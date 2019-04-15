@@ -1,0 +1,16 @@
+Package: dsuds
+Imports:
+    sf
+Type: Package
+Title: Distance Sampling Survey Design
+Version: 0.1.0
+Author: Laura Marshall <lhm@st-and.ac.uk>
+Maintainer: Laura Marshall <lhm@st-and.ac.uk>
+Description: Creates survey designs for distance sampling surveys. These
+    designs can then be assessed for various effort and coverage statistics
+    and once happy the user can generate a set of transects to use in their
+    distance sampling survey.
+License: GPL (>=2)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
