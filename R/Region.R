@@ -40,8 +40,6 @@ setMethod(
   f="initialize",
   signature="Region",
   definition=function(.Object, region.name = character(0), strata.name = character(0), units = "m", sf.shape = NULL){
-    #Input pre-processing
-    sf.shape <- check.shape(sf.shape)
     #calculates the strata areas
     area <- sf::st_area(sf.shape)
     #Set slots

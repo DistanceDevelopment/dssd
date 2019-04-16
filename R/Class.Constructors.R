@@ -46,15 +46,22 @@ make.region <- function(region.name = "region",
   }else{
     stop("This data type is not currently supported.")
   }
+  # Check the format of the shape
+  sf.shape <- check.shape(sf.shape)
+  #Check the correct number of strata names have been supplied
+  if(length(sf.shape$geometry) != length(strata.name) && length(strata.name) > 0){
+    warning("Number of strata names does not match the number of strata assiging default strata names", call. = FALSE, immediate. = TRUE)
+    strata.name = character(0)
+  }
   # If there is more than one strata and the user has not specified strata.name
-  # if(length(coords) > 1 & length(strata.name) == 0){
-  #   no.strata <- length(coords)
-  #   if(no.strata < 27){
-  #     strata.name <- LETTERS[1:no.strata]
-  #   }else{
-  #     stop("Too many strata (>26) for strata names to be assigned default names.", call. = FALSE)
-  #   }
-  # }
+  if(length(sf.shape$geometry) > 1 & length(strata.name) == 0){
+    no.strata <- length(sf.shape$geometry)
+    if(no.strata <= 26){
+      strata.name <- LETTERS[1:no.strata]
+    }else{
+      stop("Too many strata (>26) for strata names to be assigned default names.", call. = FALSE)
+    }
+  }
   # Call to make the region object
   region <- new(Class="Region", region.name = region.name, strata.name = strata.name, sf.shape = sf.shape)
   return(region)
