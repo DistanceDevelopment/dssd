@@ -14,3 +14,11 @@ License: GPL (>=2)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
+Collate: 
+    'Class.Constructors.R'
+    'Survey.Design.R'
+    'generic.functions.R'
+    'Line.Transect.Design.R'
+    'Point.Transect.Design.R'
+    'Region.R'
+    'check.shape.R'

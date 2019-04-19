@@ -7,6 +7,11 @@
 #' the type of line transect design.
 #' @name Line.Transect.Design-class
 #' @title S4 Class "Line.Transect.Design"
+#' @slot design Character value describing the name of the design.
+#' @slot line.length Numeric value defining the total line length to be generated (may be
+#' multiple values relating to each stratum).
+#' @slot spacing Numeric value defining the systematic spacing (may be multiple values
+#' relating to each stratum).
 #' @section Methods:
 #' \describe{
 #'  \item{\code{generate.transects}}{\code{signature=(object = "Line.Transect.Design", ...)}:
@@ -19,9 +24,7 @@ setClass(Class = "Line.Transect.Design",
          representation = representation(design = "character",
                                          line.length = "numeric",
                                          spacing = "numeric",
-                                         no.samplers = "numeric",
                                          design.angle = "numeric",
-                                         edge.protocol = "character",
                                          bounding.shape = "character"),
          contains = "Survey.Design"
 )
@@ -30,11 +33,10 @@ setClass(Class = "Line.Transect.Design",
 setMethod(
   f="initialize",
   signature="Line.Transect.Design",
-  definition=function(.Object, region, truncation, design, line.length,
+  definition=function(.Object, truncation, design, line.length,
                       spacing, no.samplers, design.angle, edge.protocol,
                       bounding.shape){
     #Set slots
-    .Object@region.obj    <- region
     .Object@truncation    <- truncation
     .Object@design        <- design
     .Object@line.length   <- line.length

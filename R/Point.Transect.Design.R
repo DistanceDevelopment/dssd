@@ -18,9 +18,7 @@
 setClass(Class = "Point.Transect.Design",
          representation = representation(design = "character",
                                          spacing = "numeric",
-                                         no.samplers = "numeric",
-                                         design.angle = "numeric",
-                                         edge.protocol = "character"),
+                                         design.angle = "numeric"),
          contains = "Survey.Design"
 )
 
@@ -28,11 +26,8 @@ setClass(Class = "Point.Transect.Design",
 setMethod(
   f="initialize",
   signature="Point.Transect.Design",
-  definition=function(.Object, region, truncation, design, line.length,
-                      spacing, no.samplers, design.angle, edge.protocol,
-                      bounding.shape){
+  definition=function(.Object, truncation, design, spacing, no.samplers, design.angle, edge.protocol){
     #Set slots
-    .Object@region.obj    <- region
     .Object@truncation    <- truncation
     .Object@design        <- design
     .Object@spacing       <- spacing

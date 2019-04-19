@@ -66,3 +66,134 @@ make.region <- function(region.name = "region",
   region <- new(Class="Region", region.name = region.name, strata.name = strata.name, sf.shape = sf.shape)
   return(region)
 }
+
+#' @title  Creates a Survey.Design object
+#' @description Creates a description of a survey design. Designs may use different
+#' types of either point or line transect designs across strata but cannot mix
+#' point and line transect design types within a single design object.
+#'
+#' @details For point transect designs the user may either specify "random" or
+#' "systematic" for the design argument. If the user specifies "random", they
+#' should also provide a value for effort detailing the number of point transects
+#' they wish their survey to have (for stratified designs they may specify a vector
+#' of numbers detailing the number of transects per strata). If the user specified
+#' "systematic" they may either provide their desired number of samplers or a value
+#' for spacing which defines the gap between each of the points (again a vector
+#' of spacing values can be provided for each strata). Optionally the user may
+#' select a design.angle. For both random and systematic point transect designs
+#' the user may select either a minus or plus sampling edge protocol.
+#'
+#' For line transect designs the user may either specify "random" (randomly
+#' placed full width lines), "systematic" (systematically placed full width lines)
+#' or "ESzigzag" (equally placed zigzag lines). If the user specifies "random", they
+#' should provide the either the number of samplers they wish the design to generate
+#' or the total line length they wish to achieve. If the user specifies "systematic"
+#' they should specify either the number of samplers, the desired total line length
+#' or the spacing between lines. The design angle for these parallel line designs
+#' refers to the angle of the lines. If the user specifies the zigzag design they
+#' should specify the systematic spacing value to be used and should choose between
+#' generating the design in a minimum bounding rectangle or a convex hull. The
+#' designs may be generated using plus or minus sampling protocols. As for
+#' the point transect designs different values may be specified for each strata
+#' for all of the above options.
+#'
+#' @param transect.type character variable specifying either "line" or "point"
+#' @param design a character variable describing the type of design. Either "random",
+#' "systematic" or "ESzigzag" (equal-spaced zigzag). See details for more information.
+#' @param no.samplers the number of samplers you wish the design to generate.
+#' @param line.length the total line length you desire.
+#' @param design.angle numeric value detailing the angle of the design. Can provide
+#' multiple values relating to strata. The use of the angle varies with design, it
+#' can be either the angle of the grid of points, the angle of lines or the design
+#' axis for the zigzag design.
+#' @param spacing used by systematic designs, numeric value to define spacing
+#' between transects.
+#' @param edge.protocol character value indicating whether a "plus" sampling or
+#' "minum" sampling protocol is used.
+#' @param bounding.shape only applicable to zigzag designs. A character value saying
+#' whether the
+#' zigzag transects should be generated using a minimum bounding "rectangle" or a
+#' "convex hull".
+#' @param truncation A numeric value describing the longest distance at which an
+#' object may be observed.
+#' @return object of a class which inherits from class Survey.Design
+#' @export
+#' @author Laura Marshall
+#' @examples
+make.design <- function(transect.type = "line", design = "systematic", no.samplers = numeric(0), line.length = numeric(0), design.angle =  0, spacing = numeric(0), edge.protocol = "minus", bounding.shape = "rectangle", truncation = 1){
+  #Check edge protocol
+  if(!edge.protocol %in% c("minus", "plus")){
+    warning("Edge protocol option not recognised using minus sampling.", call. = FALSE)
+  }
+  #Check the design angle
+  if(design.angle < 0 || design.angle >= 180){
+    stop("The design angle should be >= 0 and < 180 degrees.", call. = FALSE)
+  }
+  #Check the truncation distance
+  if(truncation <= 0){
+    stop("The truncation distance must be > 0.", call. = FALSE)
+  }
+  #Check design arguments
+  if(transect.type %in% c("Line", "line", "Line Transect", "line transect")){
+    if(design == "random"){
+      if(length(no.samplers) > 0 && length(line.length) > 0){
+        warning("You have supplied both the number of samplers and the line length, only the number of samplers will be used to create the surveys.", call. = FALSE)
+        line.length <- numeric(0)
+      }else if(length(no.samplers) == 0 && length(line.length) == 0){
+        no.samplers = 20
+      }
+    }else if(design == "systematic"){
+      if((length(no.samplers) > 0 || length(line.length) > 0) && length(spacing) > 0){
+        warning("You have supplied multiple effort definitions, the sampler spacing will be used.", call. = FALSE)
+        line.length <- numeric(0)
+        no.samplers <- numeric(0)
+      }else if(length(no.samplers) == 0 && length(line.length) == 0 && length(spacing) == 0){
+        no.samplers = 20
+      }
+    }else if(design %in% c("ESzigzag", "eszigzag")){
+      if((length(no.samplers) > 0 || length(line.length) > 0) && length(spacing) > 0){
+        warning("You have supplied multiple effort definitions, the sampler spacing will be used.", call. = FALSE)
+        line.length <- numeric(0)
+        no.samplers <- numeric(0)
+      }else if(length(no.samplers) == 0 && length(line.length) == 0 && length(spacing) == 0){
+        no.samplers = 20
+      }
+      if(!bounding.shape %in% c("rectangle", "convex hull")){
+        warning("Bounding shape option not recognised using a bounding rectangle", call. = FALSE)
+      }
+    }else{
+      stop("Line transect design not recognised, please choose from 'random', 'systematic, or 'ESzigzag'", call. = FALSE)
+    }
+    #Check values
+    if(any(any(no.samplers < 0) || any(line.length < 0) || any(spacing < 0))){
+      stop("Negative values were used to specify effort.", call. = FALSE)
+    }
+    #Create line transect object
+    design <- new(Class="Line.Transect.Design", truncation, design, line.length, spacing, no.samplers, design.angle, edge.protocol, bounding.shape)
+  }else if(transect.type %in% c("Point", "point", "Point Transect", "point transect")){
+    if(design == "random"){
+      if(length(no.samplers) == 0){
+        no.samplers = 20
+        spacing = numeric(0)
+      }
+    }else if(design == "systematic"){
+      if(length(no.samplers) > 0  && length(spacing) > 0){
+        warning("You have supplied multiple effort definitions, the sampler spacing will be used.", call. = FALSE)
+        no.samplers <- numeric(0)
+      }else if(length(no.samplers) == 0 && length(spacing) == 0){
+        no.samplers = 20
+      }
+    }else{
+      stop("Point transect design not recognised, please choose from 'random' or 'systematic", call. = FALSE)
+    }
+    #Check values
+    if(any(any(no.samplers < 0) || any(spacing < 0))){
+      stop("Negative values were used to specify effort.", call. = FALSE)
+    }
+    #Create line transect object
+    design <- new(Class="Point.Transect.Design", truncation, design, spacing, no.samplers, design.angle, edge.protocol)
+  }
+
+  return(design)
+}
+

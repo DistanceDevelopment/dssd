@@ -5,36 +5,20 @@
 #'
 #' @name Survey.Design-class
 #' @title S4 Class "Survey.Design"
-#' @slot region.obj Object of class \code{"character"}; The name of
-#' the region which the survey design has been made for.
 #' @slot truncation Object of class \code{"numeric"}; The maximum distance
 #' at which observations can be made. This is used to determine the covered
 #' area during the coverage calculations.
+#' @slot no.samplers Numeric values defining the number of samplers in each
+#' stratum.
+#' @slot edge.protocol Character value defining whether a "minus" or "plus"
+#' sampling strategy should be used.
 #' @keywords classes
 #' @export
 #' @seealso \code{\link{make.design}}
 setClass(Class = "Survey.Design",
-         representation = representation(region.obj = "character",
-                                         truncation = "numberic","VIRTUAL")
+         representation = representation(truncation = "numeric",
+                                         no.samplers = "numeric",
+                                         edge.protocol = "character", "VIRTUAL")
 )
 
-setMethod(
-  f="initialize",
-  signature="Survey.Design",
-  definition=function(.Object, region, truncation, ...){
-    #Set slots
-    .Object@region.obj    <- region
-    .Object@truncation    <- truncation
-    #Check object is valid
-    validObject(.Object)
-    # return object
-    return(.Object)
-  }
-)
-
-setValidity("Survey.Design",
-            function(object){
-              return(TRUE)
-            }
-)
 
