@@ -113,12 +113,18 @@ setMethod(
 setMethod(
   f="plot",
   signature="Region",
-  definition=function(x, y, main = "", ...){
+  definition=function(x, y, main = "", cols = c(2,4,5,6,7,8,3), ...){
     # If main is not supplied then take it from the object
     if(main == ""){
       main <- x@region.name
     }
-    plot(x@region, main = main, ...)
+    region <- x@region
+    bbox <- st_bbox(region)
+    plot(c(0,0), col = "white", xlim = c(bbox$xmin, bbox$xmax), ylim = c(bbox$ymin, bbox$ymax), main = main, xlab = "x-coordinates", ylab = "y-coordinates")
+    for(i in seq(along = region$geometry)){
+      plot(region$geometry[[i]], add = TRUE, col = cols[i])
+    }
+    #plot(x@region, main = main, ...)
     invisible(x)
   }
 )

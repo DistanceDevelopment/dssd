@@ -5,7 +5,8 @@
 \alias{plot,Region-method}
 \title{Plot}
 \usage{
-\S4method{plot}{Region}(x, y, main = "", ...)
+\S4method{plot}{Region}(x, y, main = "", cols = c(2, 4, 5, 6, 7, 8, 3),
+  ...)
 }
 \arguments{
 \item{x}{object of class Region}
