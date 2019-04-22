@@ -22,3 +22,4 @@ Collate:
     'Line.Transect.Design.R'
     'Point.Transect.Design.R'
     'check.shape.R'
+    'generate.systematic.points.R'
