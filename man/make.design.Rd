@@ -4,7 +4,7 @@
 \alias{make.design}
 \title{Creates a Survey.Design object}
 \usage{
-make.design(transect.type = "line", design = "systematic",
+make.design(region, transect.type = "line", design = "systematic",
   no.samplers = numeric(0), line.length = numeric(0),
   effort.allocation = numeric(0), design.angle = 0,
   spacing = numeric(0), edge.protocol = "minus",

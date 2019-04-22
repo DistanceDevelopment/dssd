@@ -1,5 +1,6 @@
 #' @include generic.functions.R
 #' @include Survey.Design.R
+#' #' @include Region.R
 
 #' @title Virtual Class "Point.Transect.Design" extends Class "Survey.Design"
 #'
@@ -24,8 +25,9 @@ setClass(Class = "Point.Transect.Design",
 setMethod(
   f="initialize",
   signature="Point.Transect.Design",
-  definition=function(.Object, truncation, design, spacing, no.samplers, effort.allocation, design.angle, edge.protocol){
+  definition=function(.Object, region, truncation, design, spacing, no.samplers, effort.allocation, design.angle, edge.protocol){
     #Set slots
+    .Object@region        <- region
     .Object@truncation    <- truncation
     .Object@design        <- design
     .Object@spacing       <- spacing

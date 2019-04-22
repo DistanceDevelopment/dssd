@@ -16,7 +16,8 @@
 #' @export
 #' @seealso \code{\link{make.design}}
 setClass(Class = "Survey.Design",
-         representation = representation(design = "character",
+         representation = representation(region = "Region",
+                                         design = "character",
                                          no.samplers = "numeric",
                                          effort.allocation  = "numeric",
                                          spacing = "numeric",

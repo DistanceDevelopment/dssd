@@ -124,7 +124,7 @@ make.region <- function(region.name = "region",
 #' @export
 #' @author Laura Marshall
 #' @examples
-make.design <- function(transect.type = "line", design = "systematic", no.samplers = numeric(0), line.length = numeric(0), effort.allocation = numeric(0), design.angle =  0, spacing = numeric(0), edge.protocol = "minus", bounding.shape = "rectangle", truncation = 1){
+make.design <- function(region, transect.type = "line", design = "systematic", no.samplers = numeric(0), line.length = numeric(0), effort.allocation = numeric(0), design.angle =  0, spacing = numeric(0), edge.protocol = "minus", bounding.shape = "rectangle", truncation = 1){
   #Check edge protocol
   if(!edge.protocol %in% c("minus", "plus")){
     warning("Edge protocol option not recognised using minus sampling.", call. = FALSE)
@@ -173,7 +173,7 @@ make.design <- function(transect.type = "line", design = "systematic", no.sample
       stop("Negative values were used to specify effort.", call. = FALSE)
     }
     #Create line transect object
-    design <- new(Class="Line.Transect.Design", truncation, design, line.length, effort.allocation, spacing, no.samplers, design.angle, edge.protocol, bounding.shape)
+    design <- new(Class="Line.Transect.Design", region, truncation, design, line.length, effort.allocation, spacing, no.samplers, design.angle, edge.protocol, bounding.shape)
   }else if(transect.type %in% c("Point", "point", "Point Transect", "point transect")){
     if(design == "random"){
       if(length(no.samplers) == 0){
@@ -195,7 +195,7 @@ make.design <- function(transect.type = "line", design = "systematic", no.sample
       stop("Negative values were used to specify effort.", call. = FALSE)
     }
     #Create line transect object
-    design <- new(Class="Point.Transect.Design", truncation, design, spacing, no.samplers, effort.allocation, design.angle, edge.protocol)
+    design <- new(Class="Point.Transect.Design", region, truncation, design, spacing, no.samplers, effort.allocation, design.angle, edge.protocol)
   }
   return(design)
 }
