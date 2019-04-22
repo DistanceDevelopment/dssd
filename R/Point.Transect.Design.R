@@ -16,9 +16,7 @@
 #' @seealso \code{\link{make.design}}
 #' @export
 setClass(Class = "Point.Transect.Design",
-         representation = representation(design = "character",
-                                         spacing = "numeric",
-                                         design.angle = "numeric"),
+         representation = representation(),
          contains = "Survey.Design"
 )
 
@@ -26,16 +24,20 @@ setClass(Class = "Point.Transect.Design",
 setMethod(
   f="initialize",
   signature="Point.Transect.Design",
-  definition=function(.Object, truncation, design, spacing, no.samplers, design.angle, edge.protocol){
+  definition=function(.Object, truncation, design, spacing, no.samplers, effort.allocation, design.angle, edge.protocol){
     #Set slots
     .Object@truncation    <- truncation
     .Object@design        <- design
     .Object@spacing       <- spacing
     .Object@no.samplers   <- no.samplers
+    .Object@effort.allocation <- effort.allocation
     .Object@design.angle  <- design.angle
     .Object@edge.protocol <- edge.protocol
     #Check object is valid
-    validObject(.Object)
+    valid <- try(validObject(.Object), silent = TRUE)
+    if(class(valid) == "try-error"){
+      stop(attr(valid, "condition")$message, call. = FALSE)
+    }
     # return object
     return(.Object)
   }

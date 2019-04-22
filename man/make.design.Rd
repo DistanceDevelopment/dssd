@@ -6,7 +6,8 @@
 \usage{
 make.design(transect.type = "line", design = "systematic",
   no.samplers = numeric(0), line.length = numeric(0),
-  design.angle = 0, spacing = numeric(0), edge.protocol = "minus",
+  effort.allocation = numeric(0), design.angle = 0,
+  spacing = numeric(0), edge.protocol = "minus",
   bounding.shape = "rectangle", truncation = 1)
 }
 \arguments{
@@ -18,6 +19,10 @@ make.design(transect.type = "line", design = "systematic",
 \item{no.samplers}{the number of samplers you wish the design to generate.}
 
 \item{line.length}{the total line length you desire.}
+
+\item{effort.allocation}{numeric values used to indicate the proportion of effort
+to be allocated to each strata from number of samplers or line length. If length 0,
+effort allocated based on stratum area.}
 
 \item{design.angle}{numeric value detailing the angle of the design. Can provide
 multiple values relating to strata. The use of the angle varies with design, it
@@ -51,7 +56,8 @@ For point transect designs the user may either specify "random" or
 "systematic" for the design argument. If the user specifies "random", they
 should also provide a value for effort detailing the number of point transects
 they wish their survey to have (for stratified designs they may specify a vector
-of numbers detailing the number of transects per strata). If the user specified
+of numbers detailing the number of transects per strata or alternatively use the
+effort.allocation argument to allocate effort proportionally). If the user specified
 "systematic" they may either provide their desired number of samplers or a value
 for spacing which defines the gap between each of the points (again a vector
 of spacing values can be provided for each strata). Optionally the user may
@@ -68,7 +74,7 @@ or the spacing between lines. The design angle for these parallel line designs
 refers to the angle of the lines. If the user specifies the zigzag design they
 should specify the systematic spacing value to be used and should choose between
 generating the design in a minimum bounding rectangle or a convex hull. The
-designs may be generated using plus or minus sampling protocols. As for
+designs may be generated using plus or minus sampling protocols. Similar to
 the point transect designs different values may be specified for each strata
 for all of the above options.
 }

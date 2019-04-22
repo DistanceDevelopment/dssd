@@ -16,9 +16,32 @@
 #' @export
 #' @seealso \code{\link{make.design}}
 setClass(Class = "Survey.Design",
-         representation = representation(truncation = "numeric",
+         representation = representation(design = "character",
                                          no.samplers = "numeric",
-                                         edge.protocol = "character", "VIRTUAL")
+                                         effort.allocation  = "numeric",
+                                         spacing = "numeric",
+                                         design.angle = "numeric",
+                                         edge.protocol = "character",
+                                         truncation = "numeric", "VIRTUAL")
 )
 
+
+setValidity("Survey.Design",
+            function(object){
+              if(length(object@effort.allocation) > 0){
+                if(sum(object@effort.allocation) != 1){
+                  return("Effort allocation should either be omitted or sum to 1")
+                }
+                if(length(object@effort.allocation) > 1 && length(object@no.samplers) > 1){
+                  warning("You have supplied effort allocation and multiple values for the no.of samplers, the sum of the number or samplers will be used as the total number of samplers.")
+                  object@no.samplers <- sum(object@no.samplers)
+                }
+                if(length(object@truncation) > 1){
+                  warning("You have supplied more than one truncation value. Currently the same truncation value must be applied across the entire study region. Using only the first value supplied")
+                  object@truncation <- object@truncation[1]
+                }
+              }
+              return(TRUE)
+            }
+)
 

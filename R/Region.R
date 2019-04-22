@@ -70,13 +70,13 @@ setValidity("Region",
                   temp <- strata.name[-i]
                   for(j in seq(along = temp)){
                     if(strata.name[i] == temp[j]){
-                      return("Stratum names must be unique")
+                      return("Stratum names must be unique.")
                     }
                   }
                 }
               }
               if(length(which(object@area <= 0)) > 0){
-                return("All areas must be greater than 0")
+                return("All areas must be greater than 0. ")
               }
               return(TRUE)
             }
