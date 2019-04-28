@@ -43,6 +43,10 @@ make.region <- function(region.name = "region",
     sf.shape <- sf::read_sf(shape)
   }else if(class(shape) == "data.frame"){
     stop("The data.frame data type is not currently supported.")
+  }else if(is.null(shape)){
+    #Make a default shape (same as in DSsim currently)
+    sfc.shape <- sf::st_sfc(sf::st_polygon(list(matrix(c(0,0,0,500,2000,500,2000,0,0,0), ncol = 2, byrow = TRUE))))
+    sf.shape <- sf::st_sf(data.frame(region="study_ar", geom=sfc.shape))
   }else{
     stop("This data type is not currently supported.")
   }
@@ -115,28 +119,16 @@ make.region <- function(region.name = "region",
 #' @param edge.protocol character value indicating whether a "plus" sampling or
 #' "minum" sampling protocol is used.
 #' @param bounding.shape only applicable to zigzag designs. A character value saying
-#' whether the
-#' zigzag transects should be generated using a minimum bounding "rectangle" or a
-#' "convex hull".
+#' whether the zigzag transects should be generated using a minimum bounding
+#' "rectangle" or a "convex hull".
 #' @param truncation A numeric value describing the longest distance at which an
 #' object may be observed.
 #' @return object of a class which inherits from class Survey.Design
 #' @export
 #' @author Laura Marshall
 #' @examples
-make.design <- function(region, transect.type = "line", design = "systematic", no.samplers = numeric(0), line.length = numeric(0), effort.allocation = numeric(0), design.angle =  0, spacing = numeric(0), edge.protocol = "minus", bounding.shape = "rectangle", truncation = 1){
-  #Check edge protocol
-  if(!edge.protocol %in% c("minus", "plus")){
-    warning("Edge protocol option not recognised using minus sampling.", call. = FALSE)
-  }
-  #Check the design angle
-  if(design.angle < 0 || design.angle >= 180){
-    stop("The design angle should be >= 0 and < 180 degrees.", call. = FALSE)
-  }
-  #Check the truncation distance
-  if(truncation <= 0){
-    stop("The truncation distance must be > 0.", call. = FALSE)
-  }
+#' design <- make.design(transect.type = "point", no.samplers = 25, design.angle = 45)
+make.design <- function(region = make.region(), transect.type = "line", design = "systematic", no.samplers = numeric(0), line.length = numeric(0), effort.allocation = numeric(0), design.angle =  0, spacing = numeric(0), edge.protocol = "minus", bounding.shape = "rectangle", truncation = 1){
   #Check design arguments
   if(transect.type %in% c("Line", "line", "Line Transect", "line transect")){
     if(design == "random"){
