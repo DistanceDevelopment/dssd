@@ -61,11 +61,14 @@ generate.systematic.points <- function(design){
     points.unrotated <- to.keep*rot.mat.rev
     transects[[strat]] <- points.unrotated
   }
-  all.transects <- transects[[1]]
+  #Put transects into a miltipart multipoint sf object defined by
+  #the strata name
+  temp <- sf::st_sfc(transects[[1]])
   if(length(transects) > 1){
     for(strat in 2:length(transects)){
-      all.transects <- st_union(all.transects, transects[[strat]])
+      temp <- c(temp, sf::st_sfc(transects[[strat]]))
     }
   }
+  all.transects <- st_sf(data.frame(strata = strata.names, geom = temp))
   return(all.transects)
 }
