@@ -14,15 +14,31 @@ design.
 \section{Slots}{
 
 \describe{
-\item{\code{truncation}}{Object of class \code{"numeric"}; The maximum distance
-at which observations can be made. This is used to determine the covered
-area during the coverage calculations.}
+\item{\code{region}}{An object of class 'Region' defining the study area.}
+
+\item{\code{design}}{Character value describing the name of the design.}
 
 \item{\code{no.samplers}}{Numeric values defining the number of samplers in each
 stratum.}
 
+\item{\code{effort.allocation}}{numeric values used to indicate the proportion of effort
+to be allocated to each strata from number of samplers or line length. If length 0,
+effort allocated based on stratum area.}
+
+\item{\code{spacing}}{used by systematic designs, numeric value to define spacing
+between transects.}
+
+\item{\code{design.angle}}{numeric value detailing the angle of the design. Can provide
+multiple values relating to strata. The use of the angle varies with design, it
+can be either the angle of the grid of points, the angle of lines or the design
+axis for the zigzag design.}
+
 \item{\code{edge.protocol}}{Character value defining whether a "minus" or "plus"
 sampling strategy should be used.}
+
+\item{\code{truncation}}{Object of class \code{"numeric"}; The maximum distance
+at which observations can be made. This is used to determine the covered
+area during the coverage calculations.}
 }}
 
 \seealso{

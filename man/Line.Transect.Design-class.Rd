@@ -11,13 +11,11 @@ the type of line transect design.
 \section{Slots}{
 
 \describe{
-\item{\code{design}}{Character value describing the name of the design.}
-
 \item{\code{line.length}}{Numeric value defining the total line length to be generated (may be
 multiple values relating to each stratum).}
 
-\item{\code{spacing}}{Numeric value defining the systematic spacing (may be multiple values
-relating to each stratum).}
+\item{\code{bounding.shape}}{relevant for zigzag designs, either a minimum bounding "rectangle"
+or a "convex hull".}
 }}
 
 \section{Methods}{

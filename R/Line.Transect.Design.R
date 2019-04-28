@@ -8,11 +8,10 @@
 #' the type of line transect design.
 #' @name Line.Transect.Design-class
 #' @title S4 Class "Line.Transect.Design"
-#' @slot design Character value describing the name of the design.
 #' @slot line.length Numeric value defining the total line length to be generated (may be
 #' multiple values relating to each stratum).
-#' @slot spacing Numeric value defining the systematic spacing (may be multiple values
-#' relating to each stratum).
+#' @slot bounding.shape relevant for zigzag designs, either a minimum bounding "rectangle"
+#' or a "convex hull".
 #' @section Methods:
 #' \describe{
 #'  \item{\code{generate.transects}}{\code{signature=(object = "Line.Transect.Design", ...)}:
