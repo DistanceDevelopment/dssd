@@ -1,6 +1,6 @@
 #' @include generic.functions.R
 #' @include Survey.Design.R
-#' #' @include Region.R
+#' @include Region.R
 
 #' @title Virtual Class "Point.Transect.Design" extends Class "Survey.Design"
 #'

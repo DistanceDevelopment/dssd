@@ -1,27 +1,28 @@
 #' @include Survey.R
 
-#' @title Class "Point.Transect.Survey" extends Class "Survey"
+#' @title Class "Line.Transect.Survey" extends Class "Survey"
 #'
-#' @description Virtual Class \code{"Point.Transect.Survey"} is an S4 class
+#' @description Virtual Class \code{"Line.Transect.Survey"} is an S4 class
 #' detailing a set of transects from a point transect design.
 #' @name Point.Transect.Survey-class
-#' @title S4 Class "Point.Transect.Survey"
+#' @title S4 Class "Line.Transect.Survey"
+#' @slot line.length the total line length for the transect set
 #' @keywords classes
 #' @seealso \code{\link{make.design}}
 #' @export
-setClass(Class = "Point.Transect.Survey",
+setClass(Class = "Line.Transect.Survey",
          representation = representation(),
          contains = "Survey")
 
-
 setMethod(
   f="initialize",
-  signature="Point.Transect.Survey",
+  signature="Line.Transect.Survey",
   definition=function(.Object, design, points, no.samplers, effort.allocation,
                       spacing, design.angle, edge.protocol){
     #Set slots
     .Object@design        <- design
     .Object@samplers      <- points
+    .Object@line.length   <- line.length
     .Object@no.samplers   <- no.samplers
     .Object@effort.allocation <- effort.allocation
     .Object@spacing       <- spacing
@@ -37,7 +38,7 @@ setMethod(
   }
 )
 
-setValidity("Point.Transect.Survey",
+setValidity("Line.Transect.Survey",
             function(object){
               return(TRUE)
             }

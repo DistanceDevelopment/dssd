@@ -16,6 +16,8 @@ single set of transects.
 \describe{
 \item{\code{design}}{Describes the design algorithm used to create the survey.}
 
+\item{\code{samplers}}{Contains the survey transects}
+
 \item{\code{no.samplers}}{Numeric value(s) giving the number of realised transects.}
 
 \item{\code{effort.allocation}}{a vector of probabilities determining how effort is

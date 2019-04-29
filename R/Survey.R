@@ -6,6 +6,7 @@
 #' @name Survey-class
 #' @title S4 Class "Survey"
 #' @slot design Describes the design algorithm used to create the survey.
+#' @slot samplers Contains the survey transects
 #' @slot no.samplers Numeric value(s) giving the number of realised transects.
 #' @slot effort.allocation a vector of probabilities determining how effort is
 #' allocated between strata. Effort allocated based on area if left empty.
@@ -19,8 +20,9 @@
 #' @keywords classes
 #' @export
 #' @seealso \code{\link{make.design}}
-setClass(Class = "Survey.Design",
+setClass(Class = "Survey",
          representation = representation(design = "character",
+                                         samplers = "list",
                                          no.samplers = "numeric",
                                          effort.allocation  = "numeric",
                                          spacing = "numeric",
@@ -29,7 +31,7 @@ setClass(Class = "Survey.Design",
 )
 
 
-setValidity("Survey.Design",
+setValidity("Survey",
             function(object){
               return(TRUE)
             }
