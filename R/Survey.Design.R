@@ -62,7 +62,7 @@ setValidity("Survey.Design",
                 object@edge.protocol[index] <- "minus"
               }
               #Check the design angle
-              if(any(design.angle < 0 || design.angle >= 180)){
+              if(any(object@design.angle < 0 || object@design.angle >= 180)){
                 return("The design angle should be >= 0 and < 180 degrees.")
               }
               return(TRUE)
