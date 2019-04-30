@@ -67,7 +67,13 @@ setValidity("Line.Transect.Design",
 setMethod(
   f="generate.transects",
   signature="Line.Transect.Design",
-  definition=function(object, region = NULL, silent = FALSE){
-      return(NULL)
+  definition=function(object, region, silent = FALSE){
+    if(object@design == "systematic"){
+      transects <- generate.systematic.lines(object)
+    }else{
+      message("This design is not supported at present")
+      transects = NULL
+    }
+    return(transects)
   }
 )
