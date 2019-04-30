@@ -47,28 +47,53 @@ generate.systematic.points <- function(design){
     }
     #Find the minimum and maximum x and y values
     bbox <- st_bbox(rot.strata)
-    start.x <- bbox[["xmin"]] + runif(1, 0, sspace)
-    start.y <- bbox[["ymin"]] + runif(1, 0, sspace)
-    x.vals <- seq(start.x, bbox[["xmax"]], by = sspace)
-    y.vals <- seq(start.y, bbox[["ymax"]], by = sspace)
-    temp.coords <- expand.grid(x.vals, y.vals)
-    #keep everything within the polygon strata
-    points <- st_multipoint(as.matrix(temp.coords))
-    to.keep <- st_intersection(points, rot.strata)
-    #Rotate back again
-    reverse.theta <- rot.angle.rad
-    rot.mat.rev <- matrix(c(cos(reverse.theta), sin(reverse.theta), -sin(reverse.theta), cos(reverse.theta)), ncol = 2, byrow = FALSE)
-    points.unrotated <- to.keep*rot.mat.rev
-    transects[[strat]] <- points.unrotated
+    #Check spacing is appropriate
+    if(sspace > (bbox[["xmax"]]-bbox[["xmin"]]) || sspace > (bbox[["ymax"]]-bbox[["ymin"]])){
+      warning(paste("The spacing allocated to strata ", strata.names[strat], " is larger than either or both of the x or y dimensions of the region. Cannot generate samplers in this strata.", sep = ""), call. = FALSE, immediate. = TRUE)
+      transects[[strat]] <- NA
+    }else{
+      start.x <- bbox[["xmin"]] + runif(1, 0, sspace)
+      start.y <- bbox[["ymin"]] + runif(1, 0, sspace)
+      x.vals <- seq(start.x, bbox[["xmax"]], by = sspace)
+      y.vals <- seq(start.y, bbox[["ymax"]], by = sspace)
+      temp.coords <- expand.grid(x.vals, y.vals)
+      #keep everything within the polygon strata
+      points <- st_multipoint(as.matrix(temp.coords))
+      to.keep <- st_intersection(points, rot.strata)
+      #Rotate back again
+      reverse.theta <- rot.angle.rad
+      rot.mat.rev <- matrix(c(cos(reverse.theta), sin(reverse.theta), -sin(reverse.theta), cos(reverse.theta)), ncol = 2, byrow = FALSE)
+      points.unrotated <- to.keep*rot.mat.rev
+      transects[[strat]] <- points.unrotated
+    }
   }
   #Put transects into a miltipart multipoint sf object defined by
   #the strata name
-  temp <- sf::st_sfc(transects[[1]])
-  if(length(transects) > 1){
-    for(strat in 2:length(transects)){
-      temp <- c(temp, sf::st_sfc(transects[[strat]]))
-    }
+  counter <- 1
+  transect.count <- 0
+  #Find first strata where there are transects
+  while(is.na(transects[[counter]]) && counter < length(transects)){
+    counter <- counter + 1
+    cat(counter)
   }
-  all.transects <- st_sf(data.frame(strata = strata.names, geom = temp))
-  return(all.transects)
+  #If there are some transects somewhere
+  if(!is.na(transects[[counter]])){
+    transect.count <- dim(transects[[counter]])[1]
+    temp <- sf::st_sfc(transects[[counter]])
+    #Now add in transects from other strata
+    if(length(transects) > counter){
+      for(strat in (counter+1):length(transects)){
+        if(!is.na(transects[[strat]])){
+          transect.count <- transect.count + dim(transects[[strat]])[1]
+          temp <- c(temp, sf::st_sfc(transects[[strat]]))
+        }
+      }
+    }
+    all.transects <- st_sf(data.frame(strata = strata.names, geom = temp))
+  }else{
+    all.transects <- list()
+  }
+  #Make a survey object
+  survey <- new(Class="Point.Transect.Survey", design = design@design, points = all.transects, no.samplers = transect.count, effort.allocation = design@effort.allocation, spacing = spacing, design.angle = design@design.angle, edge.protocol = design@edge.protocol)
+  return(survey)
 }
