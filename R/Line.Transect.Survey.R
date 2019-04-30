@@ -11,7 +11,7 @@
 #' @seealso \code{\link{make.design}}
 #' @export
 setClass(Class = "Line.Transect.Survey",
-         representation = representation(),
+         representation = representation(line.length = "numeric"),
          contains = "Survey")
 
 setMethod(
@@ -43,3 +43,24 @@ setValidity("Line.Transect.Survey",
               return(TRUE)
             }
 )
+
+# GENERIC METHODS DEFINITIONS --------------------------------------------
+
+setMethod(
+  f="plot",
+  signature="Line.Transect.Survey",
+  definition=function(x, y, ...){
+    # If main is not supplied then take it from the object
+    additional.args <- list(...)
+    add <- ifelse("add" %in% names(additional.args), additional.args$add, FALSE)
+    col <- ifelse("col" %in% names(additional.args), additional.args$col, 5)
+    pch <- ifelse("pch" %in% names(additional.args), additional.args$pch, 20)
+    if(length(x@samplers) > 0){
+      plot(x@samplers$geometry, add = add, col = col, pch = pch)
+    }else{
+      warning("No samplers to plot", call. = F, immediate. = F)
+    }
+    invisible(x)
+  }
+)
+

@@ -16,11 +16,11 @@ LazyData: true
 RoxygenNote: 6.1.1
 Collate: 
     'Class.Constructors.R'
+    'Survey.R'
     'Region.R'
     'Survey.Design.R'
     'generic.functions.R'
     'Line.Transect.Design.R'
-    'Survey.R'
     'Line.Transect.Survey.R'
     'Point.Transect.Design.R'
     'Point.Transect.Survey.R'

@@ -1,4 +1,5 @@
 #' @import sf
+#' @include Survey.R
 NULL
 
 #' @title  Class "Region"
