@@ -17,11 +17,11 @@ setClass(Class = "Line.Transect.Survey",
 setMethod(
   f="initialize",
   signature="Line.Transect.Survey",
-  definition=function(.Object, design, points, no.samplers, effort.allocation,
+  definition=function(.Object, design, lines, no.samplers, line.length, effort.allocation,
                       spacing, design.angle, edge.protocol){
     #Set slots
     .Object@design        <- design
-    .Object@samplers      <- points
+    .Object@samplers      <- lines
     .Object@line.length   <- line.length
     .Object@no.samplers   <- no.samplers
     .Object@effort.allocation <- effort.allocation
