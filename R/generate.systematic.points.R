@@ -77,13 +77,13 @@ generate.systematic.points <- function(design){
     cat(counter)
   }
   #If there are some transects somewhere
-  if(!is.na(transects[[counter]])){
+  if(!is.na(transects[[counter]][[1]])){
     transect.count <- dim(transects[[counter]])[1]
     temp <- sf::st_sfc(transects[[counter]])
     #Now add in transects from other strata
     if(length(transects) > counter){
       for(strat in (counter+1):length(transects)){
-        if(!is.na(transects[[strat]])){
+        if(!is.na(transects[[strat]][[1]])){
           transect.count <- transect.count + dim(transects[[strat]])[1]
           temp <- c(temp, sf::st_sfc(transects[[strat]]))
         }
