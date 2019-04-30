@@ -42,3 +42,32 @@ setValidity("Point.Transect.Survey",
               return(TRUE)
             }
 )
+
+# GENERIC METHODS DEFINITIONS --------------------------------------------
+
+#' Plot
+#'
+#' Plots an S4 object of class 'Survey'
+#'
+#' @param x object of class Survey
+#' @param y not used
+#' @param ... other general plot parameters
+#' @rdname plot.Survey-methods
+#' @exportMethod plot
+setMethod(
+  f="plot",
+  signature="Point.Transect.Survey",
+  definition=function(x, y, ...){
+    # If main is not supplied then take it from the object
+    additional.args <- list(...)
+    add <- ifelse("add" %in% names(additional.args), additional.args$add, FALSE)
+    col <- ifelse("col" %in% names(additional.args), additional.args$col, 5)
+    pch <- ifelse("pch" %in% names(additional.args), additional.args$pch, 20)
+    if(length(x@samplers) > 0){
+      plot(x@samplers, add = add, col = col, pch = pch)
+    }else{
+      warning("No samplers to plot", call. = F, immediate. = F)
+    }
+    invisible(x)
+  }
+)
