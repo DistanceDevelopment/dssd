@@ -101,5 +101,7 @@ generate.systematic.lines <- function(design){
     }
   }
   all.transects <- st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp))
-  return(all.transects)
+  #Make a survey object
+  survey <- new(Class="Line.Transect.Survey", design = design@design, lines = all.transects, no.samplers = dim(all.transects)[1], line.length = sum(st_length(all.transects)), effort.allocation = design@effort.allocation, spacing = spacing, design.angle = design@design.angle, edge.protocol = design@edge.protocol)
+  return(survey)
 }
