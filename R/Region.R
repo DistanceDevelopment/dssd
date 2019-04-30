@@ -129,3 +129,33 @@ setMethod(
   }
 )
 
+#' Plot
+#'
+#' Plots an S4 object of class 'Region'
+#'
+#' @param x object of class Region
+#' @param y object which inherits from class Survey
+#' @param main character plot title
+#' @param ... other general plot parameters
+#' @rdname plot.Region-methods
+#' @exportMethod plot
+setMethod(
+  f="plot",
+  signature=c("Region", "Survey"),
+  definition=function(x, y, main = "", region.cols = c(2,4,5,6,7,8,3), ...){
+    # If main is not supplied then take it from the object
+    if(main == ""){
+      main <- x@region.name
+    }
+    region <- x@region
+    #Set up bounding box for samplers (necessary when plus sampling used and extent of samplers is greater than the region)
+    bbox <- st_bbox(y@samplers)
+    plot(c(0,0), col = "white", xlim = c(bbox$xmin, bbox$xmax), ylim = c(bbox$ymin, bbox$ymax), main = main, xlab = "x-coordinates", ylab = "y-coordinates")
+    for(i in seq(along = region$geometry)){
+      plot(region$geometry[[i]], add = TRUE, col = region.cols[i])
+    }
+    plot(y, add = TRUE)
+    invisible(x)
+  }
+)
+
