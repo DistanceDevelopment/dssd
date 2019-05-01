@@ -25,6 +25,7 @@
 #' area during the coverage calculations.
 #' @keywords classes
 #' @export
+#' @importFrom methods validObject
 #' @seealso \code{\link{make.design}}
 setClass(Class = "Survey.Design",
          representation = representation(region = "Region",

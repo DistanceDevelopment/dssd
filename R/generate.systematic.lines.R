@@ -1,3 +1,5 @@
+#' @importFrom stats runif
+#' @importFrom methods new
 generate.systematic.lines <- function(design){
   # Get strata names
   region <- design@region

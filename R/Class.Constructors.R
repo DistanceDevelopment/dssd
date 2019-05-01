@@ -1,3 +1,5 @@
+#' @importFrom methods new
+
 #' @title Creates a Region object
 #' @description This creates an instance of the Region class. If the
 #' \code{shapefile} argument is supplied, all information will be extracted from
@@ -16,23 +18,12 @@
 #' @export
 #' @author Laura Marshall
 #' @examples
-#' # A basic study region of 2000m by 500m is created using the defaults
+#' # A basic study region with two strata
 #' region <- make.region()
 #' plot(region)
-#'
-#' # Here is an example of a 1000 x 1000 study region with a gap
-#' coords <- gaps <- list()
-#' coords[[1]] <- list(data.frame(x = c(0,1000,1000,0,0), y = c(0,0,
-#'  1000,1000,0)))
-#' gaps[[1]] <- list(data.frame(x = c(400,600,500,350,400), y = c(100,
-#'  250,600,120,100)))
-#'
-#' region <- make.region(region.name = "study.area", units = "m",
-#'  coords = coords, gaps = gaps)
-#' plot(region)
-#'
 make.region <- function(region.name = "region",
                         strata.name = character(0),
+                        units = "m",
                         shape = NULL){
   #Process shape
   if("sf" %in% class(shape)){
@@ -102,6 +93,7 @@ make.region <- function(region.name = "region",
 #' the point transect designs different values may be specified for each strata
 #' for all of the above options.
 #'
+#' @param region an object of class Region defining the survey region.
 #' @param transect.type character variable specifying either "line" or "point"
 #' @param design a character variable describing the type of design. Either "random",
 #' "systematic" or "ESzigzag" (equal-spaced zigzag). See details for more information.

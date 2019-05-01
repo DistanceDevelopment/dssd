@@ -8,25 +8,22 @@
 \alias{generate.transects,Point.Transect.Design-method}
 \title{S4 generic method to generate an instance of a design}
 \usage{
-generate.transects(object, region = NULL, ...)
+generate.transects(object, silent, ...)
 
 \S4method{generate.transects}{Line.Transect.Design}(object,
-  region = NULL, silent = FALSE)
+  silent = FALSE)
 
 \S4method{generate.transects}{Point.Transect.Design}(object,
-  region = NULL, silent = FALSE)
+  silent = FALSE)
 }
 \arguments{
-\item{object}{an object of class Simulation or a class which inherits from
-Survey.Design}
+\item{object}{an object which inherits from class Survey.Design}
 
-\item{region}{optional only required if object is of class Survey.Design.}
+\item{silent}{silences some warnings}
 
 \item{...}{optional argument index if an object of class Survey.Design is
 supplied allowing the user to access / plot different sets of transects
 listed in the filenames slot.}
-
-\item{index}{specifies which set of transect should be loaded}
 }
 \value{
 an object of class Line.Transect

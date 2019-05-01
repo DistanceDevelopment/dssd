@@ -5,7 +5,7 @@
 \title{Creates a Region object}
 \usage{
 make.region(region.name = "region", strata.name = character(0),
-  shape = NULL)
+  units = "m", shape = NULL)
 }
 \arguments{
 \item{region.name}{the region name}
@@ -13,11 +13,11 @@ make.region(region.name = "region", strata.name = character(0),
 \item{strata.name}{the stratum names (character vector, same length as the
 number of areas in the \code{shapefile} or \code{coords} arguments). If not supplied "A", "B", "C", ... will be assigned.}
 
-\item{shape}{sf object, sp object, shapefile path to .shp file or a
-data.frame of coordinates.}
-
 \item{units}{measurement units; either \code{"m"} for metres or \code{"km"} for
 kilometres.}
+
+\item{shape}{sf object, sp object, shapefile path to .shp file or a
+data.frame of coordinates.}
 }
 \value{
 object of class Region
@@ -31,21 +31,9 @@ areas to be excluded (\code{gaps}). If \code{area} is not specified it will be
 calculated.
 }
 \examples{
-# A basic study region of 2000m by 500m is created using the defaults
+# A basic study region with two strata
 region <- make.region()
 plot(region)
-
-# Here is an example of a 1000 x 1000 study region with a gap
-coords <- gaps <- list()
-coords[[1]] <- list(data.frame(x = c(0,1000,1000,0,0), y = c(0,0,
- 1000,1000,0)))
-gaps[[1]] <- list(data.frame(x = c(400,600,500,350,400), y = c(100,
- 250,600,120,100)))
-
-region <- make.region(region.name = "study.area", units = "m",
- coords = coords, gaps = gaps)
-plot(region)
-
 }
 \author{
 Laura Marshall

@@ -1,5 +1,6 @@
 #' @import sf
 #' @include Survey.R
+#' @importFrom methods validObject
 NULL
 
 #' @title  Class "Region"
@@ -105,9 +106,10 @@ setMethod(
 #'
 #' Plots an S4 object of class 'Region'
 #'
-#' @param x object of class Region
-#' @param y not used
-#' @param main character plot title
+#' @param x object of class Region or inheriting from Survey
+#' @param y optionally a Survey object to plot with the Region
+#' @param main the main title for the plot
+#' @param cols colours for the strata
 #' @param ... other general plot parameters
 #' @rdname plot.Region-methods
 #' @exportMethod plot
@@ -133,11 +135,7 @@ setMethod(
 #' Plot
 #'
 #' Plots an S4 object of class 'Region'
-#'
-#' @param x object of class Region
-#' @param y object which inherits from class Survey
-#' @param main character plot title
-#' @param ... other general plot parameters
+#' @param region.cols fill colours for strata
 #' @rdname plot.Region-methods
 #' @exportMethod plot
 setMethod(

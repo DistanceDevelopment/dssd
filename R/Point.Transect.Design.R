@@ -1,6 +1,7 @@
 #' @include generic.functions.R
 #' @include Survey.Design.R
 #' @include Region.R
+#' @importFrom methods validObject
 
 #' @title Virtual Class "Point.Transect.Design" extends Class "Survey.Design"
 #'
@@ -58,7 +59,7 @@ setValidity("Point.Transect.Design",
 setMethod(
   f="generate.transects",
   signature="Point.Transect.Design",
-  definition=function(object, region, silent = FALSE){
+  definition=function(object, silent = FALSE){
     if(object@design == "systematic"){
       transects <- generate.systematic.points(object)
     }else{

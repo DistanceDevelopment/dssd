@@ -19,6 +19,7 @@
 #' "minum" sampling protocol is used.
 #' @keywords classes
 #' @export
+#' @importFrom methods validObject
 #' @seealso \code{\link{make.design}}
 setClass(Class = "Survey",
          representation = representation(design = "character",

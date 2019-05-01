@@ -1,4 +1,5 @@
 #' @include Survey.R
+#' @importFrom methods validObject
 
 #' @title Class "Point.Transect.Survey" extends Class "Survey"
 #'

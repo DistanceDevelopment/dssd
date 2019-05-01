@@ -11,6 +11,8 @@ make.design(region = make.region(), transect.type = "line",
   bounding.shape = "rectangle", truncation = 1)
 }
 \arguments{
+\item{region}{an object of class Region defining the survey region.}
+
 \item{transect.type}{character variable specifying either "line" or "point"}
 
 \item{design}{a character variable describing the type of design. Either "random",

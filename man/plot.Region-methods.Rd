@@ -13,21 +13,17 @@
   5, 6, 7, 8, 3), ...)
 }
 \arguments{
-\item{x}{object of class Region}
+\item{x}{object of class Region or inheriting from Survey}
 
-\item{y}{not used}
+\item{y}{optionally a Survey object to plot with the Region}
 
-\item{main}{character plot title}
+\item{main}{the main title for the plot}
 
-\item{...}{other general plot parameters}
-
-\item{x}{object of class Region}
-
-\item{y}{object which inherits from class Survey}
-
-\item{main}{character plot title}
+\item{cols}{colours for the strata}
 
 \item{...}{other general plot parameters}
+
+\item{region.cols}{fill colours for strata}
 }
 \description{
 Plots an S4 object of class 'Region'

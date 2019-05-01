@@ -1,4 +1,3 @@
-#' @import methods
 #' @importFrom graphics plot
 NULL
 
@@ -9,18 +8,15 @@ NULL
 #' involves loading a survey shapefile from the path specified in the
 #' Survey.Design object and can only work with line transect designs.
 #'
-#' @param object an object of class Simulation or a class which inherits from
-#'   Survey.Design
-#' @param region optional only required if object is of class Survey.Design.
-#' @param index specifies which set of transect should be loaded
+#' @param object an object which inherits from class Survey.Design
+#' @param silent silences some warnings
 #' @param ... optional argument index if an object of class Survey.Design is
 #' supplied allowing the user to access / plot different sets of transects
 #' listed in the filenames slot.
 #' @return an object of class Line.Transect
 #' @export
 #' @rdname generate.transects-methods
-setGeneric("generate.transects", function(object, region = NULL, ...){standardGeneric ("generate.transects")})
-
+setGeneric("generate.transects", function(object, silent, ...){standardGeneric ("generate.transects")})
 
 if (!isGeneric("plot")){
   setGeneric(name = "plot", def = function(x, y, ...){standardGeneric("plot")})

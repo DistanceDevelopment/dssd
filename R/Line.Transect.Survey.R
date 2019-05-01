@@ -1,10 +1,11 @@
 #' @include Survey.R
+#' @importFrom methods validObject
 
 #' @title Class "Line.Transect.Survey" extends Class "Survey"
 #'
 #' @description Virtual Class \code{"Line.Transect.Survey"} is an S4 class
 #' detailing a set of transects from a point transect design.
-#' @name Point.Transect.Survey-class
+#' @name Line.Transect.Survey-class
 #' @title S4 Class "Line.Transect.Survey"
 #' @slot line.length the total line length for the transect set
 #' @keywords classes
@@ -46,6 +47,12 @@ setValidity("Line.Transect.Survey",
 
 # GENERIC METHODS DEFINITIONS --------------------------------------------
 
+#' Plot
+#'
+#' Plots an S4 object of class 'Survey'
+#'
+#' @rdname plot.Survey-methods
+#' @exportMethod plot
 setMethod(
   f="plot",
   signature="Line.Transect.Survey",

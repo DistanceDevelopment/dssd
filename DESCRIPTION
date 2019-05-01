@@ -1,6 +1,7 @@
 Package: dsuds
 Imports:
-    sf
+    sf,
+    methods
 Type: Package
 Title: Distance Sampling Survey Design
 Version: 0.1.0
