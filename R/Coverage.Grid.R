@@ -20,12 +20,13 @@ NULL
 #' @keywords classes
 #' @seealso \code{\link{make.grid}}
 setClass(Class = "Coverage.Grid",
-         representation(grid = "list")
+         representation(grid = "list",
+                        spacing = "numeric")
 )
 
 setMethod(
   f="initialize",
-  signature="Region",
+  signature="Coverage.Grid",
   definition=function(.Object, grid, spacing){
     #calculates the strata areas
     area <- sf::st_area(sf.shape)
@@ -41,7 +42,7 @@ setMethod(
     return(.Object)
   }
 )
-setValidity("Region",
+setValidity("Coverage.Grid",
             function(object){
               return(TRUE)
             }

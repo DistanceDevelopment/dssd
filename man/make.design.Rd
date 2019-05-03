@@ -8,7 +8,7 @@ make.design(region = make.region(), transect.type = "line",
   design = "systematic", no.samplers = numeric(0),
   line.length = numeric(0), effort.allocation = numeric(0),
   design.angle = 0, spacing = numeric(0), edge.protocol = "minus",
-  bounding.shape = "rectangle", truncation = 1)
+  bounding.shape = "rectangle", truncation = 1, coverage.grid = NULL)
 }
 \arguments{
 \item{region}{an object of class Region defining the survey region.}

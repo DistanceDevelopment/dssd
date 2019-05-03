@@ -14,16 +14,14 @@ generate.transects(object, silent, ...)
   silent = FALSE)
 
 \S4method{generate.transects}{Point.Transect.Design}(object,
-  silent = FALSE)
+  silent = FALSE, ...)
 }
 \arguments{
 \item{object}{an object which inherits from class Survey.Design}
 
 \item{silent}{silences some warnings}
 
-\item{...}{optional argument index if an object of class Survey.Design is
-supplied allowing the user to access / plot different sets of transects
-listed in the filenames slot.}
+\item{...}{optional arguments used for internal calls}
 }
 \value{
 an object of class Line.Transect

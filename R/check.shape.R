@@ -2,9 +2,9 @@ check.shape <- function(sf.shape){
   #This fuction was added as there were some issues with shapefiles
   #created by Distance. There seemed to be some redundant information added.
   #Checks that object is of class sf
-
   #Also checks shapefile type
-  if(!any(c("sfc_POLYGON", "sfc_MULTIPOLYGON") %in% attributes(sf.shape$geometry)$class)){
+  #Nasty partial match as sometimes geom and sometimes geometry!
+  if(!any(c("sfc_POLYGON", "sfc_MULTIPOLYGON") %in% attributes(sf.shape$geom)$class)){
     stop("The shapefile you have provided is of incorrect type. The shapefile must contain polygons.", call. = FALSE)
   }
   # keep <- rep(NA, length(shapefile$shp$shp))

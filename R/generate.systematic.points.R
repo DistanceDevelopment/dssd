@@ -1,4 +1,7 @@
-generate.systematic.points <- function(design){
+generate.systematic.points <- function(design, ...){
+  # Process additional arguments
+  additional.args <- list(...)
+  for.coverage <- ifelse("for.coverage" %in% names (additional.args), additional.args$for.coverage, FALSE)
   # Get strata names
   region <- design@region
   if(length(region@strata.name) > 0){
@@ -52,8 +55,15 @@ generate.systematic.points <- function(design){
       warning(paste("The spacing allocated to strata ", strata.names[strat], " is larger than either or both of the x or y dimensions of the region. Cannot generate samplers in this strata.", sep = ""), call. = FALSE, immediate. = TRUE)
       transects[[strat]] <- NA
     }else{
-      start.x <- bbox[["xmin"]] + runif(1, 0, sspace)
-      start.y <- bbox[["ymin"]] + runif(1, 0, sspace)
+      if(for.coverage){
+        x.diff <- bbox[["xmax"]]-bbox[["xmin"]]
+        y.diff <- bbox[["ymax"]]-bbox[["ymin"]]
+        start.x <- bbox[["xmin"]] + (x.diff - floor(x.diff/sspace)*sspace)/2
+        start.y <- bbox[["ymin"]] + (y.diff - floor(y.diff/sspace)*sspace)/2
+      }else{
+        start.x <- bbox[["xmin"]] + runif(1, 0, sspace)
+        start.y <- bbox[["ymin"]] + runif(1, 0, sspace)
+      }
       x.vals <- seq(start.x, bbox[["xmax"]], by = sspace)
       y.vals <- seq(start.y, bbox[["ymax"]], by = sspace)
       temp.coords <- expand.grid(x.vals, y.vals)

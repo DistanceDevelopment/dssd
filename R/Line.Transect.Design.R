@@ -31,9 +31,7 @@ setClass(Class = "Line.Transect.Design",
 setMethod(
   f="initialize",
   signature="Line.Transect.Design",
-  definition=function(.Object, region, truncation, design, line.length, effort.allocation,
-                      spacing, no.samplers, design.angle, edge.protocol,
-                      bounding.shape){
+  definition=function(.Object, region, truncation, design, line.length, effort.allocation, spacing, no.samplers, design.angle, edge.protocol, bounding.shape, coverage.grid){
     #Set slots
     .Object@region        <- region
     .Object@truncation    <- truncation
@@ -45,6 +43,9 @@ setMethod(
     .Object@design.angle  <- design.angle
     .Object@edge.protocol <- edge.protocol
     .Object@bounding.shape <- bounding.shape
+    .Object@coverage.grid <- coverage.grid
+    .Object@coverage.scores <- numeric(0)
+    .Object@design.statistics <- data.frame()
     #Check object is valid
     valid <- try(validObject(.Object), silent = TRUE)
     if(class(valid) == "try-error"){

@@ -35,9 +35,11 @@ setClass(Class = "Survey.Design",
                                          spacing = "numeric",
                                          design.angle = "numeric",
                                          edge.protocol = "character",
-                                         truncation = "numeric", "VIRTUAL")
+                                         truncation = "numeric",
+                                         coverage.grid = "Coverage.Grid",
+                                         coverage.scores = "numeric",
+                                         design.statistics = "data.frame", "VIRTUAL")
 )
-
 
 setValidity("Survey.Design",
             function(object){

@@ -28,6 +28,15 @@ make.region <- function(region.name = "region",
   #Process shape
   if("sf" %in% class(shape)){
     sf.shape = shape
+  }else if("sfc" %in% class(shape)){
+    if(length(shape) != length(strata.name)){
+      if(length(shape) <= 26){
+        strata.name <- LETTERS[1:length(shape)]
+      }else{
+        stop("Too many strata (>26) for strata names to be assigned default names.", call. = FALSE)
+      }
+    }
+    sf.shape = sf::st_sf(strata = strata.name,  geom = shape)
   }else if(any(class(shape) %in% c("Polygon", "Polygons", "SpatialPolygons", "SpatialPolygonsDataFrame"))){
     stop("The sp data type is not currently supported.")
   }else if(class(shape) == "character"){
@@ -120,7 +129,15 @@ make.region <- function(region.name = "region",
 #' @author Laura Marshall
 #' @examples
 #' design <- make.design(transect.type = "point", no.samplers = 25, design.angle = 45)
-make.design <- function(region = make.region(), transect.type = "line", design = "systematic", no.samplers = numeric(0), line.length = numeric(0), effort.allocation = numeric(0), design.angle =  0, spacing = numeric(0), edge.protocol = "minus", bounding.shape = "rectangle", truncation = 1){
+make.design <- function(region = make.region(), transect.type = "line", design = "systematic", no.samplers = numeric(0), line.length = numeric(0), effort.allocation = numeric(0), design.angle =  0, spacing = numeric(0), edge.protocol = "minus", bounding.shape = "rectangle", truncation = 1, coverage.grid = NULL){
+  #Check if a coverage grid has been passed in - if not create one
+  if(class(coverage.grid) != "Coverage.Grid"){
+    if(!is.null(coverage.grid)){
+      warning("The coverage.grid argument must be of class Coverage.Grid. One will automatically be generated with ~1000 points, to change it please use update.coverage.gid().")
+    }
+    #by default makes a grid with approx 1000 points
+    coverage <- make.coverage(region)
+  }
   #Check design arguments
   if(transect.type %in% c("Line", "line", "Line Transect", "line transect")){
     if(design == "random"){
@@ -182,5 +199,47 @@ make.design <- function(region = make.region(), transect.type = "line", design =
     design <- new(Class="Point.Transect.Design", region, truncation, design, spacing, no.samplers, effort.allocation, design.angle, edge.protocol)
   }
   return(design)
+}
+
+
+#' @title Creates a Coverage.Grid object
+#' @description This creates an instance of the Coverage.Grid class.
+#' @param region the region name
+#' @param spacing the stratum names (character vector, same length as the
+#'   number of areas in the \code{shapefile} or \code{coords} arguments). If not supplied "A", "B", "C", ... will be assigned.
+#' @param grid measurement units; either \code{"m"} for metres or \code{"km"} for
+#'   kilometres.
+#' @return object of class Coverage.Grid
+#' @export
+#' @author Laura Marshall
+#' @examples
+#' # A coverage grid in a rectangular region of 2000 x 500
+#' region <- make.grid(make.region(), spacing = 10)
+#' plot(region, grid)
+make.region <- function(region = make.region(),
+                        spacing = numeric(0),
+                        no.grid.points = 1000,
+                        grid = list()){
+  #if neither, spacing, no.grid.points, or grid is provided make an empty coverage - used when this is called from within this function to generate a design to create the coverage grid.
+  if(length(spacing) == 0 && length(no.grid.points) == 0 && length(grid) == 0){
+    return(new("Coverage.Grid", list(), numeric(0)))
+  }
+  #find union of region - coverage.grid is over the whole
+  region.union <- sf::st_union(region@region)
+  #Create a systematic point design with empty coverage grid
+  cover.grid.design <- new(Class="Point.Transect.Design",
+                           make.region(shape = region.union),
+                           truncation = 1,
+                           design = "systematic",
+                           spacing = spacing,
+                           no.samplers = no.grid.points,
+                           effort.allocation = numeric(0),
+                           design.angle = 0,
+                           edge.protocol = "minus",
+                           coverage.grid = make.grid(no.grid.points = numeric(0)))
+  #Now generate a set of transects from the design
+  grid <- generate.transects(cover.grid.design, for.coverage = TRUE)
+  #Now extract the samplers and make the grid
+  return(new("Coverage.Grid", grid@samplers, grid@spacing))
 }
 

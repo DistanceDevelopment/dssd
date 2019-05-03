@@ -10,9 +10,7 @@ NULL
 #'
 #' @param object an object which inherits from class Survey.Design
 #' @param silent silences some warnings
-#' @param ... optional argument index if an object of class Survey.Design is
-#' supplied allowing the user to access / plot different sets of transects
-#' listed in the filenames slot.
+#' @param ... optional arguments used for internal calls
 #' @return an object of class Line.Transect
 #' @export
 #' @rdname generate.transects-methods

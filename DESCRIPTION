@@ -17,6 +17,7 @@ LazyData: true
 RoxygenNote: 6.1.1
 Collate: 
     'Class.Constructors.R'
+    'Coverage.Grid.R'
     'Survey.R'
     'Region.R'
     'Survey.Design.R'

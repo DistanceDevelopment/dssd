@@ -26,7 +26,7 @@ setClass(Class = "Point.Transect.Design",
 setMethod(
   f="initialize",
   signature="Point.Transect.Design",
-  definition=function(.Object, region, truncation, design, spacing, no.samplers, effort.allocation, design.angle, edge.protocol){
+  definition=function(.Object, region, truncation, design, spacing, no.samplers, effort.allocation, design.angle, edge.protocol, coverage.grid){
     #Set slots
     .Object@region        <- region
     .Object@truncation    <- truncation
@@ -36,6 +36,9 @@ setMethod(
     .Object@effort.allocation <- effort.allocation
     .Object@design.angle  <- design.angle
     .Object@edge.protocol <- edge.protocol
+    .Object@coverage.grid <- coverage.grid
+    .Object@coverage.scores <- numeric(0)
+    .Object@design.statistics <- data.frame()
     #Check object is valid
     valid <- try(validObject(.Object), silent = TRUE)
     if(class(valid) == "try-error"){
@@ -59,9 +62,9 @@ setValidity("Point.Transect.Design",
 setMethod(
   f="generate.transects",
   signature="Point.Transect.Design",
-  definition=function(object, silent = FALSE){
+  definition=function(object, silent = FALSE, ...){
     if(object@design == "systematic"){
-      transects <- generate.systematic.points(object)
+      transects <- generate.systematic.points(object, ...)
     }else{
       message("This design is not supported at present")
       transects = NULL
