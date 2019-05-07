@@ -70,12 +70,96 @@ setMethod(
   f="generate.transects",
   signature="Line.Transect.Design",
   definition=function(object, silent = FALSE){
-    if(object@design == "systematic"){
-      transects <- generate.systematic.lines(object)
+#This function separates the design generation by strata so different strata can have different designs in them. Assumes that the validation method called when the class is initialised checks that all design options either have length 1 or length equal to the number of strata. Also assumes that the region object has been checked and confimred to have the correct number of strata names for the size of the geometry.
+    # Get strata names
+    region <- object@region
+    if(length(region@strata.name) > 0){
+      strata.names <- region@strata.name
+      strata.no <- length(region@strata.name)
     }else{
-      message("This design is not supported at present")
-      transects = NULL
+      strata.names <- region@region.name
+      strata.no <- 1
     }
-    return(transects)
+    #Get a vector of designs
+    if(length(object@design) == 1){
+      design <- rep(object@design, strata.no)
+    }else{
+      design <- object@design
+    }
+    #Calculate effort allocation if only only one design or if using total line length and only if spacing has not been specified.
+    if((length(design@design) == 1 || length(design@line.length) == 1) && length(design@spacing) == 0){
+      if(length(design@effort.allocation) == 0){
+        #Use area
+        effort.allocation <- region@area/sum(region@area)
+      }else{
+        effort.allocation <- design@effort.allocation
+      }
+    }
+    #Extract design parameters
+    spacing <- design@spacing
+    no.samplers <- design@no.samplers
+    line.length <- design@line.length
+    #Check if only has one has been
+    if(length(spacing) == 1){
+      spacing <- rep(spacing, strata.no)
+      by.spacing <- rep(TRUE, strata.no)
+    }else if(length(spacing) == strata.no){
+      by.spacing <- ifelse(is.na(spacing), FALSE, TRUE)
+    }else if(length(spacing) == 0){
+      by.spacing = rep(FALSE, strata.no)
+    }
+    #If spacing has not been provided for any
+    if(all(!by.spacing)){
+      #If only a total number of samplers has been provided (and there is only one design)
+      if(length(no.samplers) == 1 && length(design@design) == 1){
+        no.samplers <- no.samplers*effort.allocation
+      }
+      #If only a total line.length has been supplied
+      if(length(line.length) == 1){
+        line.length <- line.length*effort.allocation
+      }
+    #If spacing has been provided for some but not all - deal with this in validation function!
+    #Need to check only one option supplied for each strata
+    }else if(any(!by.spacing) && !all(!by.spacing)){
+      for(strat in seq(along = strata.names)){
+        if(!by.spacing[strat]){
+        }
+      }
+    }
+    #Store all lines in a list
+    transects <- list()
+    #Iterate over strata calling the appropriate method for the design.
+    #Main grid generation
+    for (strat in seq(along = region@region$geometry)) {
+      if(design[strat] == "systematic"){
+        transects[[strat]] <- generate.systematic.lines(object, strat, no.samplers[strat], line.length[strat], spacing[strat], by.spacing[strat])
+      }else if(design[strat] == "ESzigzag"){
+        transects[[strat]] <- generate.eqspace.zigzags(object, strat, no.samplers[strat], line.length[strat], spacing[strat], by.spacing[strat])
+      }else{
+        message("This design is not supported at present")
+        transects[[strat]] = NULL
+      }
+    }
+    #Put transects into a multipart, linestring/multilinestring objects
+    #Need to retain transect IDs as well as strata for lines
+    transect.count <- 0
+    strata.id <- character(0)
+    for(strat in seq(along = transects)){
+      for(i in seq(along = transects[[strat]])){
+        if(strat == 1 && i == 1){
+          temp <- sf::st_sfc(transects[[strat]][[i]])
+          transect.count <- 1
+          strata.id <- strata.names[strat]
+        }else{
+          temp <- c(temp, sf::st_sfc(transects[[strat]][[i]]))
+          transect.count <- transect.count + 1
+          strata.id <- c(strata.id, strata.names[strat])
+        }
+      }
+    }
+    all.transects <- st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp))
+    #Make a survey object
+    survey <- new(Class="Line.Transect.Survey", design = design@design, lines = all.transects, no.samplers = dim(all.transects)[1], line.length = sum(st_length(all.transects)), effort.allocation = design@effort.allocation, spacing = spacing, design.angle = design@design.angle, edge.protocol = design@edge.protocol)
+    return(survey)
   }
 )
