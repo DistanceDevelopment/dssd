@@ -61,9 +61,9 @@ setMethod(
     additional.args <- list(...)
     add <- ifelse("add" %in% names(additional.args), additional.args$add, FALSE)
     col <- ifelse("col" %in% names(additional.args), additional.args$col, 5)
-    pch <- ifelse("pch" %in% names(additional.args), additional.args$pch, 20)
+    lwd <- ifelse("lwd" %in% names(additional.args), additional.args$lwd, 2)
     if(length(x@samplers) > 0){
-      plot(x@samplers$geometry, add = add, col = col, pch = pch)
+      plot(x@samplers$geometry, add = add, col = col, lwd = lwd)
     }else{
       warning("No samplers to plot", call. = F, immediate. = F)
     }

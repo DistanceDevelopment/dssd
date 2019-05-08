@@ -87,18 +87,18 @@ setMethod(
       design <- object@design
     }
     #Calculate effort allocation if only only one design or if using total line length and only if spacing has not been specified.
-    if((length(design@design) == 1 || length(design@line.length) == 1) && length(design@spacing) == 0){
-      if(length(design@effort.allocation) == 0){
+    if((length(object@design) == 1 || length(object@line.length) == 1) && length(object@spacing) == 0){
+      if(length(object@effort.allocation) == 0){
         #Use area
         effort.allocation <- region@area/sum(region@area)
       }else{
-        effort.allocation <- design@effort.allocation
+        effort.allocation <- object@effort.allocation
       }
     }
     #Extract design parameters
-    spacing <- design@spacing
-    no.samplers <- design@no.samplers
-    line.length <- design@line.length
+    spacing <- object@spacing
+    no.samplers <- object@no.samplers
+    line.length <- object@line.length
     #Check if only has one has been
     if(length(spacing) == 1){
       spacing <- rep(spacing, strata.no)
@@ -111,7 +111,7 @@ setMethod(
     #If spacing has not been provided for any
     if(all(!by.spacing)){
       #If only a total number of samplers has been provided (and there is only one design)
-      if(length(no.samplers) == 1 && length(design@design) == 1){
+      if(length(no.samplers) == 1 && length(object@design) == 1){
         no.samplers <- no.samplers*effort.allocation
       }
       #If only a total line.length has been supplied
@@ -133,7 +133,7 @@ setMethod(
     for (strat in seq(along = region@region$geometry)) {
       if(design[strat] == "systematic"){
         transects[[strat]] <- generate.systematic.lines(object, strat, no.samplers[strat], line.length[strat], spacing[strat], by.spacing[strat])
-      }else if(design[strat] == "ESzigzag"){
+      }else if(design[strat] == "eszigzag"){
         transects[[strat]] <- generate.eqspace.zigzags(object, strat, no.samplers[strat], line.length[strat], spacing[strat], by.spacing[strat])
       }else{
         message("This design is not supported at present")
@@ -157,9 +157,9 @@ setMethod(
         }
       }
     }
-    all.transects <- st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp))
+    all.transects <- sf::st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp))
     #Make a survey object
-    survey <- new(Class="Line.Transect.Survey", design = design@design, lines = all.transects, no.samplers = dim(all.transects)[1], line.length = sum(st_length(all.transects)), effort.allocation = design@effort.allocation, spacing = spacing, design.angle = design@design.angle, edge.protocol = design@edge.protocol)
+    survey <- new(Class="Line.Transect.Survey", design = object@design, lines = all.transects, no.samplers = dim(all.transects)[1], line.length = sum(sf::st_length(all.transects)), effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol)
     return(survey)
   }
 )

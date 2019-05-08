@@ -11,16 +11,16 @@ generate.eqspace.zigzags <- function(design, strata.id, no.samplers, line.length
   rot.strata <- strata*rot.mat
   #Buffer strata for plus sampling?
   if(design@edge.protocol[strata.id] == "plus"){
-    rot.strata <- st_buffer(rot.strata, design@truncation)
+    rot.strata <- sf::st_buffer(rot.strata, design@truncation)
   }
   #Find the minimum and maximum x and y values
-  bbox <- st_bbox(rot.strata)
+  bbox <- sf::st_bbox(rot.strata)
   if(!by.spacing){
     spacing <- (bbox[["xmax"]]-bbox[["xmin"]])/(no.samplers+1)#Hmm this needs some re-thinking!
   }
   start.x <- bbox[["xmin"]] + runif(1, 0, spacing) - spacing
   x.vals <- seq(start.x, (bbox[["xmax"]] + spacing), by = spacing)
-  if(design@bounding.shape == "rectangle"){
+  if(design@bounding.shape[strata.id] == "rectangle"){
     start.y <- rep(bbox[["ymin"]], length(x.vals))
     end.y <- rep(bbox[["ymax"]], length(x.vals))
   }else if(design@bounding.shape == "convex.hull"){
@@ -36,10 +36,10 @@ generate.eqspace.zigzags <- function(design, strata.id, no.samplers, line.length
   if(complement){
     for(i in 1:(length(x.vals)-1)){
       #Do zig
-      lines[[counter]] <- st_linestring(matrix(c(x.vals[i], x.vals[i+1], start.y[i], end.y[i+1]), ncol = 2))
+      lines[[counter]] <- sf::st_linestring(matrix(c(x.vals[i], x.vals[i+1], start.y[i], end.y[i+1]), ncol = 2))
       counter <- counter + 1
       #and complementing zag
-      lines[[counter]] <- st_linestring(matrix(c(x.vals[i], x.vals[i+1], end.y[i], start.y[i+1]), ncol = 2))
+      lines[[counter]] <- sf::st_linestring(matrix(c(x.vals[i], x.vals[i+1], end.y[i], start.y[i+1]), ncol = 2))
       counter <- counter + 1
     }
   }else{
@@ -47,10 +47,10 @@ generate.eqspace.zigzags <- function(design, strata.id, no.samplers, line.length
     for(i in 1:(length(x.vals)-1)){
       #Do zig
       if(zig){
-        lines[[i]] <- st_linestring(matrix(c(x.vals[i], x.vals[i+1], start.y[i], end.y[i+1]), ncol = 2))
+        lines[[i]] <- sf::st_linestring(matrix(c(x.vals[i], x.vals[i+1], start.y[i], end.y[i+1]), ncol = 2))
       }else{
         #zag
-        lines[[i]] <- st_linestring(matrix(c(x.vals[i], x.vals[i+1], end.y[i], start.y[i+1]), ncol = 2))
+        lines[[i]] <- sf::st_linestring(matrix(c(x.vals[i], x.vals[i+1], end.y[i], start.y[i+1]), ncol = 2))
       }
       #reverse for next time
       zig <- ifelse(zig, FALSE, TRUE)
@@ -58,7 +58,7 @@ generate.eqspace.zigzags <- function(design, strata.id, no.samplers, line.length
 
   }
   #keep everything within the polygon strata
-  to.keep <- lapply(lines, st_intersection, y = rot.strata)
+  to.keep <- lapply(lines, sf::st_intersection, y = rot.strata)
   #Rotate back again
   reverse.theta <- rot.angle.rad
   rot.mat.rev <- matrix(c(cos(reverse.theta), sin(reverse.theta), -sin(reverse.theta), cos(reverse.theta)), ncol = 2, byrow = FALSE)

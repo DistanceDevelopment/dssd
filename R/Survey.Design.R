@@ -47,16 +47,16 @@ setValidity("Survey.Design",
                 if(sum(object@effort.allocation) != 1){
                   return("Effort allocation should either be omitted or sum to 1")
                 }
-                if(length(object@effort.allocation) > 1 && length(object@no.samplers) > 1){
-                  warning("You have supplied effort allocation and multiple values for the no.of samplers, the sum of the number or samplers will be used as the total number of samplers.")
-                  object@no.samplers <- sum(object@no.samplers)
-                }
-                if(length(object@truncation) > 1){
-                  warning("You have supplied more than one truncation value. Currently the same truncation value must be applied across the entire study region. Using only the first value supplied.")
-                  object@truncation <- object@truncation[1]
-                }else if(object@truncation <= 0){
-                  return("The truncation distance must be > 0.")
-                }
+              }
+                # if(length(object@effort.allocation) > 1 && length(object@no.samplers) > 1){
+                #   warning("You have supplied effort allocation and multiple values for the no.of samplers, the sum of the number or samplers will be used as the total number of samplers.")
+                #   object@no.samplers <- sum(object@no.samplers)
+                # }
+              if(length(object@truncation) > 1){
+                warning("You have supplied more than one truncation value. Currently the same truncation value must be applied across the entire study region. Using only the first value supplied.")
+                object@truncation <- object@truncation[1]
+              }else if(object@truncation <= 0){
+                return("The truncation distance must be > 0.")
               }
               #Check edge protocol
               if(!all(object@edge.protocol %in% c("minus", "plus"))){

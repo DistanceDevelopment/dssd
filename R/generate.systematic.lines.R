@@ -16,7 +16,7 @@ generate.systematic.lines <- function(design, strata.id, no.samplers, line.lengt
   #Find the minimum and maximum x and y values
   bbox <- st_bbox(rot.strata)
   if(!by.spacing){
-    spacing <- (bbox[["xmax"]]-bbox[["xmin"]])/(no.samplers+1)
+    spacing <- (bbox[["xmax"]]-bbox[["xmin"]])/(no.samplers)
   }
   start.x <- bbox[["xmin"]] + runif(1, 0, spacing)
   start.y <- bbox[["ymin"]]

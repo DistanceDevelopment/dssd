@@ -141,7 +141,7 @@ setMethod(
 setMethod(
   f="plot",
   signature=c("Region", "Survey"),
-  definition=function(x, y, main = "", region.cols = c(2,4,5,6,7,8,3), ...){
+  definition=function(x, y, main = "", region.col = c(2,4,5,6,7,8,3), ...){
     # If main is not supplied then take it from the object
     if(main == ""){
       main <- x@region.name
@@ -151,9 +151,9 @@ setMethod(
     bbox <- st_bbox(y@samplers)
     plot(c(0,0), col = "white", xlim = c(bbox$xmin, bbox$xmax), ylim = c(bbox$ymin, bbox$ymax), main = main, xlab = "x-coordinates", ylab = "y-coordinates")
     for(i in seq(along = region$geometry)){
-      plot(region$geometry[[i]], add = TRUE, col = region.cols[i])
+      plot(region$geometry[[i]], add = TRUE, col = region.col[i])
     }
-    plot(y, add = TRUE)
+    plot(y, add = TRUE, ...)
     invisible(x)
   }
 )

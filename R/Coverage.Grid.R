@@ -28,8 +28,6 @@ setMethod(
   f="initialize",
   signature="Coverage.Grid",
   definition=function(.Object, grid, spacing){
-    #calculates the strata areas
-    area <- sf::st_area(sf.shape)
     #Set slots
     .Object@grid      <- grid
     .Object@spacing   <- spacing

@@ -28,7 +28,7 @@ generate.systematic.points <- function(design, ...){
       }
     }
     #Calculate spacing from the number of desired samplers
-    spacing <- abs(region@area)^0.5 / no.samplers^0.5
+    spacing <- abs(region@area)^0.5 / design@no.samplers^0.5
   }else{
     spacing <- design@spacing
   }
