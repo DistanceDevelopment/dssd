@@ -4,21 +4,10 @@
 \alias{make.region}
 \title{Creates a Region object}
 \usage{
-make.region(region = make.region(), spacing = numeric(0),
-  no.grid.points = 1000, grid = list())
-
-make.region(region = make.region(), spacing = numeric(0),
-  no.grid.points = 1000, grid = list())
+make.region(region.name = "region", strata.name = character(0),
+  units = "m", shape = NULL)
 }
 \arguments{
-\item{region}{the region name}
-
-\item{spacing}{the stratum names (character vector, same length as the
-number of areas in the \code{shapefile} or \code{coords} arguments). If not supplied "A", "B", "C", ... will be assigned.}
-
-\item{grid}{measurement units; either \code{"m"} for metres or \code{"km"} for
-kilometres.}
-
 \item{region.name}{the region name}
 
 \item{strata.name}{the stratum names (character vector, same length as the
@@ -32,8 +21,6 @@ data.frame of coordinates.}
 }
 \value{
 object of class Region
-
-object of class Coverage.Grid
 }
 \description{
 This creates an instance of the Region class. If the
@@ -42,19 +29,12 @@ there. Otherwise, the a list of polygons describing the areas of interest needs
 to be supplied (\code{coords}) and optionally a list of polygons describing the
 areas to be excluded (\code{gaps}). If \code{area} is not specified it will be
 calculated.
-
-This creates an instance of the Coverage.Grid class.
 }
 \examples{
 # A basic study region with two strata
 region <- make.region()
 plot(region)
-# A coverage grid in a rectangular region of 2000 x 500
-region <- make.grid(make.region(), spacing = 10)
-plot(region, grid)
 }
 \author{
-Laura Marshall
-
 Laura Marshall
 }

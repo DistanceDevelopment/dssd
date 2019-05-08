@@ -9,8 +9,8 @@
 \S4method{plot}{Region,ANY}(x, y, main = "", cols = c(2, 4, 5, 6, 7, 8,
   3), ...)
 
-\S4method{plot}{Region,Survey}(x, y, main = "", region.cols = c(2, 4,
-  5, 6, 7, 8, 3), ...)
+\S4method{plot}{Region,Survey}(x, y, main = "", region.col = c(2, 4, 5,
+  6, 7, 8, 3), ...)
 }
 \arguments{
 \item{x}{object of class Region or inheriting from Survey}
