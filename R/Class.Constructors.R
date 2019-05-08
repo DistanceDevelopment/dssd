@@ -47,13 +47,14 @@ make.region <- function(region.name = "region",
     #Make a default shape (same as in DSsim currently)
     sfc.shape <- sf::st_sfc(sf::st_polygon(list(matrix(c(0,0,0,500,2000,500,2000,0,0,0), ncol = 2, byrow = TRUE))))
     sf.shape <- sf::st_sf(data.frame(region="study_ar", geom=sfc.shape))
+    strata.name = region.name
   }else{
     stop("This data type is not currently supported.")
   }
   # Check the format of the shape
   sf.shape <- check.shape(sf.shape)
   #Check the correct number of strata names have been supplied
-  if(length(sf.shape$geometry) != length(strata.name) && length(strata.name) > 0){
+  if((length(sf.shape$geometry) != length(strata.name)) && length(strata.name) > 0){
     warning("Number of strata names does not match the number of strata assiging default strata names", call. = FALSE, immediate. = TRUE)
     strata.name = character(0)
   }
@@ -136,45 +137,50 @@ make.design <- function(region = make.region(), transect.type = "line", design =
       warning("The coverage.grid argument must be of class Coverage.Grid. One will automatically be generated with ~1000 points, to change it please use update.coverage.gid().")
     }
     #by default makes a grid with approx 1000 points
-    coverage <- make.coverage(region)
+    #coverage <- make.coverage(region)
+    coverage <- new("Coverage.Grid", grid = list(), spacing = numeric(0))
   }
   #Check design arguments
   if(transect.type %in% c("Line", "line", "Line Transect", "line transect")){
-    if(design == "random"){
-      if(length(no.samplers) > 0 && length(line.length) > 0){
-        warning("You have supplied both the number of samplers and the line length, only the number of samplers will be used to create the surveys.", call. = FALSE)
-        line.length <- numeric(0)
-      }else if(length(no.samplers) == 0 && length(line.length) == 0){
-        no.samplers = 20
-      }
-    }else if(design == "systematic"){
-      if((length(no.samplers) > 0 || length(line.length) > 0) && length(spacing) > 0){
-        warning("You have supplied multiple effort definitions, the sampler spacing will be used.", call. = FALSE)
-        line.length <- numeric(0)
-        no.samplers <- numeric(0)
-      }else if(length(no.samplers) == 0 && length(line.length) == 0 && length(spacing) == 0){
-        no.samplers = 20
-      }
-    }else if(design %in% c("ESzigzag", "eszigzag")){
-      if((length(no.samplers) > 0 || length(line.length) > 0) && length(spacing) > 0){
-        warning("You have supplied multiple effort definitions, the sampler spacing will be used.", call. = FALSE)
-        line.length <- numeric(0)
-        no.samplers <- numeric(0)
-      }else if(length(no.samplers) == 0 && length(line.length) == 0 && length(spacing) == 0){
-        no.samplers = 20
-      }
-      if(!bounding.shape %in% c("rectangle", "convex hull")){
-        warning("Bounding shape option not recognised using a bounding rectangle", call. = FALSE)
-      }
-    }else{
-      stop("Line transect design not recognised, please choose from 'random', 'systematic, or 'ESzigzag'", call. = FALSE)
-    }
-    #Check values
-    if(any(any(no.samplers < 0) || any(line.length < 0) || any(spacing < 0))){
-      stop("Negative values were used to specify effort.", call. = FALSE)
+    # if(design == "random"){
+    #   if(length(no.samplers) > 0 && length(line.length) > 0){
+    #     warning("You have supplied both the number of samplers and the line length, only the number of samplers will be used to create the surveys.", call. = FALSE)
+    #     line.length <- numeric(0)
+    #   }else if(length(no.samplers) == 0 && length(line.length) == 0){
+    #     no.samplers = 20
+    #   }
+    # }else if(design == "systematic"){
+    #   if((length(no.samplers) > 0 || length(line.length) > 0) && length(spacing) > 0){
+    #     warning("You have supplied multiple effort definitions, the sampler spacing will be used.", call. = FALSE)
+    #     line.length <- numeric(0)
+    #     no.samplers <- numeric(0)
+    #   }else if(length(no.samplers) == 0 && length(line.length) == 0 && length(spacing) == 0){
+    #     no.samplers = 20
+    #   }
+    # }else if(design %in% c("ESzigzag", "eszigzag")){
+    #   if((length(no.samplers) > 0 || length(line.length) > 0) && length(spacing) > 0){
+    #     warning("You have supplied multiple effort definitions, the sampler spacing will be used.", call. = FALSE)
+    #     line.length <- numeric(0)
+    #     no.samplers <- numeric(0)
+    #   }else if(length(no.samplers) == 0 && length(line.length) == 0 && length(spacing) == 0){
+    #     no.samplers = 20
+    #   }
+    #   if(!bounding.shape %in% c("rectangle", "convex hull")){
+    #     warning("Bounding shape option not recognised using a bounding rectangle", call. = FALSE)
+    #   }
+    # }else{
+    #   stop("Line transect design not recognised, please choose from 'random', 'systematic, or 'ESzigzag'", call. = FALSE)
+    # }
+    # #Check values
+    # if(any(any(no.samplers < 0) || any(line.length < 0) || any(spacing < 0))){
+    #   stop("Negative values were used to specify effort.", call. = FALSE)
+    # }
+
+    if(length(no.samplers) == 0 && length(line.length) == 0 && length(spacing) == 0){
+      no.samplers = 20
     }
     #Create line transect object
-    design <- new(Class="Line.Transect.Design", region, truncation, design, line.length, effort.allocation, spacing, no.samplers, design.angle, edge.protocol, bounding.shape)
+    design <- new(Class="Line.Transect.Design", region, truncation, design, line.length, effort.allocation, spacing, no.samplers, design.angle, edge.protocol, bounding.shape, coverage)
   }else if(transect.type %in% c("Point", "point", "Point Transect", "point transect")){
     if(design == "random"){
       if(length(no.samplers) == 0){
@@ -196,7 +202,7 @@ make.design <- function(region = make.region(), transect.type = "line", design =
       stop("Negative values were used to specify effort.", call. = FALSE)
     }
     #Create line transect object
-    design <- new(Class="Point.Transect.Design", region, truncation, design, spacing, no.samplers, effort.allocation, design.angle, edge.protocol)
+    design <- new(Class="Point.Transect.Design", region, truncation, design, spacing, no.samplers, effort.allocation, design.angle, edge.protocol, coverage)
   }
   return(design)
 }
@@ -214,12 +220,12 @@ make.design <- function(region = make.region(), transect.type = "line", design =
 #' @author Laura Marshall
 #' @examples
 #' # A coverage grid in a rectangular region of 2000 x 500
-#' region <- make.grid(make.region(), spacing = 10)
+#' region <- make.coverage(make.region(), spacing = 10)
 #' plot(region, grid)
-make.region <- function(region = make.region(),
-                        spacing = numeric(0),
-                        no.grid.points = 1000,
-                        grid = list()){
+make.coverage <- function(region = make.region(),
+                      spacing = numeric(0),
+                      no.grid.points = 1000,
+                      grid = list()){
   #if neither, spacing, no.grid.points, or grid is provided make an empty coverage - used when this is called from within this function to generate a design to create the coverage grid.
   if(length(spacing) == 0 && length(no.grid.points) == 0 && length(grid) == 0){
     return(new("Coverage.Grid", list(), numeric(0)))
@@ -228,7 +234,7 @@ make.region <- function(region = make.region(),
   region.union <- sf::st_union(region@region)
   #Create a systematic point design with empty coverage grid
   cover.grid.design <- new(Class="Point.Transect.Design",
-                           make.region(shape = region.union),
+                           region = make.region(shape = region.union, strata.name = region@region),
                            truncation = 1,
                            design = "systematic",
                            spacing = spacing,
@@ -236,7 +242,7 @@ make.region <- function(region = make.region(),
                            effort.allocation = numeric(0),
                            design.angle = 0,
                            edge.protocol = "minus",
-                           coverage.grid = make.grid(no.grid.points = numeric(0)))
+                           coverage.grid = make.coverage(region = region.union, no.grid.points = numeric(0)))
   #Now generate a set of transects from the design
   grid <- generate.transects(cover.grid.design, for.coverage = TRUE)
   #Now extract the samplers and make the grid
