@@ -27,5 +27,6 @@ Collate:
     'Point.Transect.Design.R'
     'Point.Transect.Survey.R'
     'check.shape.R'
+    'generate.eqspace.zigzags.R'
     'generate.systematic.lines.R'
     'generate.systematic.points.R'
