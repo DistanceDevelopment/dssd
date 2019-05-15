@@ -1,6 +1,7 @@
 #' @importFrom stats runif
 #' @importFrom methods new
-generate.systematic.lines <- function(design, strata.id, no.samplers, line.length, spacing, by.spacing){
+generate.parallel.lines <- function(design, strata.id, no.samplers, line.length, spacing, by.spacing){
+  #Generates either random or systematic parallel lines
   region <- design@region
   #Get the current strata and spacing
   strata <- region@region$geometry[[strata.id]]
@@ -15,13 +16,17 @@ generate.systematic.lines <- function(design, strata.id, no.samplers, line.lengt
   }
   #Find the minimum and maximum x and y values
   bbox <- st_bbox(rot.strata)
-  if(!by.spacing){
+  if(!by.spacing && design@design[strata.id] == "systematic"){
     spacing <- (bbox[["xmax"]]-bbox[["xmin"]])/(no.samplers)
   }
-  start.x <- bbox[["xmin"]] + runif(1, 0, spacing)
   start.y <- bbox[["ymin"]]
   end.y <- bbox[["ymax"]]
-  x.vals <- seq(start.x, bbox[["xmax"]], by = spacing)
+  if(design@design[strata.id] == "systematic"){
+    start.x <- bbox[["xmin"]] + runif(1, 0, spacing)
+    x.vals <- seq(start.x, bbox[["xmax"]], by = spacing)
+  }else if(design@design[strata.id] == "random"){
+    x.vals <- runif(no.samplers, bbox[["xmin"]], bbox[["xmax"]])
+  }
   #Create transects lines
   lines <- list()
   for(i in seq(along = x.vals)){

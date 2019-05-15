@@ -28,5 +28,5 @@ Collate:
     'Point.Transect.Survey.R'
     'check.shape.R'
     'generate.eqspace.zigzags.R'
-    'generate.systematic.lines.R'
+    'generate.parallel.lines.R'
     'generate.systematic.points.R'

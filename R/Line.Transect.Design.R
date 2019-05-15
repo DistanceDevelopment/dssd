@@ -131,9 +131,9 @@ setMethod(
     #Iterate over strata calling the appropriate method for the design.
     #Main grid generation
     for (strat in seq(along = region@region$geometry)) {
-      if(design[strat] == "systematic"){
-        transects[[strat]] <- generate.systematic.lines(object, strat, no.samplers[strat], line.length[strat], spacing[strat], by.spacing[strat])
-      }else if(design[strat] == "eszigzag"){
+      if(design[strat] %in% c("systematic","random")){
+        transects[[strat]] <- generate.parallel.lines(object, strat, no.samplers[strat], line.length[strat], spacing[strat], by.spacing[strat])
+      }else if(design[strat] == "eszigzag" || design[strat] == "eszigzagcom"){
         transects[[strat]] <- generate.eqspace.zigzags(object, strat, no.samplers[strat], line.length[strat], spacing[strat], by.spacing[strat])
       }else{
         message("This design is not supported at present")
