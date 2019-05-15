@@ -1,6 +1,6 @@
 #' @importFrom stats runif
 #' @importFrom methods new
-generate.eqspace.zigzags <- function(design, strata.id, no.samplers, line.length, spacing, by.spacing, complement = FALSE){
+generate.eqspace.zigzags <- function(design, strata.id, no.samplers, line.length, spacing, by.spacing){
   region <- design@region
   #Get the current strata and spacing
   strata <- region@region$geometry[[strata.id]]
@@ -16,24 +16,26 @@ generate.eqspace.zigzags <- function(design, strata.id, no.samplers, line.length
   #Find the minimum and maximum x and y values
   bbox <- sf::st_bbox(rot.strata)
   if(!by.spacing){
-    spacing <- (bbox[["xmax"]]-bbox[["xmin"]])/(no.samplers+1)#Hmm this needs some re-thinking!
+    spacing <- (bbox[["xmax"]]-bbox[["xmin"]])/(no.samplers)
+    if(design@design[strata.id] == "eszigzagcom"){
+      spacing <- spacing * 2
+    }
   }
   start.x <- bbox[["xmin"]] + runif(1, 0, spacing) - spacing
   x.vals <- seq(start.x, (bbox[["xmax"]] + spacing), by = spacing)
-  if(design@bounding.shape[strata.id] == "rectangle"){
-    start.y <- rep(bbox[["ymin"]], length(x.vals))
-    end.y <- rep(bbox[["ymax"]], length(x.vals))
-  }else if(design@bounding.shape == "convex.hull"){
-    #Going to need to clip lines and get y values, y values for the lines outside the region will be the same as the adjacent lines.
-  }else{
-    stop("Bounding shape invalid.", call. = FALSE)
+  start.y <- rep(bbox[["ymin"]], length(x.vals))
+  end.y <- rep(bbox[["ymax"]], length(x.vals))
+  if(design@bounding.shape[strata.id] == "convex.hull"){
+    clipped.vals <- get.intersection.points(rot.strata, x.vals, start.y, end.y)
+    start.y <- clipped.vals$start.y
+    end.y <- clipped.vals$end.y
   }
   #Randomise zig or zag at start
   random.start <- rbinom(1, 1, 0.5)
   #Create the lines
   lines <- list()
   counter <- 1
-  if(complement){
+  if(design@design[strata.id] == "eszigzagcom"){
     for(i in 1:(length(x.vals)-1)){
       #Do zig
       lines[[counter]] <- sf::st_linestring(matrix(c(x.vals[i], x.vals[i+1], start.y[i], end.y[i+1]), ncol = 2))

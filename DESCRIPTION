@@ -30,3 +30,4 @@ Collate:
     'generate.eqspace.zigzags.R'
     'generate.parallel.lines.R'
     'generate.systematic.points.R'
+    'get.intersection.points.R'
