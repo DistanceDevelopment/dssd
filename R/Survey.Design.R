@@ -43,15 +43,18 @@ setClass(Class = "Survey.Design",
 
 setValidity("Survey.Design",
             function(object){
+              #Check how many strata there are
+              no.strata <- length(object@region@strata.name)
+              #EFFORT ALLOCATION
               if(length(object@effort.allocation) > 0){
-                if(sum(object@effort.allocation) != 1){
+                if(sum(object@effort.allocation, na.rm = T) != 1){
                   return("Effort allocation should either be omitted or sum to 1")
                 }
+                if(any(is.na(object@effort))){
+                  return("Sorry, effort allocation is only applied across all strata at present. NA values are not permitted.")
+                }
               }
-                # if(length(object@effort.allocation) > 1 && length(object@no.samplers) > 1){
-                #   warning("You have supplied effort allocation and multiple values for the no.of samplers, the sum of the number or samplers will be used as the total number of samplers.")
-                #   object@no.samplers <- sum(object@no.samplers)
-                # }
+              #TRUNCATION
               if(length(object@truncation) > 1){
                 warning("You have supplied more than one truncation value. Currently the same truncation value must be applied across the entire study region. Using only the first value supplied.")
                 object@truncation <- object@truncation[1]
@@ -59,11 +62,13 @@ setValidity("Survey.Design",
                 return("The truncation distance must be > 0.")
               }
               #Check edge protocol
+              if(length(object@edge.protocol ))
               if(!all(object@edge.protocol %in% c("minus", "plus"))){
                 warning("Edge protocol option(s) not recognised using minus sampling.", call. = FALSE)
                 index <- which(!(object@edge.protocol %in% c("minus", "plus")))
                 object@edge.protocol[index] <- "minus"
               }
+              #DESIGN ANGLE
               #Check the design angle
               if(any(object@design.angle < 0 || object@design.angle >= 180)){
                 return("The design angle should be >= 0 and < 180 degrees.")
