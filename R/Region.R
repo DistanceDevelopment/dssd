@@ -148,8 +148,9 @@ setMethod(
     }
     region <- x@region
     #Set up bounding box for samplers (necessary when plus sampling used and extent of samplers is greater than the region)
-    bbox <- st_bbox(y@samplers)
-    plot(c(0,0), col = "white", xlim = c(bbox$xmin, bbox$xmax), ylim = c(bbox$ymin, bbox$ymax), main = main, xlab = "x-coordinates", ylab = "y-coordinates")
+    bbox.samps <- st_bbox(y@samplers)
+    bbox.region <- st_bbox(x@region)
+    plot(c(0,0), col = "white", xlim = c(min(bbox.samps$xmin, bbox.region$xmin), max(bbox.samps$xmax, bbox.region$xmax)), ylim = c(min(bbox.samps$ymin, bbox.region$ymin), max(bbox.samps$ymax, bbox.region$ymax)), main = main, xlab = "x-coordinates", ylab = "y-coordinates")
     for(i in seq(along = region$geometry)){
       plot(region$geometry[[i]], add = TRUE, col = region.col[i])
     }
