@@ -55,7 +55,7 @@ make.region <- function(region.name = "region",
   sf.shape <- check.shape(sf.shape)
   #Check the correct number of strata names have been supplied
   if((length(sf.shape$geometry) != length(strata.name)) && length(strata.name) > 0){
-    warning("Number of strata names does not match the number of strata assiging default strata names", call. = FALSE, immediate. = TRUE)
+    message("Number of strata names does not match the number of strata assiging default strata names.")
     strata.name = character(0)
   }
   # If there is more than one strata and the user has not specified strata.name
@@ -224,25 +224,35 @@ make.design <- function(region = make.region(), transect.type = "line", design =
 #' plot(region, grid)
 make.coverage <- function(region = make.region(),
                       spacing = numeric(0),
-                      no.grid.points = 1000,
+                      n.grid.points = 1000,
                       grid = list()){
   #if neither, spacing, no.grid.points, or grid is provided make an empty coverage - used when this is called from within this function to generate a design to create the coverage grid.
-  if(length(spacing) == 0 && length(no.grid.points) == 0 && length(grid) == 0){
+  if(length(spacing) == 0 && length(n.grid.points) == 0 && length(grid) == 0){
     return(new("Coverage.Grid", list(), numeric(0)))
   }
   #find union of region - coverage.grid is over the whole
   region.union <- sf::st_union(region@region)
+
+  #op <- options(warn = -1)
+  #on.exit(options(op))
+  suppressMessages(region.union <- make.region(shape = region.union))
+  #options(op)
   #Create a systematic point design with empty coverage grid
-  cover.grid.design <- new(Class="Point.Transect.Design",
-                           region = make.region(shape = region.union, strata.name = region@region),
-                           truncation = 1,
-                           design = "systematic",
-                           spacing = spacing,
-                           no.samplers = no.grid.points,
-                           effort.allocation = numeric(0),
-                           design.angle = 0,
-                           edge.protocol = "minus",
-                           coverage.grid = make.coverage(region = region.union, no.grid.points = numeric(0)))
+  cover.grid.design <- make.design(region = region.union,
+                                   transect.type = "point",
+                                   design = "systematic",
+                                   no.samplers = n.grid.points,
+                                   spacing = spacing)
+  # cover.grid.design <- new(Class="Point.Transect.Design",
+  #                          region = make.region(shape = region.union, strata.name = region@region),
+  #                          truncation = 1,
+  #                          design = "systematic",
+  #                          spacing = spacing,
+  #                          no.samplers = no.grid.points,
+  #                          effort.allocation = numeric(0),
+  #                          design.angle = 0,
+  #                          edge.protocol = "minus",
+  #                          coverage.grid = make.coverage(region = region.union, no.grid.points = numeric(0)))
   #Now generate a set of transects from the design
   grid <- generate.transects(cover.grid.design, for.coverage = TRUE)
   #Now extract the samplers and make the grid

@@ -5,7 +5,7 @@
 \title{Creates a Coverage.Grid object}
 \usage{
 make.coverage(region = make.region(), spacing = numeric(0),
-  no.grid.points = 1000, grid = list())
+  n.grid.points = 1000, grid = list())
 }
 \arguments{
 \item{region}{the region name}

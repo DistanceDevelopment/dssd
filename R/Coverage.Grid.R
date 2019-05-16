@@ -47,3 +47,30 @@ setValidity("Coverage.Grid",
 )
 
 # GENERIC METHODS DEFINITIONS --------------------------------------------
+
+#' Plot
+#'
+#' Plots an S4 object of class 'Survey'
+#'
+#' @param x object of class Survey
+#' @param y not used
+#' @param ... other general plot parameters
+#' @rdname plot.Survey-methods
+#' @exportMethod plot
+setMethod(
+  f="plot",
+  signature="Coverage.Grid",
+  definition=function(x, y, ...){
+    # If main is not supplied then take it from the object
+    additional.args <- list(...)
+    add <- ifelse("add" %in% names(additional.args), additional.args$add, FALSE)
+    col <- ifelse("col" %in% names(additional.args), additional.args$col, 5)
+    pch <- ifelse("pch" %in% names(additional.args), additional.args$pch, 20)
+    if(length(x@grid) > 0){
+      plot(x@grid, add = add, col = col, pch = pch)
+    }else{
+      warning("No grid points to plot", call. = F, immediate. = F)
+    }
+    invisible(x)
+  }
+)
