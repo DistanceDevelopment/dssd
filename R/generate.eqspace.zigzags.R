@@ -2,8 +2,9 @@
 #' @importFrom methods new
 generate.eqspace.zigzags <- function(design, strata.id, no.samplers, line.length, spacing, by.spacing){
   region <- design@region
+  sf.column <- attr(region@region, "sf_column")
   #Get the current strata and spacing
-  strata <- region@region$geometry[[strata.id]]
+  strata <- region@region[[sf.column]][[strata.id]]
   #Spin round so design angle lies along x axis
   rot.angle.rad <- design@design.angle[strata.id]/180*pi
   theta <- ifelse(rot.angle.rad == 0, 0, 2*pi-rot.angle.rad)

@@ -73,6 +73,7 @@ setMethod(
 #This function separates the design generation by strata so different strata can have different designs in them. Assumes that the validation method called when the class is initialised checks that all design options either have length 1 or length equal to the number of strata. Also assumes that the region object has been checked and confimred to have the correct number of strata names for the size of the geometry.
     # Get strata names
     region <- object@region
+    sf.column <- attr(region@region, "sf_column")
     if(length(region@strata.name) > 0){
       strata.names <- region@strata.name
       strata.no <- length(region@strata.name)
@@ -120,17 +121,17 @@ setMethod(
       }
     #If spacing has been provided for some but not all - deal with this in validation function!
     #Need to check only one option supplied for each strata
-    }else if(any(!by.spacing) && !all(!by.spacing)){
-      for(strat in seq(along = strata.names)){
-        if(!by.spacing[strat]){
-        }
-      }
+    # }else if(any(!by.spacing) && !all(!by.spacing)){
+    #   for(strat in seq(along = strata.names)){
+    #     if(!by.spacing[strat]){
+    #     }
+    #   }
     }
     #Store all lines in a list
     transects <- list()
     #Iterate over strata calling the appropriate method for the design.
     #Main grid generation
-    for (strat in seq(along = region@region$geometry)) {
+    for (strat in seq(along = region@region[[sf.column]])) {
       if(design[strat] %in% c("systematic","random")){
         transects[[strat]] <- generate.parallel.lines(object, strat, no.samplers[strat], line.length[strat], spacing[strat], by.spacing[strat])
       }else if(design[strat] == "eszigzag" || design[strat] == "eszigzagcom"){
