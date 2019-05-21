@@ -1,28 +1,30 @@
-#' @include Survey.R
+#' @include Transect.R
 #' @importFrom methods validObject
 
-#' @title Class "Point.Transect.Survey" extends Class "Survey"
+#' @title Class "Point.Transect" extends Class "Survey"
 #'
-#' @description Virtual Class \code{"Point.Transect.Survey"} is an S4 class
+#' @description Virtual Class \code{"Point.Transect"} is an S4 class
 #' detailing a set of transects from a point transect design.
-#' @name Point.Transect.Survey-class
-#' @title S4 Class "Point.Transect.Survey"
+#' @name Point.Transect-class
+#' @title S4 Class "Point.Transect"
 #' @keywords classes
 #' @seealso \code{\link{make.design}}
 #' @export
-setClass(Class = "Point.Transect.Survey",
+setClass(Class = "Point.Transect",
          representation = representation(),
-         contains = "Survey")
+         contains = "Transect")
 
 
 setMethod(
   f="initialize",
-  signature="Point.Transect.Survey",
+  signature="Point.Transect",
   definition=function(.Object, design, points, no.samplers, effort.allocation,
-                      spacing, design.angle, edge.protocol){
+                      spacing, design.angle, edge.protocol, cov.area = numeric(0), cov.area.polys = list()){
     #Set slots
     .Object@design        <- design
     .Object@samplers      <- points
+    .Object@cov.area      <- cov.area
+    .Object@cov.area.polys <- cov.area.polys
     .Object@no.samplers   <- no.samplers
     .Object@effort.allocation <- effort.allocation
     .Object@spacing       <- spacing
@@ -38,7 +40,7 @@ setMethod(
   }
 )
 
-setValidity("Point.Transect.Survey",
+setValidity("Point.Transect",
             function(object){
               return(TRUE)
             }
@@ -53,11 +55,11 @@ setValidity("Point.Transect.Survey",
 #' @param x object of class Survey
 #' @param y not used
 #' @param ... other general plot parameters
-#' @rdname plot.Survey-methods
+#' @rdname plot.Transect-methods
 #' @exportMethod plot
 setMethod(
   f="plot",
-  signature="Point.Transect.Survey",
+  signature="Point.Transect",
   definition=function(x, y, ...){
     # If main is not supplied then take it from the object
     additional.args <- list(...)

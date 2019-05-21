@@ -1,28 +1,30 @@
-#' @include Survey.R
+#' @include Transect.R
 #' @importFrom methods validObject
 
-#' @title Class "Line.Transect.Survey" extends Class "Survey"
+#' @title Class "Line.Transect" extends Class "Transect"
 #'
-#' @description Virtual Class \code{"Line.Transect.Survey"} is an S4 class
+#' @description Virtual Class \code{"Line.Transect"} is an S4 class
 #' detailing a set of transects from a point transect design.
-#' @name Line.Transect.Survey-class
-#' @title S4 Class "Line.Transect.Survey"
+#' @name Line.Transect-class
+#' @title S4 Class "Line.Transect"
 #' @slot line.length the total line length for the transect set
 #' @keywords classes
 #' @seealso \code{\link{make.design}}
 #' @export
-setClass(Class = "Line.Transect.Survey",
+setClass(Class = "Line.Transect",
          representation = representation(line.length = "numeric"),
-         contains = "Survey")
+         contains = "Transect")
 
 setMethod(
   f="initialize",
-  signature="Line.Transect.Survey",
+  signature="Line.Transect",
   definition=function(.Object, design, lines, no.samplers, line.length, effort.allocation,
-                      spacing, design.angle, edge.protocol){
+                      spacing, design.angle, edge.protocol, cov.area = numeric(0), cov.area.polys = list()){
     #Set slots
     .Object@design        <- design
     .Object@samplers      <- lines
+    .Object@cov.area      <- cov.area
+    .Object@cov.area.polys <- cov.area.polys
     .Object@line.length   <- line.length
     .Object@no.samplers   <- no.samplers
     .Object@effort.allocation <- effort.allocation
@@ -39,7 +41,7 @@ setMethod(
   }
 )
 
-setValidity("Line.Transect.Survey",
+setValidity("Line.Transect",
             function(object){
               return(TRUE)
             }
@@ -51,11 +53,11 @@ setValidity("Line.Transect.Survey",
 #'
 #' Plots an S4 object of class 'Survey'
 #'
-#' @rdname plot.Survey-methods
+#' @rdname plot.Transect-methods
 #' @exportMethod plot
 setMethod(
   f="plot",
-  signature="Line.Transect.Survey",
+  signature="Line.Transect",
   definition=function(x, y, ...){
     # If main is not supplied then take it from the object
     additional.args <- list(...)

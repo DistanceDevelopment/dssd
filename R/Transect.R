@@ -1,10 +1,10 @@
-#' Virtual Class "Survey"
+#' Virtual Class "Transect"
 #'
-#' Virtual Class \code{"Survey"} is an S4 class detailing a single survey, a
+#' Virtual Class \code{"Transect"} is an S4 class detailing a single survey, a
 #' single set of transects.
 #'
-#' @name Survey-class
-#' @title S4 Class "Survey"
+#' @name Transect-class
+#' @title S4 Class "Transect"
 #' @slot design Describes the design algorithm used to create the survey.
 #' @slot samplers Contains the survey transects
 #' @slot no.samplers Numeric value(s) giving the number of realised transects.
@@ -17,13 +17,16 @@
 #' axis for the zigzag design.
 #' @slot edge.protocol character value indicating whether a "plus" sampling or
 #' "minum" sampling protocol is used.
+#' @slot cover.poly polygons outlining the covered area
 #' @keywords classes
 #' @export
 #' @importFrom methods validObject
 #' @seealso \code{\link{make.design}}
-setClass(Class = "Survey",
+setClass(Class = "Transect",
          representation = representation(design = "character",
                                          samplers = "list",
+                                         cov.area = "numeric",
+                                         cov.area.polys = "list",
                                          no.samplers = "numeric",
                                          effort.allocation  = "numeric",
                                          spacing = "numeric",
@@ -31,8 +34,7 @@ setClass(Class = "Survey",
                                          edge.protocol = "character", "VIRTUAL")
 )
 
-
-setValidity("Survey",
+setValidity("Transect",
             function(object){
               return(TRUE)
             }

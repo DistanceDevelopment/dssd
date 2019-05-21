@@ -129,13 +129,16 @@ setMethod(
     }
     #Store all lines in a list
     transects <- list()
+    polys <- list()
     #Iterate over strata calling the appropriate method for the design.
     #Main grid generation
     for (strat in seq(along = region@region[[sf.column]])) {
       if(design[strat] %in% c("systematic","random")){
-        transects[[strat]] <- generate.parallel.lines(object, strat, no.samplers[strat], line.length[strat], spacing[strat], by.spacing[strat])
+        temp <- generate.parallel.lines(object, strat, no.samplers[strat], line.length[strat], spacing[strat], by.spacing[strat])
+        transects[[strat]] <- temp$transects
       }else if(design[strat] == "eszigzag" || design[strat] == "eszigzagcom"){
-        transects[[strat]] <- generate.eqspace.zigzags(object, strat, no.samplers[strat], line.length[strat], spacing[strat], by.spacing[strat])
+        temp <-  generate.eqspace.zigzags(object, strat, no.samplers[strat], line.length[strat], spacing[strat], by.spacing[strat])
+        transects[[strat]] <- temp$transects
       }else{
         message("This design is not supported at present")
         transects[[strat]] = NULL
@@ -160,7 +163,7 @@ setMethod(
     }
     all.transects <- sf::st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp))
     #Make a survey object
-    survey <- new(Class="Line.Transect.Survey", design = object@design, lines = all.transects, no.samplers = dim(all.transects)[1], line.length = sum(sf::st_length(all.transects)), effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol)
+    survey <- new(Class="Line.Transect", design = object@design, lines = all.transects, no.samplers = dim(all.transects)[1], line.length = sum(sf::st_length(all.transects)), effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol)
     return(survey)
   }
 )
