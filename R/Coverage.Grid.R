@@ -50,12 +50,12 @@ setValidity("Coverage.Grid",
 
 #' Plot
 #'
-#' Plots an S4 object of class 'Survey'
+#' Plots an S4 object of class 'Coverage.Grid'
 #'
-#' @param x object of class Survey
+#' @param x object of class Coverage.Grid
 #' @param y not used
 #' @param ... other general plot parameters
-#' @rdname plot.Survey-methods
+#' @rdname plot.Coverage.Grid-methods
 #' @exportMethod plot
 setMethod(
   f="plot",

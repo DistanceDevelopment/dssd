@@ -46,7 +46,7 @@ generate.parallel.lines <- function(design, strata.id, no.samplers, line.length,
         x.vals <- c(rep((bbox$xmin - trunc),2), rep((bbox$xmax + trunc),2), (bbox$xmin - trunc))
         y.vals <- c(bbox$ymin, rep(bbox$ymax,2), rep(bbox$ymin,2))
         cover.polys[[tr]] <- sf::st_polygon(list(matrix(c(x.vals, y.vals), ncol = 2)))
-      }else if(any(class(to.keep[[tr]] = "MULTILINESTRING"))){
+      }else if(any(class(to.keep[[tr]] == "MULTILINESTRING"))){
         #Need to iterate along the list
         temp <- list()
         for(part in seq(along = to.keep[[tr]])){
@@ -73,6 +73,7 @@ generate.parallel.lines <- function(design, strata.id, no.samplers, line.length,
   #Also rotate covered region
   if(return.cov.area){
     cover.polys.unrot <- lapply(cover.polys, mat.mult, y = rot.mat.rev)
+    return(list(transects = transects, cover.polys = cover.polys.unrot))
   }
-  return(list(transects = transects, cover.polys = cover.polys.unrot)
+  return(list(transects = transects, cover.polys = list()))
 }

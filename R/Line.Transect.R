@@ -51,7 +51,7 @@ setValidity("Line.Transect",
 
 #' Plot
 #'
-#' Plots an S4 object of class 'Survey'
+#' Plots an S4 object of class 'Transect'
 #'
 #' @rdname plot.Transect-methods
 #' @exportMethod plot

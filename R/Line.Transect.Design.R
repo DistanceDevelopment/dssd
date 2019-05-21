@@ -136,9 +136,11 @@ setMethod(
       if(design[strat] %in% c("systematic","random")){
         temp <- generate.parallel.lines(object, strat, no.samplers[strat], line.length[strat], spacing[strat], by.spacing[strat])
         transects[[strat]] <- temp$transects
+        polys[[strat]] <- temp$cover.polys
       }else if(design[strat] == "eszigzag" || design[strat] == "eszigzagcom"){
         temp <-  generate.eqspace.zigzags(object, strat, no.samplers[strat], line.length[strat], spacing[strat], by.spacing[strat])
         transects[[strat]] <- temp$transects
+        polys[[strat]] <- temp$cover.polys
       }else{
         message("This design is not supported at present")
         transects[[strat]] = NULL
@@ -162,6 +164,11 @@ setMethod(
       }
     }
     all.transects <- sf::st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp))
+    #Accumulate covered area polygons
+
+
+
+
     #Make a survey object
     survey <- new(Class="Line.Transect", design = object@design, lines = all.transects, no.samplers = dim(all.transects)[1], line.length = sum(sf::st_length(all.transects)), effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol)
     return(survey)

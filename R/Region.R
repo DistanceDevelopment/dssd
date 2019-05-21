@@ -1,5 +1,4 @@
-#' @import sf
-#' @include Survey.R
+#' @include Transect.R
 #' @importFrom methods validObject
 NULL
 
@@ -140,7 +139,7 @@ setMethod(
 #' @exportMethod plot
 setMethod(
   f="plot",
-  signature=c("Region", "Survey"),
+  signature=c("Region", "Transect"),
   definition=function(x, y, main = "", region.col = c(2,4,5,6,7,8,3), ...){
     # If main is not supplied then take it from the object
     if(main == ""){

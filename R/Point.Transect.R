@@ -50,9 +50,9 @@ setValidity("Point.Transect",
 
 #' Plot
 #'
-#' Plots an S4 object of class 'Survey'
+#' Plots an S4 object of class 'Transect'
 #'
-#' @param x object of class Survey
+#' @param x object of class Transect
 #' @param y not used
 #' @param ... other general plot parameters
 #' @rdname plot.Transect-methods
