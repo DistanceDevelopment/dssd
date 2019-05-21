@@ -68,5 +68,5 @@ generate.eqspace.zigzags <- function(design, strata.id, no.samplers, line.length
   mat.mult <- function(x,y){return(x*y)}
   lines.unrotated <- lapply(to.keep, mat.mult, y=rot.mat.rev)
   transects <- lines.unrotated
-  return(transects)
+  return(list(transects = transects, cover.polys = list()))
 }
