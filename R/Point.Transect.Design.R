@@ -155,7 +155,7 @@ setMethod(
           }
         }
       }
-      all.transects <- st_sf(data.frame(strata = strata.names, geom = temp))
+      all.transects <- sf::st_sf(data.frame(strata = strata.names, geom = temp))
     }else{
       all.transects <- list()
     }

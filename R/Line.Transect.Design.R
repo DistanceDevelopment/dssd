@@ -154,23 +154,21 @@ setMethod(
       for(i in seq(along = transects[[strat]])){
         if(strat == 1 && i == 1){
           temp <- sf::st_sfc(transects[[strat]][[i]])
+          temp.poly <- sf::st_sfc(polys[[strat]][[i]])
           transect.count <- 1
           strata.id <- strata.names[strat]
         }else{
           temp <- c(temp, sf::st_sfc(transects[[strat]][[i]]))
+          temp.poly <- c(temp.poly, sf::st_sfc(polys[[strat]][[i]]))
           transect.count <- transect.count + 1
           strata.id <- c(strata.id, strata.names[strat])
         }
       }
     }
     all.transects <- sf::st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp))
-    #Accumulate covered area polygons
-
-
-
-
+    all.polys <- sf::st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp.poly))
     #Make a survey object
-    survey <- new(Class="Line.Transect", design = object@design, lines = all.transects, no.samplers = dim(all.transects)[1], line.length = sum(sf::st_length(all.transects)), effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol)
-    return(survey)
+    transect <- new(Class="Line.Transect", design = object@design, lines = all.transects, no.samplers = dim(all.transects)[1], line.length = sum(sf::st_length(all.transects)), effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = sum(sf::st_area(all.polys)), cov.area.polys = all.polys)
+    return(transect)
   }
 )

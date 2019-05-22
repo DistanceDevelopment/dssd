@@ -1,6 +1,6 @@
 #' @importFrom stats runif
 #' @importFrom methods new
-generate.parallel.lines <- function(design, strata.id, no.samplers, line.length, spacing, by.spacing, return.cov.area, clip.to.strata){
+generate.parallel.lines <- function(design, strata.id, no.samplers, line.length, spacing, by.spacing, calc.cov.area = TRUE, clip.to.strata = TRUE){
   #Generates either random or systematic parallel lines
   region <- design@region
   sf.column <- attr(region@region, "sf_column")
@@ -38,15 +38,15 @@ generate.parallel.lines <- function(design, strata.id, no.samplers, line.length,
   to.keep <- lapply(lines, sf::st_intersection, y = rot.strata)
   #Calculate covered region - do it here as easier before unrotating!
   cover.polys <- list()
-  if(return.cov.area){
+  if(calc.cov.area){
     trunc <- design@truncation
     for(tr in seq(along = to.keep)){
       if(any(class(to.keep[[tr]]) == "LINESTRING")){
-        bbox <- sf::st_bbox(to.keep[[1]])
+        bbox <- sf::st_bbox(to.keep[[tr]])
         x.vals <- c(rep((bbox$xmin - trunc),2), rep((bbox$xmax + trunc),2), (bbox$xmin - trunc))
         y.vals <- c(bbox$ymin, rep(bbox$ymax,2), rep(bbox$ymin,2))
         cover.polys[[tr]] <- sf::st_polygon(list(matrix(c(x.vals, y.vals), ncol = 2)))
-      }else if(any(class(to.keep[[tr]] == "MULTILINESTRING"))){
+      }else if(any(class(to.keep[[tr]]) == "MULTILINESTRING")){
         #Need to iterate along the list
         temp <- list()
         for(part in seq(along = to.keep[[tr]])){
@@ -55,9 +55,9 @@ generate.parallel.lines <- function(design, strata.id, no.samplers, line.length,
           ly <- line.mat[,2]
           px <- c(rep((lx[1] - trunc), 2), rep((lx[2] + trunc), 2), (lx[1] - trunc))
           py <- c(ly[1], rep(ly[2],2), rep(ly[1],2))
-          temp[[part]] <- matrix(c(px, py), ncol = 2)
+          temp[[part]] <- list(matrix(c(px, py), ncol = 2))
         }
-        cover.polys[[tr]] <- sf::st_polygon(temp)
+        cover.polys[[tr]] <- sf::st_multipolygon(temp)
       }
     }
   }
@@ -71,7 +71,7 @@ generate.parallel.lines <- function(design, strata.id, no.samplers, line.length,
   lines.unrotated <- lapply(to.keep, mat.mult, y=rot.mat.rev)
   transects <- lines.unrotated
   #Also rotate covered region
-  if(return.cov.area){
+  if(calc.cov.area){
     cover.polys.unrot <- lapply(cover.polys, mat.mult, y = rot.mat.rev)
     return(list(transects = transects, cover.polys = cover.polys.unrot))
   }

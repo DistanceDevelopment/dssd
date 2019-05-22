@@ -12,10 +12,10 @@ generate.systematic.points <- function(design, strata.id, spacing, for.coverage 
   rot.strata <- strata*rot.mat
   #Buffer strata for plus sampling?
   if(design@edge.protocol[strata.id] == "plus"){
-    rot.strata <- st_buffer(rot.strata, design@truncation)
+    rot.strata <- sf::st_buffer(rot.strata, design@truncation)
   }
   #Find the minimum and maximum x and y values
-  bbox <- st_bbox(rot.strata)
+  bbox <- sf::st_bbox(rot.strata)
   #Check spacing is appropriate
   if(sspace > (bbox[["xmax"]]-bbox[["xmin"]]) || sspace > (bbox[["ymax"]]-bbox[["ymin"]])){
     warning(paste("The spacing allocated to strata number ", strata.id, " is larger than either or both of the x or y dimensions of the region. Cannot generate samplers in this strata.", sep = ""), call. = FALSE, immediate. = TRUE)
@@ -34,8 +34,8 @@ generate.systematic.points <- function(design, strata.id, spacing, for.coverage 
     y.vals <- seq(start.y, bbox[["ymax"]], by = sspace)
     temp.coords <- expand.grid(x.vals, y.vals)
     #keep everything within the polygon strata
-    points <- st_multipoint(as.matrix(temp.coords))
-    to.keep <- st_intersection(points, rot.strata)
+    points <- sf::st_multipoint(as.matrix(temp.coords))
+    to.keep <- sf::st_intersection(points, rot.strata)
     #Rotate back again
     reverse.theta <- rot.angle.rad
     rot.mat.rev <- matrix(c(cos(reverse.theta), sin(reverse.theta), -sin(reverse.theta), cos(reverse.theta)), ncol = 2, byrow = FALSE)
