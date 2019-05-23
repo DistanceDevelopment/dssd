@@ -34,12 +34,25 @@ generate.systematic.points <- function(design, strata.id, spacing, for.coverage 
     y.vals <- seq(start.y, bbox[["ymax"]], by = sspace)
     temp.coords <- expand.grid(x.vals, y.vals)
     #keep everything within the polygon strata
-    points <- sf::st_multipoint(as.matrix(temp.coords))
-    to.keep <- sf::st_intersection(points, rot.strata)
+    points <- list()
+    for(p in seq(along = temp.coords[,1])){
+      points[[p]] <- sf::st_point(as.matrix(temp.coords)[p,])
+    }
+    #points <- sf::st_multipoint(as.matrix(temp.coords))
+    to.keep <- lapply(points, FUN = sf::st_intersection, y = rot.strata)
+    points.inside <- list()
+    count <- 1
+    for(p in seq(along = to.keep)){
+      if(length(to.keep[[p]]) > 0){
+        points.inside[[count]] <- to.keep[[p]]
+        count <- count + 1
+      }
+    }
     #Rotate back again
     reverse.theta <- rot.angle.rad
     rot.mat.rev <- matrix(c(cos(reverse.theta), sin(reverse.theta), -sin(reverse.theta), cos(reverse.theta)), ncol = 2, byrow = FALSE)
-    points.unrotated <- to.keep*rot.mat.rev
+    mat.mult <- function(x,y){return(x*y)}
+    points.unrotated <- lapply(points.inside, mat.mult, y=rot.mat.rev)
     transects <- points.unrotated
   }
   return(transects)

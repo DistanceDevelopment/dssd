@@ -110,6 +110,8 @@ setMethod(
         #Calculate spacing from the number of desired samplers across whole region
         spacing <- sum(abs(region@area))^0.5 / object@no.samplers^0.5
         spacing <- rep(spacing, strata.no)
+      }else if(length(no.samplers) == strata.no){
+        spacing <- apply(matrix(c(region@area, object@no.samplers), ncol = 2), FUN = function(x){abs(x[1])^0.5 / x[2]^0.5}, MARGIN = 1)
       }
     #If spacing has been provided for some but not all need to calculate spacing for others
     }else if(any(!by.spacing) && !all(!by.spacing)){
@@ -133,32 +135,47 @@ setMethod(
         transects[[strat]] = NULL
       }
     }
-    #Put transects into a miltipart multipoint sf object defined by
+    #Put transects into a point sf object defined by
     #the strata name
-    counter <- 1
-    transect.count <- 0
-    #Find first strata where there are transects
-    while(is.na(transects[[counter]]) && counter < length(transects)){
-      counter <- counter + 1
-      cat(counter)
-    }
+    #counter <- 1
+    #transect.count <- 0
+    # #Find first strata where there are transects
+    # while(is.na(transects[[counter]]) && counter < length(transects)){
+    #   counter <- counter + 1
+    #   cat(counter)
+    # }
     #If there are some transects somewhere
-    if(!is.na(transects[[counter]][[1]])){
-      transect.count <- dim(transects[[counter]])[1]
-      temp <- sf::st_sfc(transects[[counter]])
-      #Now add in transects from other strata
-      if(length(transects) > counter){
-        for(strat in (counter+1):length(transects)){
-          if(!is.na(transects[[strat]][[1]])){
-            transect.count <- transect.count + dim(transects[[strat]])[1]
-            temp <- c(temp, sf::st_sfc(transects[[strat]]))
-          }
-        }
+    # if(!is.na(transects[[counter]][[1]])){
+    #   transect.count <- dim(transects[[counter]])[1]
+    #   temp <- sf::st_sfc(transects[[counter]])
+    #   #Now add in transects from other strata
+    #   if(length(transects) > counter){
+    #     for(strat in (counter+1):length(transects)){
+    #       if(!is.na(transects[[strat]][[1]])){
+    #         transect.count <- transect.count + dim(transects[[strat]])[1]
+    #         temp <- c(temp, sf::st_sfc(transects[[strat]]))
+    #       }
+    #     }
+    #   }
+    transect.count <- 0
+    strata.id <- character(0)
+    for(strat in seq(along = transects)){
+      if(strat == 1 ){
+        temp <- sf::st_sfc(transects[[strat]])
+        #temp.poly <- sf::st_sfc(polys[[strat]][[i]])
+        transect.count <- length(transects[[strat]])
+        strata.id <- rep(strata.names[strat], length(transects[[strat]]))
+      }else{
+        temp <- c(temp, sf::st_sfc(transects[[strat]]))
+        #temp.poly <- c(temp.poly, sf::st_sfc(polys[[strat]][[i]]))
+        transect.count <- transect.count + length(transects[[strat]])
+        strata.id <- c(strata.id, rep(strata.names[strat], length(transects[[strat]])))
       }
-      all.transects <- sf::st_sf(data.frame(strata = strata.names, geom = temp))
-    }else{
-      all.transects <- list()
     }
+    all.transects <- sf::st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp))
+    #}else{
+    #  all.transects <- list()
+    #}
     #Make a survey object
     survey <- new(Class="Point.Transect", design = object@design, points = all.transects, no.samplers = transect.count, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol)
     return(survey)
