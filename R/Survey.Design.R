@@ -38,7 +38,7 @@ setClass(Class = "Survey.Design",
                                          truncation = "numeric",
                                          coverage.grid = "Coverage.Grid",
                                          coverage.scores = "numeric",
-                                         design.statistics = "data.frame", "VIRTUAL")
+                                         design.statistics = "list", "VIRTUAL")
 )
 
 setValidity("Survey.Design",

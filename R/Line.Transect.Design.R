@@ -148,6 +148,7 @@ setMethod(
     }
     #Put transects into a multipart, linestring/multilinestring objects
     #Need to retain transect IDs as well as strata for lines
+    cov.areas <- line.length <- sampler.count <- numeric(0)
     transect.count <- 0
     strata.id <- character(0)
     for(strat in seq(along = transects)){
@@ -164,11 +165,14 @@ setMethod(
           strata.id <- c(strata.id, strata.names[strat])
         }
       }
+      line.length[strat] <- sum(unlist(lapply(transects[[strat]], FUN = sf::st_length)))
+      cov.areas[strat] <- sum(unlist(lapply(polys[[strat]], FUN = sf::st_area)))
+      sampler.count[strat] <- length(transects[[strat]])
     }
     all.transects <- sf::st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp))
     all.polys <- sf::st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp.poly))
     #Make a survey object
-    transect <- new(Class="Line.Transect", design = object@design, lines = all.transects, no.samplers = dim(all.transects)[1], line.length = sum(sf::st_length(all.transects)), effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = sum(sf::st_area(all.polys)), cov.area.polys = all.polys)
+    transect <- new(Class="Line.Transect", design = object@design, lines = all.transects, no.samplers = sampler.count, line.length = line.length, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = cov.areas, cov.area.polys = all.polys)
     return(transect)
   }
 )

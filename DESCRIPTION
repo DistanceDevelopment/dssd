@@ -31,3 +31,4 @@ Collate:
     'generate.parallel.lines.R'
     'generate.systematic.points.R'
     'get.intersection.points.R'
+    'run.coverage.R'
