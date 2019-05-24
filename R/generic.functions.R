@@ -19,3 +19,11 @@ setGeneric("generate.transects", function(object, silent, ...){standardGeneric (
 if (!isGeneric("plot")){
   setGeneric(name = "plot", def = function(x, y, ...){standardGeneric("plot")})
 }
+
+if (!isGeneric("show")){
+  setGeneric(name = "show", def = function(object){standardGeneric("show")})
+}
+
+if (!isGeneric("summary")){
+  setGeneric(name = "summary", def = function(object, ...){standardGeneric("summary")})
+}

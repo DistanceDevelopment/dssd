@@ -77,3 +77,56 @@ setValidity("Survey.Design",
             }
 )
 
+
+# GENERIC METHODS DEFINITIONS --------------------------------------------
+
+#' Plot
+#'
+#' Plots an S4 object of class 'Survey.Design'
+#'
+#' @param x object of class Survey.Design
+#' @param y not used
+#' @param ... other general plot parameters
+#' @rdname plot.Survey.Design-methods
+#' @exportMethod plot
+setMethod(
+  f="plot",
+  signature="Survey.Design",
+  definition=function(x, y, ...){
+    #Check coverage has been run
+    if(all(is.na(x@coverage.grid@grid$coverage.score))){
+      stop("Design has not been run yet, all coverage scores are NA.", call. = FALSE)
+    }
+    # If main is not supplied then take it from the object
+    additional.args <- list(...)
+    col.breaks <- ifelse("col.breaks" %in% names(additional.args), additional.args$col.breaks, 10)
+    coverage.scores <- x@coverage.grid@grid$coverage.scores
+    pmar <- par(mar = c(1, 1, 4, 5))
+    on.exit(par(mar = pmar))
+    plot(x@region@region$geometry, main = "Coverage Scores", cex.main = 1.5)
+    cols <- heat.colors(col.breaks)[as.numeric(cut(coverage.scores, breaks = col.breaks))]
+    plot(x@coverage.grid@grid$geometry, pch = 20, col = cols, add = T)
+    plot3D::colkey(side = 4, clim = range(coverage.scores), col = heat.colors(col.breaks), add = TRUE, length = 0.7)
+    invisible(x)
+  }
+)
+
+
+#' show
+#'
+#' Summarises an S4 object of class 'Survey.Design'
+#'
+#' @param x object of class Survey.Design
+#' @param y not used
+#' @param ... other general plot parameters
+#' @rdname show.Survey.Design-methods
+#' @exportMethod show
+setMethod(
+  f="show",
+  signature="Survey.Design",
+  definition=function(object){
+    print(object@design.statistics)
+  }
+)
+
+

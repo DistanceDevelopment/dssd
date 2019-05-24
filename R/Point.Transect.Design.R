@@ -172,7 +172,11 @@ setMethod(
         strata.id <- c(strata.id, rep(strata.names[strat], length(transects[[strat]])))
       }
     }
-    all.transects <- sf::st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp))
+    if(for.coverage){
+      all.transects <- sf::st_sf(data.frame(coverage.scores = rep(NA, transect.count), geom = temp))
+    }else{
+      all.transects <- sf::st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp))
+    }
     #}else{
     #  all.transects <- list()
     #}

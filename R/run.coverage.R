@@ -1,3 +1,4 @@
+#' @export
 run.coverage <- function(design, reps = 10){
 #Calculates the coverage scores for the design supplied
 #Also stores summary statistics
@@ -45,7 +46,7 @@ run.coverage <- function(design, reps = 10){
   summary.stats <- list(sampler.count = summary(transect.count),
                         line.length = summary(line.length),
                         cov.area = summary(cov.area))
-  design@coverage.scores <- total.hits/reps
+  design@coverage.grid@grid$coverage.scores <- total.hits/reps
   design@design.statistics <- summary.stats
   return(design)
 }
