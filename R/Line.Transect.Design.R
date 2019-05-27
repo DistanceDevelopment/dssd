@@ -44,7 +44,6 @@ setMethod(
     .Object@edge.protocol <- edge.protocol
     .Object@bounding.shape <- bounding.shape
     .Object@coverage.grid <- coverage.grid
-    .Object@coverage.scores <- numeric(0)
     .Object@design.statistics <- data.frame()
     #Check object is valid
     valid <- try(validObject(.Object), silent = TRUE)

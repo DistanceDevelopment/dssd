@@ -37,7 +37,6 @@ setClass(Class = "Survey.Design",
                                          edge.protocol = "character",
                                          truncation = "numeric",
                                          coverage.grid = "Coverage.Grid",
-                                         coverage.scores = "numeric",
                                          design.statistics = "list", "VIRTUAL")
 )
 
