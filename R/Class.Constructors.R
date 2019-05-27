@@ -29,19 +29,12 @@ make.region <- function(region.name = "region",
   if("sf" %in% class(shape)){
     sf.shape = shape
   }else if("sfc" %in% class(shape)){
-    if(length(shape) != length(strata.name)){
-      if(length(shape) <= 26){
-        strata.name <- LETTERS[1:length(shape)]
-      }else{
-        stop("Too many strata (>26) for strata names to be assigned default names.", call. = FALSE)
-      }
-    }
     sf.shape = sf::st_sf(strata = strata.name,  geom = shape)
   }else if(any(class(shape) %in% c("Polygon", "Polygons", "SpatialPolygons", "SpatialPolygonsDataFrame"))){
     stop("The sp data type is not currently supported.")
   }else if(class(shape) == "character"){
     sf.shape <- sf::read_sf(shape)
-  }else if(class(shape) == "data.frame"){
+  }else if(class(shape) == "list"){
     stop("The data.frame data type is not currently supported.")
   }else if(is.null(shape)){
     #Make a default shape (same as in DSsim currently)
@@ -51,22 +44,21 @@ make.region <- function(region.name = "region",
   }else{
     stop("This data type is not currently supported.")
   }
-  # Check the format of the shape
-  sf.shape <- check.shape(sf.shape)
-  #Check the correct number of strata names have been supplied
-  if((length(sf.shape$geometry) != length(strata.name)) && length(strata.name) > 0){
-    message("Number of strata names does not match the number of strata assiging default strata names.")
-    strata.name = character(0)
-  }
-  # If there is more than one strata and the user has not specified strata.name
-  if(length(sf.shape$geometry) > 1 & length(strata.name) == 0){
-    no.strata <- length(sf.shape$geometry)
-    if(no.strata <= 26){
-      strata.name <- LETTERS[1:no.strata]
+  # Check the number of strata names are correct
+  sf.column <- attr(region@region, "sf_column")
+  strata.count <- length(shape[[sf.column]])
+  if(strata.count == 1 && length(strata.name = (0))){
+    strata.name <- region.name
+  }else if(strata.count != length(strata.name)){
+    if(length(shape) <= 26){
+      warning("Automatically naming strata as no strata names provided.", call. = F, immediate. = T)
+      strata.name <- LETTERS[1:length(shape)]
     }else{
-      stop("Too many strata (>26) for strata names to be assigned default names.", call. = FALSE)
+      stop("Too many strata (>26) for strata names to be assigned default names, please provide strata names.", call. = FALSE)
     }
   }
+  # Check the format of the shape
+  sf.shape <- check.shape(sf.shape)
   # Call to make the region object
   region <- new(Class="Region", region.name = region.name, strata.name = strata.name, sf.shape = sf.shape)
   return(region)
