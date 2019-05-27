@@ -37,7 +37,6 @@ setMethod(
     .Object@design.angle  <- design.angle
     .Object@edge.protocol <- edge.protocol
     .Object@coverage.grid <- coverage.grid
-    .Object@coverage.scores <- numeric(0)
     .Object@design.statistics <- data.frame()
     #Check object is valid
     valid <- try(validObject(.Object), silent = TRUE)
@@ -123,11 +122,14 @@ setMethod(
     }
     #Store all lines in a list
     transects <- list()
+    polys <- list()
     #Iterate over strata calling the appropriate method for the design.
     #Main grid generation
     for (strat in seq(along = region@region[[sf.column]])) {
       if(object@design[strat] %in% c("systematic")){
-        transects[[strat]] <- generate.systematic.points(design = object, strata.id = strat, spacing = spacing[strat], for.coverage = for.coverage)
+        temp <- generate.systematic.points(design = object, strata.id = strat, spacing = spacing[strat], for.coverage = for.coverage)
+        transects[[strat]] <- temp$transects
+        polys[[strat]] <- temp$cover.polys
       #}else if(object@design[strat] == "random"){
       #  transects[[strat]] <- generate.random.points(object, strat, no.samplers[strat], line.length[strat], spacing[strat], by.spacing[strat])
       }else{
@@ -157,31 +159,36 @@ setMethod(
     #       }
     #     }
     #   }
+    cov.areas <- sampler.count <- numeric(0)
     transect.count <- 0
     strata.id <- character(0)
     for(strat in seq(along = transects)){
       if(strat == 1 ){
         temp <- sf::st_sfc(transects[[strat]])
-        #temp.poly <- sf::st_sfc(polys[[strat]][[i]])
+        temp.poly <- sf::st_sfc(polys[[strat]])
         transect.count <- length(transects[[strat]])
         strata.id <- rep(strata.names[strat], length(transects[[strat]]))
       }else{
         temp <- c(temp, sf::st_sfc(transects[[strat]]))
-        #temp.poly <- c(temp.poly, sf::st_sfc(polys[[strat]][[i]]))
+        temp.poly <- c(temp.poly, sf::st_sfc(polys[[strat]]))
         transect.count <- transect.count + length(transects[[strat]])
         strata.id <- c(strata.id, rep(strata.names[strat], length(transects[[strat]])))
       }
+      cov.areas[strat] <- sum(unlist(lapply(polys[[strat]], FUN = sf::st_area)))
+      sampler.count[strat] <- length(transects[[strat]])
     }
     if(for.coverage){
       all.transects <- sf::st_sf(data.frame(coverage.scores = rep(NA, transect.count), geom = temp))
+      all.polys <- list()
     }else{
       all.transects <- sf::st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp))
+      all.polys <- sf::st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp.poly))
     }
     #}else{
     #  all.transects <- list()
     #}
     #Make a survey object
-    survey <- new(Class="Point.Transect", design = object@design, points = all.transects, no.samplers = transect.count, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol)
+    survey <- new(Class="Point.Transect", design = object@design, points = all.transects, no.samplers = transect.count, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = cov.areas, cov.area.polys = all.polys)
     return(survey)
   }
 )
