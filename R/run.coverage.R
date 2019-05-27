@@ -41,6 +41,8 @@ run.coverage <- function(design, reps = 10){
     if(class(design) == "Line.Transect.Design"){
       line.length[rep,] <- transects@line.length
     }
+    percent.complete <- round(rep/reps*100, 1)
+    cat("\r", percent.complete, "% complete \r")
   }
   #Calculate summary statistics
   summary.stats <- list(sampler.count = summary(transect.count),
