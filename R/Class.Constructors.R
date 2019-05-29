@@ -99,7 +99,7 @@ make.region <- function(region.name = "region",
 #' @param transect.type character variable specifying either "line" or "point"
 #' @param design a character variable describing the type of design. Either "random",
 #' "systematic" or "ESzigzag" (equal-spaced zigzag). See details for more information.
-#' @param no.samplers the number of samplers you wish the design to generate.
+#' @param desired.sampler the number of samplers you wish the design to generate.
 #' @param line.length the total line length you desire.
 #' @param effort.allocation numeric values used to indicate the proportion of effort
 #' to be allocated to each strata from number of samplers or line length. If length 0,
@@ -121,8 +121,8 @@ make.region <- function(region.name = "region",
 #' @export
 #' @author Laura Marshall
 #' @examples
-#' design <- make.design(transect.type = "point", no.samplers = 25, design.angle = 45)
-make.design <- function(region = make.region(), transect.type = "line", design = "systematic", no.samplers = numeric(0), line.length = numeric(0), effort.allocation = numeric(0), design.angle =  0, spacing = numeric(0), edge.protocol = "minus", bounding.shape = "rectangle", truncation = 1, coverage.grid = NULL){
+#' design <- make.design(transect.type = "point", samplers = 25, design.angle = 45)
+make.design <- function(region = make.region(), transect.type = "line", design = "systematic", samplers = numeric(0), line.length = numeric(0), effort.allocation = numeric(0), design.angle =  0, spacing = numeric(0), edge.protocol = "minus", bounding.shape = "rectangle", truncation = 1, coverage.grid = NULL){
   #Check if a coverage grid has been passed in - if not create one
   if(class(coverage.grid) != "Coverage.Grid"){
     if(!is.null(coverage.grid)){
@@ -172,29 +172,29 @@ make.design <- function(region = make.region(), transect.type = "line", design =
       no.samplers = 20
     }
     #Create line transect object
-    design <- new(Class="Line.Transect.Design", region, truncation, design, line.length, effort.allocation, spacing, no.samplers, design.angle, edge.protocol, bounding.shape, coverage)
+    design <- new(Class="Line.Transect.Design", region, truncation, design, line.length, effort.allocation, spacing, samplers, design.angle, edge.protocol, bounding.shape, coverage)
   }else if(transect.type %in% c("Point", "point", "Point Transect", "point transect")){
     if(design == "random"){
-      if(length(no.samplers) == 0){
-        no.samplers = 20
+      if(length(samplers) == 0){
+        samplers = 20
         spacing = numeric(0)
       }
     }else if(design == "systematic"){
-      if(length(no.samplers) > 0  && length(spacing) > 0){
+      if(length(samplers) > 0  && length(spacing) > 0){
         warning("You have supplied multiple effort definitions, the sampler spacing will be used.", call. = FALSE)
-        no.samplers <- numeric(0)
-      }else if(length(no.samplers) == 0 && length(spacing) == 0){
-        no.samplers = 20
+        samplers <- numeric(0)
+      }else if(length(samplers) == 0 && length(spacing) == 0){
+        samplers = 20
       }
     }else{
       stop("Point transect design not recognised, please choose from 'random' or 'systematic", call. = FALSE)
     }
     #Check values
-    if(any(any(no.samplers < 0) || any(spacing < 0))){
+    if(any(any(samplers < 0) || any(spacing < 0))){
       stop("Negative values were used to specify effort.", call. = FALSE)
     }
     #Create line transect object
-    design <- new(Class="Point.Transect.Design", region, truncation, design, spacing, no.samplers, effort.allocation, design.angle, edge.protocol, coverage)
+    design <- new(Class="Point.Transect.Design", region, truncation, design, spacing, samplers, effort.allocation, design.angle, edge.protocol, coverage)
   }
   return(design)
 }
@@ -233,7 +233,7 @@ make.coverage <- function(region = make.region(),
   cover.grid.design <- make.design(region = region.union,
                                    transect.type = "point",
                                    design = "systematic",
-                                   no.samplers = n.grid.points,
+                                   samplers = n.grid.points,
                                    spacing = spacing)
   # cover.grid.design <- new(Class="Point.Transect.Design",
   #                          region = make.region(shape = region.union, strata.name = region@region),

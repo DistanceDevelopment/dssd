@@ -31,7 +31,7 @@ setClass(Class = "Line.Transect.Design",
 setMethod(
   f="initialize",
   signature="Line.Transect.Design",
-  definition=function(.Object, region, truncation, design, line.length, effort.allocation, spacing, no.samplers, design.angle, edge.protocol, bounding.shape, coverage.grid){
+  definition=function(.Object, region, truncation, design, line.length, effort.allocation, spacing, samplers, design.angle, edge.protocol, bounding.shape, coverage.grid){
     #Set slots
     .Object@region        <- region
     .Object@truncation    <- truncation
@@ -39,11 +39,12 @@ setMethod(
     .Object@line.length   <- line.length
     .Object@effort.allocation <- effort.allocation
     .Object@spacing       <- spacing
-    .Object@no.samplers   <- no.samplers
+    .Object@samplers      <- samplers
     .Object@design.angle  <- design.angle
     .Object@edge.protocol <- edge.protocol
     .Object@bounding.shape <- bounding.shape
     .Object@coverage.grid <- coverage.grid
+    .Object@coverage.scores <- numeric(0)
     .Object@design.statistics <- data.frame()
     #Check object is valid
     valid <- try(validObject(.Object), silent = TRUE)
@@ -57,6 +58,8 @@ setMethod(
 
 setValidity("Line.Transect.Design",
             function(object){
+              region <- object@region
+
               return(TRUE)
             }
 )
@@ -97,7 +100,7 @@ setMethod(
     }
     #Extract design parameters
     spacing <- object@spacing
-    no.samplers <- object@no.samplers
+    samplers <- object@samplers
     line.length <- object@line.length
     #Check if only has one has been
     if(length(spacing) == 1){
@@ -111,8 +114,8 @@ setMethod(
     #If spacing has not been provided for any
     if(all(!by.spacing)){
       #If only a total number of samplers has been provided (and there is only one design)
-      if(length(no.samplers) == 1 && length(object@design) == 1){
-        no.samplers <- no.samplers*effort.allocation
+      if(length(samplers) == 1 && length(object@design) == 1){
+        samplers <- samplers*effort.allocation
       }
       #If only a total line.length has been supplied
       if(length(line.length) == 1){
@@ -133,11 +136,11 @@ setMethod(
     #Main grid generation
     for (strat in seq(along = region@region[[sf.column]])) {
       if(design[strat] %in% c("systematic","random")){
-        temp <- generate.parallel.lines(object, strat, no.samplers[strat], line.length[strat], spacing[strat], by.spacing[strat])
+        temp <- generate.parallel.lines(object, strat, samplers[strat], line.length[strat], spacing[strat], by.spacing[strat])
         transects[[strat]] <- temp$transects
         polys[[strat]] <- temp$cover.polys
       }else if(design[strat] == "eszigzag" || design[strat] == "eszigzagcom"){
-        temp <-  generate.eqspace.zigzags(object, strat, no.samplers[strat], line.length[strat], spacing[strat], by.spacing[strat])
+        temp <-  generate.eqspace.zigzags(object, strat, samplers[strat], line.length[strat], spacing[strat], by.spacing[strat])
         transects[[strat]] <- temp$transects
         polys[[strat]] <- temp$cover.polys
       }else{
@@ -171,7 +174,7 @@ setMethod(
     all.transects <- sf::st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp))
     all.polys <- sf::st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp.poly))
     #Make a survey object
-    transect <- new(Class="Line.Transect", design = object@design, lines = all.transects, no.samplers = sampler.count, line.length = line.length, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = cov.areas, cov.area.polys = all.polys)
+    transect <- new(Class="Line.Transect", design = object@design, lines = all.transects, samp.count = sampler.count, line.length = line.length, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = cov.areas, cov.area.polys = all.polys)
     return(transect)
   }
 )

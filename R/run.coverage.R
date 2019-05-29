@@ -36,7 +36,7 @@ run.coverage <- function(design, reps = 10){
     #Coverered Area
     cov.area[rep,] <- transects@cov.area
     #Number of transects
-    transect.count[rep,] <- transects@no.samplers
+    transect.count[rep,] <- transects@samp.count
     #Transect Length
     if(class(design) == "Line.Transect.Design"){
       line.length[rep,] <- transects@line.length

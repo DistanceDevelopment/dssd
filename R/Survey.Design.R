@@ -7,7 +7,7 @@
 #' @title S4 Class "Survey.Design"
 #' @slot region An object of class 'Region' defining the study area.
 #' @slot design Character value describing the name of the design.
-#' @slot no.samplers Numeric values defining the number of samplers in each
+#' @slot samplers Numeric values defining the number of samplers in each
 #' stratum.
 #' @slot effort.allocation numeric values used to indicate the proportion of effort
 #' to be allocated to each strata from number of samplers or line length. If length 0,
@@ -30,20 +30,21 @@
 setClass(Class = "Survey.Design",
          representation = representation(region = "Region",
                                          design = "character",
-                                         no.samplers = "numeric",
+                                         samplers = "numeric",
                                          effort.allocation  = "numeric",
                                          spacing = "numeric",
                                          design.angle = "numeric",
                                          edge.protocol = "character",
                                          truncation = "numeric",
                                          coverage.grid = "Coverage.Grid",
+                                         coverage.scores = "numeric",
                                          design.statistics = "list", "VIRTUAL")
 )
 
 setValidity("Survey.Design",
             function(object){
               #Check how many strata there are
-              no.strata <- length(object@region@strata.name)
+              strata.count <- length(object@region@strata.name)
               #EFFORT ALLOCATION
               if(length(object@effort.allocation) > 0){
                 if(sum(object@effort.allocation, na.rm = T) != 1){

@@ -18,7 +18,7 @@ single set of transects.
 
 \item{\code{samplers}}{Contains the survey transects}
 
-\item{\code{no.samplers}}{Numeric value(s) giving the number of realised transects.}
+\item{\code{samp.count}}{Numeric value(s) giving the number of realised transects.}
 
 \item{\code{effort.allocation}}{a vector of probabilities determining how effort is
 allocated between strata. Effort allocated based on area if left empty.}

@@ -1,6 +1,6 @@
 #' @importFrom stats runif
 #' @importFrom methods new
-generate.eqspace.zigzags <- function(design, strata.id, no.samplers, line.length, spacing, by.spacing){
+generate.eqspace.zigzags <- function(design, strata.id, samplers, line.length, spacing, by.spacing){
   region <- design@region
   sf.column <- attr(region@region, "sf_column")
   #Get the current strata and spacing
@@ -17,7 +17,7 @@ generate.eqspace.zigzags <- function(design, strata.id, no.samplers, line.length
   #Find the minimum and maximum x and y values
   bbox <- sf::st_bbox(rot.strata)
   if(!by.spacing){
-    spacing <- (bbox[["xmax"]]-bbox[["xmin"]])/(no.samplers)
+    spacing <- (bbox[["xmax"]]-bbox[["xmin"]])/(samplers)
     if(design@design[strata.id] == "eszigzagcom"){
       spacing <- spacing * 2
     }

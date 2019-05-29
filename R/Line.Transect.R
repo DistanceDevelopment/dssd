@@ -18,7 +18,7 @@ setClass(Class = "Line.Transect",
 setMethod(
   f="initialize",
   signature="Line.Transect",
-  definition=function(.Object, design, lines, no.samplers, line.length, effort.allocation,
+  definition=function(.Object, design, lines, samp.count, line.length, effort.allocation,
                       spacing, design.angle, edge.protocol, cov.area = numeric(0), cov.area.polys = list()){
     #Set slots
     .Object@design        <- design
@@ -26,7 +26,7 @@ setMethod(
     .Object@cov.area      <- cov.area
     .Object@cov.area.polys <- cov.area.polys
     .Object@line.length   <- line.length
-    .Object@no.samplers   <- no.samplers
+    .Object@samp.count    <- samp.count
     .Object@effort.allocation <- effort.allocation
     .Object@spacing       <- spacing
     .Object@design.angle  <- design.angle

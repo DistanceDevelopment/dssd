@@ -18,14 +18,14 @@ setClass(Class = "Point.Transect",
 setMethod(
   f="initialize",
   signature="Point.Transect",
-  definition=function(.Object, design, points, no.samplers, effort.allocation,
+  definition=function(.Object, design, points, samp.count, effort.allocation,
                       spacing, design.angle, edge.protocol, cov.area = numeric(0), cov.area.polys = list()){
     #Set slots
     .Object@design        <- design
     .Object@samplers      <- points
     .Object@cov.area      <- cov.area
     .Object@cov.area.polys <- cov.area.polys
-    .Object@no.samplers   <- no.samplers
+    .Object@samp.count    <- samp.count
     .Object@effort.allocation <- effort.allocation
     .Object@spacing       <- spacing
     .Object@design.angle  <- design.angle

@@ -26,17 +26,18 @@ setClass(Class = "Point.Transect.Design",
 setMethod(
   f="initialize",
   signature="Point.Transect.Design",
-  definition=function(.Object, region, truncation, design, spacing, no.samplers, effort.allocation, design.angle, edge.protocol, coverage.grid){
+  definition=function(.Object, region, truncation, design, spacing, samplers, effort.allocation, design.angle, edge.protocol, coverage.grid){
     #Set slots
     .Object@region        <- region
     .Object@truncation    <- truncation
     .Object@design        <- design
     .Object@spacing       <- spacing
-    .Object@no.samplers   <- no.samplers
+    .Object@samplers      <- samplers
     .Object@effort.allocation <- effort.allocation
     .Object@design.angle  <- design.angle
     .Object@edge.protocol <- edge.protocol
     .Object@coverage.grid <- coverage.grid
+    .Object@coverage.scores <- numeric(0)
     .Object@design.statistics <- data.frame()
     #Check object is valid
     valid <- try(validObject(.Object), silent = TRUE)
@@ -92,7 +93,7 @@ setMethod(
     }
     #Extract design parameters
     spacing <- object@spacing
-    no.samplers <- object@no.samplers
+    samplers <- object@samplers
     #Check if only has one has been
     if(length(spacing) == 1){
       spacing <- rep(spacing, strata.no)
@@ -105,18 +106,18 @@ setMethod(
     #If spacing has not been provided for any
     if(all(!by.spacing)){
       #If only a total number of samplers has been provided (and there is only one design)
-      if(length(no.samplers) == 1 && length(object@design) == 1){
+      if(length(samplers) == 1 && length(object@design) == 1){
         #Calculate spacing from the number of desired samplers across whole region
-        spacing <- sum(abs(region@area))^0.5 / object@no.samplers^0.5
+        spacing <- sum(abs(region@area))^0.5 / object@samplers^0.5
         spacing <- rep(spacing, strata.no)
-      }else if(length(no.samplers) == strata.no){
-        spacing <- apply(matrix(c(region@area, object@no.samplers), ncol = 2), FUN = function(x){abs(x[1])^0.5 / x[2]^0.5}, MARGIN = 1)
+      }else if(length(samplers) == strata.no){
+        spacing <- apply(matrix(c(region@area, object@samplers), ncol = 2), FUN = function(x){abs(x[1])^0.5 / x[2]^0.5}, MARGIN = 1)
       }
     #If spacing has been provided for some but not all need to calculate spacing for others
     }else if(any(!by.spacing) && !all(!by.spacing)){
       for(strat in seq(along = strata.names)){
         if(!by.spacing[strat]){
-          spacing[strat] <- abs(region@area[strat])^0.5 / object@no.samplers[strat]^0.5
+          spacing[strat] <- abs(region@area[strat])^0.5 / object@samplers[strat]^0.5
         }
       }
     }
@@ -131,7 +132,7 @@ setMethod(
         transects[[strat]] <- temp$transects
         polys[[strat]] <- temp$cover.polys
       #}else if(object@design[strat] == "random"){
-      #  transects[[strat]] <- generate.random.points(object, strat, no.samplers[strat], line.length[strat], spacing[strat], by.spacing[strat])
+      #  transects[[strat]] <- generate.random.points(object, strat, samplers[strat], line.length[strat], spacing[strat], by.spacing[strat])
       }else{
         message("This design is not supported at present")
         transects[[strat]] = NULL
@@ -188,7 +189,7 @@ setMethod(
     #  all.transects <- list()
     #}
     #Make a survey object
-    survey <- new(Class="Point.Transect", design = object@design, points = all.transects, no.samplers = transect.count, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = cov.areas, cov.area.polys = all.polys)
+    survey <- new(Class="Point.Transect", design = object@design, points = all.transects, samp.count = transect.count, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = cov.areas, cov.area.polys = all.polys)
     return(survey)
   }
 )

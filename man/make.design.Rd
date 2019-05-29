@@ -5,7 +5,7 @@
 \title{Creates a Survey.Design object}
 \usage{
 make.design(region = make.region(), transect.type = "line",
-  design = "systematic", no.samplers = numeric(0),
+  design = "systematic", samplers = numeric(0),
   line.length = numeric(0), effort.allocation = numeric(0),
   design.angle = 0, spacing = numeric(0), edge.protocol = "minus",
   bounding.shape = "rectangle", truncation = 1, coverage.grid = NULL)
@@ -17,8 +17,6 @@ make.design(region = make.region(), transect.type = "line",
 
 \item{design}{a character variable describing the type of design. Either "random",
 "systematic" or "ESzigzag" (equal-spaced zigzag). See details for more information.}
-
-\item{no.samplers}{the number of samplers you wish the design to generate.}
 
 \item{line.length}{the total line length you desire.}
 
@@ -43,6 +41,8 @@ whether the zigzag transects should be generated using a minimum bounding
 
 \item{truncation}{A numeric value describing the longest distance at which an
 object may be observed.}
+
+\item{desired.sampler}{the number of samplers you wish the design to generate.}
 }
 \value{
 object of a class which inherits from class Survey.Design
@@ -80,7 +80,7 @@ the point transect designs different values may be specified for each strata
 for all of the above options.
 }
 \examples{
-design <- make.design(transect.type = "point", no.samplers = 25, design.angle = 45)
+design <- make.design(transect.type = "point", samplers = 25, design.angle = 45)
 }
 \author{
 Laura Marshall

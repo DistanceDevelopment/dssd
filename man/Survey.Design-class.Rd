@@ -18,7 +18,7 @@ design.
 
 \item{\code{design}}{Character value describing the name of the design.}
 
-\item{\code{no.samplers}}{Numeric values defining the number of samplers in each
+\item{\code{samplers}}{Numeric values defining the number of samplers in each
 stratum.}
 
 \item{\code{effort.allocation}}{numeric values used to indicate the proportion of effort
