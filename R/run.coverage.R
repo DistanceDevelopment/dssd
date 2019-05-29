@@ -8,6 +8,11 @@ run.coverage <- function(design, reps = 10){
     inside <- ifelse(inside, 1, 0)
     return(inside)
   }
+  #Check that the coverage grid has a grid!
+  if(length(design@coverage.grid@grid) == 0){
+    warning("No coverage grid, generating a default grid with 1000 points.", immediate. = TRUE, call. = FALSE)
+    design@coverage.grid <- make.coverage(region = design@region)
+  }
   #Get region
   region <- design@region
   if(length(region@strata.name) > 0){
