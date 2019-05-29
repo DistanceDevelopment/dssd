@@ -105,13 +105,13 @@ setMethod(
   signature="Survey.Design",
   definition=function(x, y, ...){
     #Check coverage has been run
-    if(all(is.na(x@coverage.grid@grid$coverage.score))){
+    if(all(is.na(x@coverage.scores))){
       stop("Design has not been run yet, all coverage scores are NA.", call. = FALSE)
     }
     # If main is not supplied then take it from the object
     additional.args <- list(...)
     col.breaks <- ifelse("col.breaks" %in% names(additional.args), additional.args$col.breaks, 10)
-    coverage.scores <- x@coverage.grid@grid$coverage.scores
+    coverage.scores <- x@coverage.scores
     pmar <- par(mar = c(1, 1, 4, 5))
     on.exit(par(mar = pmar))
     plot(x@region@region$geometry, main = "Coverage Scores", cex.main = 1.5)
