@@ -7,7 +7,7 @@
 #' @title S4 Class "Transect"
 #' @slot design Describes the design algorithm used to create the survey.
 #' @slot samplers Contains the survey transects
-#' @slot no.samplers Numeric value(s) giving the number of realised transects.
+#' @slot samp.count Numeric value(s) giving the number of realised transects.
 #' @slot effort.allocation a vector of probabilities determining how effort is
 #' allocated between strata. Effort allocated based on area if left empty.
 #' @slot spacing determines the spacing of systematic samplers
@@ -27,7 +27,7 @@ setClass(Class = "Transect",
                                          samplers = "list",
                                          cov.area = "numeric",
                                          cov.area.polys = "list",
-                                         no.samplers = "numeric",
+                                         samp.count = "numeric",
                                          effort.allocation  = "numeric",
                                          spacing = "numeric",
                                          design.angle = "numeric",
