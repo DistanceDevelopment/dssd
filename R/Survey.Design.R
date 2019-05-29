@@ -50,7 +50,7 @@ setValidity("Survey.Design",
                 if(sum(object@effort.allocation, na.rm = T) != 1){
                   return("Effort allocation should either be omitted or sum to 1")
                 }
-                if(any(is.na(object@effort))){
+                if(any(is.na(object@effort.allocation))){
                   return("Sorry, effort allocation is only applied across all strata at present. NA values are not permitted.")
                 }
               }
@@ -62,14 +62,25 @@ setValidity("Survey.Design",
                 return("The truncation distance must be > 0.")
               }
               #Check edge protocol
-              if(length(object@edge.protocol ))
+              if(length(object@edge.protocol) == 1){
+                object@edge.protocol <- rep(object@edge.protocol, strata.count)
+              }else if(length(object@edge.protocol) > 1 && length(object@edge.protocol) != strata.count){
+                warning("Edge protocol argument has a different number of values than there are strata, only using the 1st value.")
+                object@edge.protocol <- rep(object@edge.protocol[1], strata.count)
+              }
               if(!all(object@edge.protocol %in% c("minus", "plus"))){
-                warning("Edge protocol option(s) not recognised using minus sampling.", call. = FALSE)
+                warning("Some edge protocol option(s) not recognised using minus sampling for these strata.", call. = FALSE)
                 index <- which(!(object@edge.protocol %in% c("minus", "plus")))
                 object@edge.protocol[index] <- "minus"
               }
               #DESIGN ANGLE
               #Check the design angle
+              if(length(object@design.angle) == 1){
+                object@design.angle <- rep(object@design.angle, strata.count)
+              }else if(length(object@design.angle) > 1 && length(object@design.angle) != strata.count){
+                warning("Design angle argument has a different number of values than there are strata, only using the 1st value.")
+                object@design.angle <- rep(object@design.angle[1], strata.count)
+              }
               if(any(object@design.angle < 0 || object@design.angle >= 180)){
                 return("The design angle should be >= 0 and < 180 degrees.")
               }
