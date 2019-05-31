@@ -36,6 +36,10 @@ generate.parallel.lines <- function(design, strata.id, samplers, line.length, sp
   }
   #keep everything within the polygon strata
   to.keep <- lapply(lines, sf::st_intersection, y = rot.strata)
+  #Only keep lines - sometimes points are generated for extremely small intersections
+  test.line <- function(x){ifelse(any(class(x) %in% c("LINESTRING", "MULTILINESTRING")), TRUE, FALSE)}
+  is.line <- which(unlist(lapply(to.keep, FUN = test.line)))
+  to.keep <- to.keep[is.line]
   #Calculate covered region - do it here as easier before unrotating!
   cover.polys <- list()
   if(calc.cov.area){

@@ -62,6 +62,108 @@ generate.eqspace.zigzags <- function(design, strata.id, samplers, line.length, s
   }
   #keep everything within the polygon strata
   to.keep <- lapply(lines, sf::st_intersection, y = rot.strata)
+  #Only keep lines (discard points - fragments of line so small they have become points)
+  test.line <- function(x){ifelse(any(class(x) %in% c("LINESTRING", "MULTILINESTRING")), TRUE, FALSE)}
+  is.line <- which(unlist(lapply(to.keep, FUN = test.line)))
+  to.keep <- to.keep[is.line]
+  #Calculate covered region - do it here as easier before unrotating!
+  cover.polys <- list()
+  if(calc.cov.area){
+    trunctn <- design@truncation
+    xend1 <- xend2 <- numeric(0)
+    for(tr in seq(along = to.keep)){
+      if(any(class(to.keep[[tr]]) == "LINESTRING")){
+        #Find end points
+        lx <- to.keep[[tr]][,1]
+        ly <- to.keep[[tr]][,2]
+        #Find gradients
+        lm <- (ly[2]-ly[1])/(lx[2]-lx[1])
+        if(lm == 0){
+          x.vals <- lx[c(1,1,2,2,1)]
+          y.vals <- c(ly[1]-trunctn, rep(ly[1]+trunctn,2), rep(ly[1]-trunctn, 2))
+        }else if(lm == Inf){
+          x.vals <- c(rep(lx[1]-trunctn,2), rep(lx[1]+trunctn,2), lx[1]-trunctn)
+          y.vals <- ly[c(1,2,2,1,1)]
+        }else{
+          pm <- -1*(1/lm)
+          #Calculate x coordinates
+          xend1[1] <- lx[1] - trunctn/sqrt(1+pm^2)
+          xend1[2] <- lx[1] + trunctn/sqrt(1+pm^2)
+          xend2[1] <- lx[2] - trunctn/sqrt(1+pm^2)
+          xend2[2] <- lx[2] + trunctn/sqrt(1+pm^2)
+          x.vals <- c(xend1[1], xend2, xend1[2:1])
+          x0 <- c(lx[1], lx[2], lx[2], lx[1], lx[1])
+          y0 <- c(ly[1], ly[2], ly[2], ly[1], ly[1])
+          y.vals = pm*(x.vals-x0)+y0
+        }
+        cover.polys[[tr]] <- sf::st_polygon(list(matrix(c(x.vals, y.vals), ncol = 2)))
+      }else if(any(class(to.keep[[tr]]) == "MULTILINESTRING")){
+        #Need to iterate along the list
+        temp <- list()
+        for(part in seq(along = to.keep[[tr]])){
+          #Find end points
+          lx <- to.keep[[tr]][[part]][,1]
+          ly <- to.keep[[tr]][[part]][,2]
+          #Find gradients
+          lm <- (ly[2]-ly[1])/(lx[2]-lx[1])
+          if(lm == 0){
+            x.vals <- lx[c(1,1,2,2,1)]
+            y.vals <- c(ly[1]-trunctn, rep(ly[1]+trunctn,2), rep(ly[1]-trunctn, 2))
+          }else if(lm == Inf){
+            x.vals <- c(rep(lx[1]-trunctn,2), rep(lx[1]+trunctn,2), lx[1]-trunctn)
+            y.vals <- ly[c(1,2,2,1,1)]
+          }else{
+            pm <- -1*(1/lm)
+            #Calculate x coordinates
+            xend1[1] <- lx[1] - trunctn/sqrt(1+pm^2)
+            xend1[2] <- lx[1] + trunctn/sqrt(1+pm^2)
+            xend2[1] <- lx[2] - trunctn/sqrt(1+pm^2)
+            xend2[2] <- lx[2] + trunctn/sqrt(1+pm^2)
+            x.vals <- c(xend1[1], xend2, xend1[2:1])
+            x0 <- c(lx[1], lx[2], lx[2], lx[1], lx[1])
+            y0 <- c(ly[1], ly[2], ly[2], ly[1], ly[1])
+            y.vals = pm*(x.vals-x0)+y0
+          }
+          temp[[part]] <- list(matrix(c(x.vals, y.vals), ncol = 2))
+        }
+        cover.polys[[tr]] <- sf::st_multipolygon(temp)
+      }
+    }
+  }
+  #Check if any polygons are invalid - sometimes tiny pieces of line are generated on the boundaries which lead to overlapping multi polygons
+  invalid <- which(!unlist(lapply(cover.polys, sf::st_is_valid)))
+  for(i in seq(along = invalid)){
+    tmp <- cover.polys[[invalid[i]]]
+    polys.tmp <- list()
+    mat.tmp <- list()
+    for(poly in seq(along = tmp)){
+      polys.tmp[[poly]] <- sf::st_polygon(tmp[[poly]])
+      mat.tmp[[poly]] <- tmp[[poly]]
+    }
+    to.rem <- numeric(0)
+    for(poly in seq(along = polys.tmp)){
+      intsec <- which(unlist(lapply(polys.tmp, sf::st_intersects, polys.tmp[poly][[1]], sparse = FALSE)))[-poly]
+      if(length(intsec) > 0){
+        intsec <- sort(c(intsec, poly))
+        areas <- unlist(lapply(polys.tmp[intsec], sf::st_area))
+        to.rem <- c(to.rem, intsec[which(areas == min(areas))])
+        if(min(areas) > sf::st_area(rot.strata)/100000){
+          warning("Removing covered area greater than 100,000th of the strata area.", immediate. = TRUE, call. = FALSE)
+        }
+      }
+    }
+    to.rem <- unique(to.rem)
+    new.polys <- mat.tmp[-to.rem]
+    if(length(new.polys) == 1){
+      cover.polys[[invalid[i]]] <- sf::st_polygon(new.polys[[1]])
+    }else{
+      cover.polys[[invalid[i]]] <- sf::st_multipolygon(new.polys)
+    }
+  }
+  #Clip to strata
+  if(clip.to.strata){
+   cover.polys <- lapply(cover.polys, sf::st_intersection, y = rot.strata)
+  }
   #Rotate back again
   reverse.theta <- rot.angle.rad
   rot.mat.rev <- matrix(c(cos(reverse.theta), sin(reverse.theta), -sin(reverse.theta), cos(reverse.theta)), ncol = 2, byrow = FALSE)
