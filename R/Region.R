@@ -1,5 +1,6 @@
 #' @include Transect.R
 #' @importFrom methods validObject
+#' @import sf
 NULL
 
 #' @title  Class "Region"
@@ -115,16 +116,24 @@ setMethod(
 setMethod(
   f="plot",
   signature="Region",
-  definition=function(x, y, main = "", cols = c(2,4,5,6,7,8,3), ...){
+  definition=function(x, y, main = "", cols = "default", ...){
     # If main is not supplied then take it from the object
     if(main == ""){
       main <- x@region.name
     }
+    if(cols == "default"){
+      if(length(x@strata.name) <= 15){
+        cols <-  c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1")[1:(length(x@strata.name))]
+      }else{
+        cols <-  rep(c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1"),3)[1:(length(x@strata.name))]
+      }
+    }
     region <- x@region
+    sf.column <- attr(region, "sf_column")
     bbox <- sf::st_bbox(region)
     plot(c(0,0), col = "white", xlim = c(bbox$xmin, bbox$xmax), ylim = c(bbox$ymin, bbox$ymax), main = main, xlab = "x-coordinates", ylab = "y-coordinates")
-    for(i in seq(along = region$geometry)){
-      plot(region$geometry[[i]], add = TRUE, col = cols[i])
+    for(i in seq(along = region[[sf.column]])){
+      plot(region[[sf.column]][[i]], add = TRUE, col = cols[i])
     }
     #plot(x@region, main = main, ...)
     invisible(x)
@@ -134,24 +143,44 @@ setMethod(
 #' Plot
 #'
 #' Plots an S4 object of class 'Region'
-#' @param region.cols fill colours for strata
+#' @param region.col fill colours for strata
 #' @rdname plot.Region-methods
 #' @exportMethod plot
 setMethod(
   f="plot",
   signature=c("Region", "Transect"),
-  definition=function(x, y, main = "", region.col = c(2,4,5,6,7,8,3), ...){
+  definition=function(x, y, main = "", region.col = "default", ...){
     # If main is not supplied then take it from the object
     if(main == ""){
       main <- x@region.name
     }
+    if(region.col == "default"){
+      if(length(x@strata.name) <= 15){
+        region.col <-  c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1")[1:(length(x@strata.name))]
+      }else{
+        region.col <-  rep(c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1"),3)[1:(length(x@strata.name))]
+      }
+    }
+    #Check additional attributes
+    add.attrs <- list(...)
+    cov.area <- ifelse("covered.area" %in% names(add.attrs), add.attrs$covered.area, FALSE)
     region <- x@region
+    sf.column <- attr(region, "sf_column")
     #Set up bounding box for samplers (necessary when plus sampling used and extent of samplers is greater than the region)
     bbox.samps <- sf::st_bbox(y@samplers)
     bbox.region <- sf::st_bbox(x@region)
     plot(c(0,0), col = "white", xlim = c(min(bbox.samps$xmin, bbox.region$xmin), max(bbox.samps$xmax, bbox.region$xmax)), ylim = c(min(bbox.samps$ymin, bbox.region$ymin), max(bbox.samps$ymax, bbox.region$ymax)), main = main, xlab = "x-coordinates", ylab = "y-coordinates")
-    for(i in seq(along = region$geometry)){
-      plot(region$geometry[[i]], add = TRUE, col = region.col[i])
+    for(i in seq(along = region[[sf.column]])){
+      plot(region[[sf.column]][[i]], add = TRUE, col = region.col[i])
+    }
+    if(cov.area){
+      #plot the covered areas
+      cov.area.shape <- y@cov.area.polys
+      sf.col.ca <- attr(cov.area.shape, "sf_column")
+      cov.area.shape <- cov.area.shape[[sf.col.ca]]
+      for(i in seq(along = cov.area.shape)){
+        plot(cov.area.shape[[i]], add = T)
+      }
     }
     plot(y, add = TRUE, ...)
     invisible(x)
