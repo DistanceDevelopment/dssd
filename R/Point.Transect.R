@@ -107,6 +107,7 @@ setMethod(
       cat("Edge protocol: ", object@edge.protocol[strat], fill = T)
       cat("Covered area: ", object@cov.area[strat], fill = T)
       cat("Strata coverage: ", round((object@cov.area[strat]/object@strata.area[strat])*100,2), "%", fill = T)
+      cat("Strata area: ", object@strata.area[strat], fill = T)
     }
     #Now print totals
     cat("\n   Study Area Totals:", fill = T)
