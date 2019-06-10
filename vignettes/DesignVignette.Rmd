@@ -30,41 +30,6 @@ region <- make.region(region.name = "study.area", shape = "/Users/lhm/Documents/
 plot(region)
 ```
 
-Example of creating a study region manually. This example code is taken from the help file for 'sf::st_multipolygon'. To create an sf polygon or multipolygon you first need to create 1 or more matrices of coordinates representing the outer polygons and any holes. For multipolygons the outer polygons and holes are defined by their placement within their list element, only the first matrix in a list element is an outer polygon then all the following matrices are holes. In the following example all polygons would be considered to be in the same strata.
-
-```{r makeown}
-outer = matrix(c(0,0,10,0,10,10,0,10,0,0),ncol=2, byrow=TRUE)
-hole1 = matrix(c(1,1,1,2,2,2,2,1,1,1),ncol=2, byrow=TRUE)
-hole2 = matrix(c(5,5,5,6,6,6,6,5,5,5),ncol=2, byrow=TRUE)
-pol1 = list(outer, hole1, hole2)
-pol2 = list(outer + 12, hole1 + 12)
-pol3 = list(outer + 24)
-mp = list(pol1,pol2,pol3)
-mp1 = sf::st_multipolygon(mp)
-
-region <- make.region(region.name = "study.area", shape = mp1)
-plot(region)
-```
-
-
-If instead you wanted to create the 3 separate polygons as 3 distinct strata you could use the following code:
-
-```{r makeown2}
-outer = matrix(c(0,0,10,0,10,10,0,10,0,0),ncol=2, byrow=TRUE)
-hole1 = matrix(c(1,1,1,2,2,2,2,1,1,1),ncol=2, byrow=TRUE)
-hole2 = matrix(c(5,5,5,6,6,6,6,5,5,5),ncol=2, byrow=TRUE)
-pol1 = sf::st_polygon(list(outer, hole1, hole2))
-pol2 = sf::st_polygon(list(outer + 12, hole1 + 12))
-pol3 = sf::st_polygon(list(outer + 24))
-sfc = sf::st_sfc(pol1,pol2,pol3)
-strata.names <- c("SW", "central", "NE")
-mp1 = sf::st_sf(strata = strata.names, geom = sfc)
-
-region <- make.region(region.name = "study.area", 
-                      strata.name = strata.names, 
-                      shape = mp1)
-plot(region)
-```
 
 If no shape is supplied for the region The design package will make a default study area with the same dimensions as that in the simulation package 'DSsim' 2000 x 500.
 
@@ -251,6 +216,45 @@ plot(design.mix)
  - Add option to clip covered area polygons to the entire study area rather than the strata polygons (this will give higher coverage where two strata meet)
  - Enhanced effort allocation by a sub section of strata only
 
+### Appendices
+
+## Manual creation of study areas
+
+Example of creating a study region manually. This example code is taken from the help file for 'sf::st_multipolygon'. To create an sf polygon or multipolygon you first need to create 1 or more matrices of coordinates representing the outer polygons and any holes. For multipolygons the outer polygons and holes are defined by their placement within their list element, only the first matrix in a list element is an outer polygon then all the following matrices are holes. In the following example all polygons would be considered to be in the same strata.
+
+```{r makeown}
+outer <- matrix(c(0,0,10,0,10,10,0,10,0,0),ncol=2, byrow=TRUE)
+hole1 <- matrix(c(1,1,1,2,2,2,2,1,1,1),ncol=2, byrow=TRUE)
+hole2 <- matrix(c(5,5,5,6,6,6,6,5,5,5),ncol=2, byrow=TRUE)
+pol1 <- list(outer, hole1, hole2)
+pol2 <- list(outer + 12, hole1 + 12)
+pol3 <- list(outer + 24)
+mp <- list(pol1,pol2,pol3)
+mp1 <- sf::st_multipolygon(mp)
+
+region <- make.region(region.name = "study.area", shape = mp1)
+plot(region)
+```
+
+
+If instead you wanted to create the 3 separate polygons as 3 distinct strata you could use the following code:
+
+```{r makeown2}
+outer <- matrix(c(0,0,10,0,10,10,0,10,0,0),ncol=2, byrow=TRUE)
+hole1 <- matrix(c(1,1,1,2,2,2,2,1,1,1),ncol=2, byrow=TRUE)
+hole2 <- matrix(c(5,5,5,6,6,6,6,5,5,5),ncol=2, byrow=TRUE)
+pol1 <- sf::st_polygon(list(outer, hole1, hole2))
+pol2 <- sf::st_polygon(list(outer + 12, hole1 + 12))
+pol3 <- sf::st_polygon(list(outer + 24))
+sfc <- sf::st_sfc(pol1,pol2,pol3)
+strata.names <- c("SW", "central", "NE")
+mp1 <- sf::st_sf(strata = strata.names, geom = sfc)
+
+region <- make.region(region.name = "study.area", 
+                      strata.name = strata.names, 
+                      shape = mp1)
+plot(region)
+```
 
 
 
