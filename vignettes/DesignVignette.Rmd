@@ -198,18 +198,14 @@ plot(design)
 
 ## Line transect surveys
 
+This next section deals with line transect surveys. Currently the design package implements 4 types of line transect design: random parallel lines, systematic parallel lines, equal spaced zigzag and equal spaced zigzag with complement lines. Here we use a study region from the SCANS II survey to demonstrate how different designs can be used in different strata.
+
 ```{r strata, echo=TRUE, fig.asp = 1}
 
 region <- make.region("region", shape = "/Users/lhm/Documents/GitHub/dsuds/dsuds/inst/extdata/shape/strata.shp")
 plot(region)
 
 ```
-
-\newpage
-
-This design demonstrates how different strata can have different designs and different design parameters. 
-
-All designs must either be line transects or point transects, lines and point cannot be mixed. This example uses a mixture of systematic parallel lines and equal spaced zigzags. The zigzags are all generated based on a set spacing where as the parallel lines are generated on a mixture of set spacings or desired number of samplers. 
 
 
 ```{r mixdesign, echo=TRUE, fig.asp = 1}
@@ -242,55 +238,18 @@ plot(design.mix)
 ```
 
 
-## Effort Allocation
+### Enhancements/issues yet to do... in order of importance
 
-In Distance the user can choose to allocate effort to strata based on strata area to try and give even coverage across strata. I plan to implement this by allowing the user to enter a single value for line length (or number of samplers for point transect surveys), they can then optionally specify an effort.allocation which will be a vector of proportions which sum to 1 with a value for each strata. If the user omits the effort.allocation argument then the effort will be allocated according to strata area to try to achieve even coverage.
-
-```{r mixdesign1, echo=TRUE, fig.asp = 1, eval = FALSE}
-
-design.mix <- make.design(region,
-                          transect.type = "line",
-                          design = c(rep("systematic", 2), "eszigzag","systematic", 
-                                     rep("eszigzag",2), "systematic"),
-                          line.length = 4800000,
-                          design.angle = c(85, 100, 145, 110, 135, 140, 150),
-                          bounding.shape = c(NA, NA, "rectangle", NA, "rectangle", 
-                                             "rectangle", NA),
-                          edge.protocol = rep("minus", 7),
-                          truncation = 0.5)
-
-
-```
-
-### Effort Allocation - advanced
-
-If the user wishes to only share effort between a sub group of strata they may do this as shown in the code below. In this case the user will need to allocate -1 in the effort allocation argument where they wish the effort to be allocated based on stratum area. So here the first 4 strata will have line lenghs 500000,700000,500000,700000 respectively and the last 3 strata will have a line length of 2040000 shared between them based on strata area. Otherwise they can again specify proportions that sum to 1 for the non NA values. Is this necessary - not high on the to-do-list,
-
-```{r mixdesign2, echo=TRUE, fig.asp = 1, eval = FALSE}
-
-design.mix <- make.design(region,
-                          transect.type = "line",
-                          design = c(rep("systematic", 2), "eszigzag","systematic", 
-                                     rep("eszigzag",2), "systematic"),
-                          line.length = c(500000,700000,500000,700000, 2040000, 2040000, 2040000),
-                          effort.allocation = c(NA, NA, NA, NA, -1, -1, -1),
-                          design.angle = c(85, 100, 145, 110, 135, 140, 150),
-                          bounding.shape = c(NA, NA, "rectangle", NA, "rectangle", 
-                                             "rectangle", NA),
-                          edge.protocol = rep("minus", 7),
-                          truncation = 0.5)
-
-
-```
-
-### Enhancements/issues yet to do...
-
- - Random point design
- - Merge/union problematic covered areas rather than removing small ones and hence remove the following warnings: Warning: Removing covered area greater than 100,000th of the strata 
- - Speed up systematic point design
- - Add option to clip covered area polygons to the entire study area rather than the strata polygons (this will give higher coverage where two strata meet)
- - Sort 
- - Enhanced effort allocation by a sub section of strata only
+ - Generating line transect surveys by line length (working on it!)
+ - Sort plotting warning Warning in plot.sf(x@samplers, add = add, col = col, pch = pch): ignoring all but the first attribute
  - Dealing with zero effort in some strata
  - Cyclic trackline distances for line transect surveys
+ - Merge/union problematic covered areas rather than removing small ones and hence remove the following warnings: Warning: Removing covered area greater than 100,000th of the strata 
+ - Random point design
+ - Speed up systematic point design
+ - Add option to clip covered area polygons to the entire study area rather than the strata polygons (this will give higher coverage where two strata meet)
+ - Enhanced effort allocation by a sub section of strata only
+
+
+
 
