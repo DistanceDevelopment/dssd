@@ -1,4 +1,15 @@
+#' @title run.coverage
+#' @description This function can be used to assess the coverage of
+#' a design. It generates many sets of transects from the design
+#' supplied and counts how many times each point in the coverage
+#' grid is sampled on each survey. These 'hits' are then averaged
+#' across the number of repetitions.
+#' @param design an object which inherits from the Survey.Design
+#' class.
+#' @param reps the number of times you wish the coverage simulation
+#' to be carried out.
 #' @export
+#' @importFrom stats median
 run.coverage <- function(design, reps = 10){
 #Calculates the coverage scores for the design supplied
 #Also stores summary statistics
@@ -13,6 +24,7 @@ run.coverage <- function(design, reps = 10){
     warning("No coverage grid, generating a default grid with 1000 points.", immediate. = TRUE, call. = FALSE)
     design@coverage.grid <- make.coverage(region = design@region)
   }
+  coverage <- design@coverage.grid
   #Get region
   region <- design@region
   if(length(region@strata.name) > 0){
@@ -46,13 +58,66 @@ run.coverage <- function(design, reps = 10){
     if(class(design) == "Line.Transect.Design"){
       line.length[rep,] <- transects@line.length
     }
-    percent.complete <- round(rep/reps*100, 1)
+    percent.complete <- round((rep/reps)*100, 1)
     cat("\r", percent.complete, "% complete \r")
   }
   #Calculate summary statistics
-  summary.stats <- list(sampler.count = summary(transect.count),
-                        line.length = summary(line.length),
-                        cov.area = summary(cov.area))
+  sampler.summary <- matrix(rep(NA, 4*(strata.count+1)), ncol = (strata.count+1), dimnames = list(c("Minimum", "Mean", "Median", "Maximum"), c(strata.names, "Total")))
+  sampler.summary[1,1:strata.count] <- apply(transect.count, 2, min)
+  sampler.summary[2,1:strata.count] <- apply(transect.count, 2, mean)
+  sampler.summary[3,1:strata.count] <- apply(transect.count, 2, median)
+  sampler.summary[4,1:strata.count] <- apply(transect.count, 2, max)
+  sampler.totals <- apply(transect.count, 1, FUN = sum)
+  sampler.summary[1,(strata.count+1)] <- min(sampler.totals)
+  sampler.summary[2,(strata.count+1)] <- mean(sampler.totals)
+  sampler.summary[3,(strata.count+1)] <- median(sampler.totals)
+  sampler.summary[4,(strata.count+1)] <- max(sampler.totals)
+  sampler.summary <- round(sampler.summary, 1)
+
+
+  cov.area.summary <- matrix(rep(NA, 4*(strata.count+1)), ncol = (strata.count+1), dimnames = list(c("Minimum", "Mean", "Median", "Maximum"), c(strata.names, "Total")))
+  cov.area.summary[1,1:strata.count] <- apply(cov.area, 2, min)
+  cov.area.summary[2,1:strata.count] <- apply(cov.area, 2, mean)
+  cov.area.summary[3,1:strata.count] <- apply(cov.area, 2, median)
+  cov.area.summary[4,1:strata.count] <- apply(cov.area, 2, max)
+  cov.area.totals <- apply(cov.area, 1, FUN = sum)
+  cov.area.summary[1,(strata.count+1)] <- min(cov.area.totals)
+  cov.area.summary[2,(strata.count+1)] <- mean(cov.area.totals)
+  cov.area.summary[3,(strata.count+1)] <- median(cov.area.totals)
+  cov.area.summary[4,(strata.count+1)] <- max(cov.area.totals)
+  cov.area.summary <- round(cov.area.summary, 2)
+
+  areas <- region@area
+  cov.area.percent <- matrix(rep(NA, 4*(strata.count+1)), ncol = (strata.count+1), dimnames = list(c("Minimum", "Mean", "Median", "Maximum"), c(strata.names, "Total")))
+  cov.area.percent[1,1:strata.count] <- apply(cov.area, 2, min)/areas
+  cov.area.percent[2,1:strata.count] <- apply(cov.area, 2, mean)/areas
+  cov.area.percent[3,1:strata.count] <- apply(cov.area, 2, median)/areas
+  cov.area.percent[4,1:strata.count] <- apply(cov.area, 2, max)/areas
+  cov.area.totals <- apply(cov.area, 1, FUN = sum)/sum(areas)
+  cov.area.percent[1,(strata.count+1)] <- min(cov.area.totals)
+  cov.area.percent[2,(strata.count+1)] <- mean(cov.area.totals)
+  cov.area.percent[3,(strata.count+1)] <- median(cov.area.totals)
+  cov.area.percent[4,(strata.count+1)] <- max(cov.area.totals)
+  cov.area.percent <- round(cov.area.percent, 2)
+
+  summary.stats <- list(sampler.count = sampler.summary,
+                        cov.area = cov.area.summary,
+                        p.cov.area = cov.area.percent)
+
+  if(class(design) == "Line.Transect.Design"){
+    line.len.summary <- matrix(rep(NA, 4*(strata.count+1)), ncol = (strata.count+1), dimnames = list(c("Minimum", "Mean", "Median", "Maximum"), c(strata.names, "Total")))
+    line.len.summary[1,1:strata.count] <- apply(line.length, 2, min)
+    line.len.summary[2,1:strata.count] <- apply(line.length, 2, mean)
+    line.len.summary[3,1:strata.count] <- apply(line.length, 2, median)
+    line.len.summary[4,1:strata.count] <- apply(line.length, 2, max)
+    line.len.totals <- apply(line.length, 1, FUN = sum)
+    line.len.summary[1,(strata.count+1)] <- min(line.len.totals)
+    line.len.summary[2,(strata.count+1)] <- mean(line.len.totals)
+    line.len.summary[3,(strata.count+1)] <- median(line.len.totals)
+    line.len.summary[4,(strata.count+1)] <- max(line.len.totals)
+    line.len.summary <- round(line.len.summary, 2)
+    summary.stats$line.length <- line.len.summary
+  }
   design@coverage.scores <- total.hits/reps
   design@design.statistics <- summary.stats
   return(design)
