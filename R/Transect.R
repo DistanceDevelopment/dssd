@@ -7,6 +7,11 @@
 #' @title S4 Class "Transect"
 #' @slot design Describes the design algorithm used to create the survey.
 #' @slot samplers Contains the survey transects
+#' @slot strata.area The areas of the strata in the design
+#' @slot cov.area The total areas sampled within each strata. Areas sampled
+#' twice are counted twice.
+#' @slot cov.area.polys The polygons representing the covered area of the
+#' survey.
 #' @slot samp.count Numeric value(s) giving the number of realised transects.
 #' @slot effort.allocation a vector of probabilities determining how effort is
 #' allocated between strata. Effort allocated based on area if left empty.
@@ -17,7 +22,6 @@
 #' axis for the zigzag design.
 #' @slot edge.protocol character value indicating whether a "plus" sampling or
 #' "minum" sampling protocol is used.
-#' @slot cover.poly polygons outlining the covered area
 #' @keywords classes
 #' @export
 #' @importFrom methods validObject
@@ -25,6 +29,7 @@
 setClass(Class = "Transect",
          representation = representation(design = "character",
                                          samplers = "list",
+                                         strata.area  = "numeric",
                                          cov.area = "numeric",
                                          cov.area.polys = "list",
                                          samp.count = "numeric",
