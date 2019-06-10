@@ -1,4 +1,5 @@
 #' @importFrom methods new
+#' @importFrom stats na.omit
 
 #' @title Creates a Region object
 #' @description This creates an instance of the Region class. If the
@@ -28,7 +29,10 @@ make.region <- function(region.name = "region",
   #Process shape
   if("sf" %in% class(shape)){
     sf.shape = shape
-  }else if("sfc" %in% class(shape)){
+  }else if("sfc" %in% class(shape) || "sfg" %in% class(shape)){
+    if("sfg" %in% class(shape)){
+      shape <- list(shape)
+    }
     if(length(strata.name) < length(shape) && length(shape) > 1){
       warning("Automatically naming strata as insufficient strata names provided.", call. = F, immediate. = T)
       strata.name <- LETTERS[1:length(shape)]
@@ -39,11 +43,13 @@ make.region <- function(region.name = "region",
     }
     sf.shape = sf::st_sf(strata = strata.name,  geom = shape)
   }else if(any(class(shape) %in% c("Polygon", "Polygons", "SpatialPolygons", "SpatialPolygonsDataFrame"))){
-    stop("The sp data type is not currently supported.")
-  }else if(class(shape) == "character"){
-    sf.shape <- sf::read_sf(shape)
-  }else if(class(shape) == "list"){
-    stop("The data.frame data type is not currently supported.")
+    stop("The sp data type is not yet supported... coming soon!")
+  }else if(length(class(shape)) == 1 && !is.null(shape)){
+    if(class(shape) == "character"){
+      sf.shape <- sf::read_sf(shape)
+    }else if(class(shape) == "list"){
+      stop("The list data type is not yet supported... coming soon!")
+    }
   }else if(is.null(shape)){
     #Make a default shape (same as in DSsim currently)
     sfc.shape <- sf::st_sfc(sf::st_polygon(list(matrix(c(0,0,0,500,2000,500,2000,0,0,0), ncol = 2, byrow = TRUE))))
@@ -58,9 +64,9 @@ make.region <- function(region.name = "region",
   if(strata.count == 1 && length(strata.name) == 0){
     strata.name <- region.name
   }else if(strata.count != length(strata.name)){
-    if(length(shape) <= 26){
+    if(length(sf.shape) <= 26){
       warning("Automatically naming strata as no strata names provided.", call. = F, immediate. = T)
-      strata.name <- LETTERS[1:length(shape)]
+      strata.name <- LETTERS[1:length(sf.shape[[sf.column]])]
     }else{
       stop("Too many strata (>26) for strata names to be assigned default names, please provide strata names.", call. = FALSE)
     }
@@ -107,7 +113,9 @@ make.region <- function(region.name = "region",
 #' @param transect.type character variable specifying either "line" or "point"
 #' @param design a character variable describing the type of design. Either "random",
 #' "systematic" or "ESzigzag" (equal-spaced zigzag). See details for more information.
-#' @param desired.sampler the number of samplers you wish the design to generate.
+#' @param samplers the number of samplers you wish the design to generate
+#' (note that the number actually generated may differ slightly due to the
+#' shape of the study region).
 #' @param line.length the total line length you desire.
 #' @param effort.allocation numeric values used to indicate the proportion of effort
 #' to be allocated to each strata from number of samplers or line length. If length 0,
@@ -125,6 +133,8 @@ make.region <- function(region.name = "region",
 #' "rectangle" or a "convex hull".
 #' @param truncation A numeric value describing the longest distance at which an
 #' object may be observed.
+#' @param coverage.grid An object of class Coverage.Grid for use when
+#' running the coverage simulation.
 #' @return object of a class which inherits from class Survey.Design
 #' @export
 #' @author Laura Marshall
@@ -137,7 +147,7 @@ make.design <- function(region = make.region(), transect.type = "line", design =
       warning("The coverage.grid argument must be of class Coverage.Grid.")
     }
     #by default makes a grid with approx 1000 points
-    coverage <- new("Coverage.Grid", grid = list(), spacing = numeric(0))
+    coverage.grid <- new("Coverage.Grid", grid = list(), spacing = numeric(0))
   }
   #Check design arguments
   if(transect.type %in% c("Line", "line", "Line Transect", "line transect")){
@@ -145,7 +155,7 @@ make.design <- function(region = make.region(), transect.type = "line", design =
       samplers = 20
     }
     #Create line transect object
-    design <- new(Class="Line.Transect.Design", region, truncation, design, line.length, effort.allocation, spacing, samplers, design.angle, edge.protocol, bounding.shape, coverage)
+    design <- new(Class="Line.Transect.Design", region, truncation, design, line.length, effort.allocation, spacing, samplers, design.angle, edge.protocol, bounding.shape, coverage.grid)
   }else if(transect.type %in% c("Point", "point", "Point Transect", "point transect")){
     if(design == "random"){
       if(length(samplers) == 0){
@@ -153,21 +163,33 @@ make.design <- function(region = make.region(), transect.type = "line", design =
         spacing = numeric(0)
       }
     }else if(design == "systematic"){
-      if(length(samplers) > 0  && length(spacing) > 0){
-        warning("You have supplied multiple effort definitions, the sampler spacing will be used.", call. = FALSE)
-        samplers <- numeric(0)
-      }else if(length(samplers) == 0 && length(spacing) == 0){
+      # if(length(samplers) > 0  && length(spacing) > 0){
+      #   warning("You have supplied multiple effort definitions, the sampler spacing will be used.", call. = FALSE)
+      #   samplers <- numeric(0)
+      # }else
+      if(length(samplers) == 0 && length(spacing) == 0){
         samplers = 20
       }
     }else{
       stop("Point transect design not recognised, please choose from 'random' or 'systematic", call. = FALSE)
     }
     #Check values
-    if(any(any(samplers < 0) || any(spacing < 0))){
+    if(any(any(na.omit(samplers) < 0) || any(na.omit(spacing) < 0))){
       stop("Negative values were used to specify effort.", call. = FALSE)
     }
     #Create line transect object
-    design <- new(Class="Point.Transect.Design", region, truncation, design, spacing, samplers, effort.allocation, design.angle, edge.protocol, coverage)
+    design <- new(Class="Point.Transect.Design", region, truncation, design, spacing, samplers, effort.allocation, design.angle, edge.protocol, coverage.grid)
+  }
+  #Check design object - make sure correct number of elements per slot etc
+  if(class(design) == "Point.Transect.Design"){
+    test <- check.point.design(design)
+  }else{
+    test <- check.line.design(design)
+  }
+  if(class(test) == "character"){
+    stop(test, call. = FALSE)
+  }else{
+    design <- test
   }
   return(design)
 }
@@ -178,6 +200,9 @@ make.design <- function(region = make.region(), transect.type = "line", design =
 #' @param region the region name
 #' @param spacing the stratum names (character vector, same length as the
 #'   number of areas in the \code{shapefile} or \code{coords} arguments). If not supplied "A", "B", "C", ... will be assigned.
+#' @param n.grid.points the desired number of grid points (note that
+#'   the exact number generated may differ slightly depending on the
+#'   shape of the study region).
 #' @param grid measurement units; either \code{"m"} for metres or \code{"km"} for
 #'   kilometres.
 #' @return object of class Coverage.Grid
