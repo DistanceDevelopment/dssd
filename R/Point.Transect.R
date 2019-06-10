@@ -68,8 +68,9 @@ setMethod(
     add <- ifelse("add" %in% names(additional.args), additional.args$add, FALSE)
     col <- ifelse("col" %in% names(additional.args), additional.args$col, 4)
     pch <- ifelse("pch" %in% names(additional.args), additional.args$pch, 20)
+    sf.column <- attr(region@region, "sf_column")
     if(length(x@samplers) > 0){
-      plot(x@samplers, add = add, col = col, pch = pch)
+      plot(x@samplers[[sf.column]], add = add, col = col, pch = pch)
     }else{
       warning("No samplers to plot", call. = F, immediate. = F)
     }
