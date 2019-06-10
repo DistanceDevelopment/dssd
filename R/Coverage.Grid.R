@@ -18,7 +18,6 @@ NULL
 #'  the grid of points.}
 #' }
 #' @keywords classes
-#' @seealso \code{\link{make.grid}}
 setClass(Class = "Coverage.Grid",
          representation(grid = "list",
                         spacing = "numeric")

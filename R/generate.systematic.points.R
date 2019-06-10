@@ -1,4 +1,4 @@
-generate.systematic.points <- function(design, strata.id, spacing, for.coverage = FALSE, calc.cov.area = TRUE, clip.to.strata = TRUE){
+generate.systematic.points <- function(design, strata.id, spacing, coverage.grid = FALSE, calc.cov.area = TRUE, clip.to.strata = TRUE){
   #Generates either random or systematic parallel lines
   region <- design@region
   #Get the current strata and spacing
@@ -21,7 +21,7 @@ generate.systematic.points <- function(design, strata.id, spacing, for.coverage 
     warning(paste("The spacing allocated to strata number ", strata.id, " is larger than either or both of the x or y dimensions of the region. Cannot generate samplers in this strata.", sep = ""), call. = FALSE, immediate. = TRUE)
     transects <- NA
   }else{
-    if(for.coverage){
+    if(coverage.grid){
       x.diff <- bbox[["xmax"]]-bbox[["xmin"]]
       y.diff <- bbox[["ymax"]]-bbox[["ymin"]]
       start.x <- bbox[["xmin"]] + (x.diff - floor(x.diff/sspace)*sspace)/2
@@ -55,7 +55,7 @@ generate.systematic.points <- function(design, strata.id, spacing, for.coverage 
     points.unrotated <- lapply(points.inside, mat.mult, y=rot.mat.rev)
     transects <- points.unrotated
   }
-  if(calc.cov.area && !for.coverage){
+  if(calc.cov.area && !coverage.grid){
     cov.area.polys <- lapply(transects, FUN = sf::st_buffer, dist = design@truncation)
     if(clip.to.strata){
       cov.area.polys <- lapply(cov.area.polys, sf::st_intersection, y = strata)

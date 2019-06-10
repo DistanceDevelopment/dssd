@@ -1,6 +1,6 @@
-#' @importFrom stats runif
+#' @importFrom stats runif rbinom
 #' @importFrom methods new
-generate.eqspace.zigzags <- function(design, strata.id, samplers, line.length, spacing, by.spacing){
+generate.eqspace.zigzags <- function(design, strata.id, samplers, line.length, spacing, by.spacing, calc.cov.area = TRUE, clip.to.strata = TRUE){
   region <- design@region
   sf.column <- attr(region@region, "sf_column")
   #Get the current strata and spacing
@@ -58,7 +58,6 @@ generate.eqspace.zigzags <- function(design, strata.id, samplers, line.length, s
       #reverse for next time
       zig <- ifelse(zig, FALSE, TRUE)
     }
-
   }
   #keep everything within the polygon strata
   to.keep <- lapply(lines, sf::st_intersection, y = rot.strata)
@@ -170,5 +169,10 @@ generate.eqspace.zigzags <- function(design, strata.id, samplers, line.length, s
   mat.mult <- function(x,y){return(x*y)}
   lines.unrotated <- lapply(to.keep, mat.mult, y=rot.mat.rev)
   transects <- lines.unrotated
+  #Also rotate covered region
+  if(calc.cov.area){
+    cover.polys.unrot <- lapply(cover.polys, mat.mult, y = rot.mat.rev)
+    return(list(transects = transects, cover.polys = cover.polys.unrot))
+  }
   return(list(transects = transects, cover.polys = list()))
 }
