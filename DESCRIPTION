@@ -1,7 +1,10 @@
 Package: dsuds
 Imports:
     sf,
+    plot3D,
     methods
+Suggests: knitr
+VignetteBuilder: knitr
 Type: Package
 Title: Distance Sampling Survey Design
 Version: 0.1.0
@@ -26,6 +29,9 @@ Collate:
     'Line.Transect.R'
     'Point.Transect.Design.R'
     'Point.Transect.R'
+    'calc.ave.line.height.R'
+    'check.line.design.R'
+    'check.point.design.R'
     'check.shape.R'
     'generate.eqspace.zigzags.R'
     'generate.parallel.lines.R'
