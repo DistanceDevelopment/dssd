@@ -24,7 +24,7 @@ Users can define a study area by either passing in a pathway to a shapefile or p
 
 The user can provide a region name and names for strata if applicable. If no strata names are provided and the study area has multiple strata these will be automatically assigned as letters of the alpabet.
 
-```{r scansIIarea}
+```{r scansIIarea, fig.asp = 1}
 library(dsuds)
 region <- make.region(region.name = "study.area", shape = "/Users/lhm/Documents/GitHub/dsuds/dsuds/inst/extdata/shape/strata.shp")
 plot(region)
@@ -33,7 +33,7 @@ plot(region)
 
 If no shape is supplied for the region The design package will make a default study area with the same dimensions as that in the simulation package 'DSsim' 2000 x 500.
 
-```{r defaultregion}
+```{r defaultregion, fig.asp = 1}
 default.region <- make.region()
 plot(default.region)
 ```
@@ -45,7 +45,7 @@ plot(default.region)
 
 'dsuds' can generate two types of transect designs: points and lines. The default design is 20 systematic parallel lines with a design angle of 0, meaning that the lines run perpendicular to the x axis. 
 
-```{r defaultdesign}
+```{r defaultdesign, fig.asp = 1}
 default.design <- make.design(default.region)
 transects <- generate.transects(default.design)
 plot(default.region, transects, lwd = 1.5, col = 4)
@@ -58,7 +58,7 @@ plot(default.region, transects, lwd = 1.5, col = 4)
 
 I have implemented the systematic point transect design. This design can have different design arguments such as spacing, design.angle, no.samplers and  plus/minus sampling for each strata. I have yet to implement the summary methods for the point transect objects so I have included details about what I will show.
 
-```{r point}
+```{r point, fig.asp = 1}
 
 region <- make.region("study area", c("A", "B"), shape = "/Users/lhm/Documents/Work/design package/sf investigations/strata.shp")
 design <- make.design(region, transect.type = "point", 
@@ -78,7 +78,7 @@ plot(region, transects)
 
 The next example uses the desired number of samplers to determine the spacing. In this example the spacing is based on a calculation involving the strata area however in the case of plus sampling should this calculation be based on the buffered survey region? Otherwise it will generate many more than the desired number of points.
 
-```{r point2}
+```{r point2, fig.asp = 1}
 
 design <- make.design(region, "point", "systematic", 
                       samplers = c(20,20), 
@@ -95,7 +95,7 @@ plot(region, transects, covered.area = TRUE)
 This next example demonstrates when the user would like even coverage and would like to define the desired number of samplers across the entire study region rather than by strata.
 
 
-```{r pointtotalsamplers}
+```{r pointtotalsamplers, fig.asp = 1}
 
 design <- make.design(region, "point", "systematic", 
                       samplers = c(40), 
@@ -109,7 +109,7 @@ plot(region, transects, covered.area = TRUE)
 
 ```
 
-```{r pointmissampspace}
+```{r pointmissampspace, fig.asp = 1}
 
 design <- make.design(region, "point", "systematic", 
                       samplers = c(20, NA),
@@ -123,7 +123,7 @@ plot(region, transects, covered.area = TRUE)
 
 
 ```
-```{r pointtotalsamplerswitheffortallocation}
+```{r pointtotalsamplerswitheffortallocation, fig.asp = 1}
 
 design <- make.design(region, "point", "systematic", 
                       samplers = c(40),
@@ -141,7 +141,7 @@ plot(region, transects, covered.area = TRUE)
 
 Let us now assess the coverage of a design. It is reccommended that you make a coverage grid and pass it to the make.design function. Doing it this way can be more memory efficient if you are trying multiple designs in the same study region. If you have not passed in a coverage grid when you make the design then when you try to run the coverage you will get a warning and a default grid with 1000 points will be generated. This example demonstrated the difference in coverage around the stratum boundaries with plus and minus sampling.
 
-```{r pointcoverage}
+```{r pointcoverage, results='hide'}
 
 region <- make.region("study area", c("A", "B"), shape = "/Users/lhm/Documents/Work/design package/sf investigations/strata.shp")
 cover <- make.coverage(region, n.grid.point = 500)
@@ -153,9 +153,11 @@ design <- make.design(region, transect.type = "point",
                       truncation = 1,
                       coverage.grid = cover)
 design <- run.coverage(design, reps = 50)
+
+```
+```{r pointcoverageresults, fig.asp = 1}
 design
 plot(design)
-
 ```
 
 
@@ -194,9 +196,15 @@ plot(region, transects.mix, col = 4, covered.area = T)
 
 ```
 
-```{r mixdesigncoverage, echo=TRUE, fig.asp = 1}
+```{r mixdesigncoverage, echo=TRUE, fig.asp = 1, results='hide'}
 
 design.mix <- run.coverage(design.mix, reps = 50)
+
+
+```
+
+```{r mixdesigncoverageresults, echo=TRUE, fig.asp = 1}
+
 design.mix
 plot(design.mix)
 
@@ -222,7 +230,7 @@ plot(design.mix)
 
 Example of creating a study region manually. This example code is taken from the help file for 'sf::st_multipolygon'. To create an sf polygon or multipolygon you first need to create 1 or more matrices of coordinates representing the outer polygons and any holes. For multipolygons the outer polygons and holes are defined by their placement within their list element, only the first matrix in a list element is an outer polygon then all the following matrices are holes. In the following example all polygons would be considered to be in the same strata.
 
-```{r makeown}
+```{r makeown, fig.asp = 1}
 outer <- matrix(c(0,0,10,0,10,10,0,10,0,0),ncol=2, byrow=TRUE)
 hole1 <- matrix(c(1,1,1,2,2,2,2,1,1,1),ncol=2, byrow=TRUE)
 hole2 <- matrix(c(5,5,5,6,6,6,6,5,5,5),ncol=2, byrow=TRUE)
@@ -239,7 +247,7 @@ plot(region)
 
 If instead you wanted to create the 3 separate polygons as 3 distinct strata you could use the following code:
 
-```{r makeown2}
+```{r makeown2, fig.asp = 1}
 outer <- matrix(c(0,0,10,0,10,10,0,10,0,0),ncol=2, byrow=TRUE)
 hole1 <- matrix(c(1,1,1,2,2,2,2,1,1,1),ncol=2, byrow=TRUE)
 hole2 <- matrix(c(5,5,5,6,6,6,6,5,5,5),ncol=2, byrow=TRUE)
