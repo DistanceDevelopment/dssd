@@ -74,3 +74,46 @@ setMethod(
     invisible(x)
   }
 )
+
+#' Show
+#'
+#' Displays details of an S4 object of class 'Transect'
+#'
+#' @rdname show.Transect-methods
+#' @exportMethod show
+setMethod(
+  f="show",
+  signature="Point.Transect",
+  definition=function(object){
+    strata.names <- as.character(unique(object@samplers$strata))
+    for(strat in seq(along = object@design)){
+      title <- paste("\n   Strata ", strata.names[strat], ":", sep = "")
+      len.title <- nchar(title)
+      underline <- paste("   ", paste(rep("_", (len.title-3)), collapse = ""), sep = "")
+      cat(title, fill = T)
+      cat(underline, fill = T)
+      design <- switch(object@design[strat],
+                       "random" = "randomly located transects",
+                       "systematic" = "systematically spaced transects")
+      cat("Design: ", design, fill = T)
+      if(object@design[strat] == "systematic"){
+        cat("Spacing: ", object@spacing[strat], fill = T)
+      }
+      cat("Number of samplers: ", object@samp.count[strat], fill = T)
+      cat("Design angle: ", object@design.angle[strat], fill = T)
+      cat("Edge protocol: ", object@edge.protocol[strat], fill = T)
+      cat("Covered area: ", object@cov.area[strat], fill = T)
+      cat("Strata coverage: ", round((object@cov.area[strat]/object@strata.area[strat])*100,2), "%", fill = T)
+    }
+    #Now print totals
+    cat("\n   Study Area Totals:", fill = T)
+    cat("   _________________", fill = T)
+    cat("Number of samplers: ", sum(object@samp.count), fill = T)
+    if(length(object@effort.allocation) > 0){
+      cat("Effort allocation: ", paste(object@effort.allocation*100, collapse = "%, "), "%", fill = T)
+    }
+    cat("Covered area: ", sum(object@cov.area), fill = T)
+    cat("Average coverage: ", round((sum(object@cov.area)/sum(object@strata.area))*100,2), "%", fill = T)
+    invisible(object)
+  }
+)
