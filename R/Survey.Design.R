@@ -107,7 +107,7 @@ setMethod(
       cat(underline, fill = T)
       design <- switch(object@design[strat],
                        "random" = "randomly located transects",
-                       "systematic" = "systematically spaced parallel transects",
+                       "systematic" = "systematically spaced transects",
                        "eszigzag" = "equal spaced zigzag",
                        "eszigzagcom" = "complementaty equal spaced zigzags")
       cat("Design: ", design, fill = T)
