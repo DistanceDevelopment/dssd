@@ -18,6 +18,10 @@ make.design(region = make.region(), transect.type = "line",
 \item{design}{a character variable describing the type of design. Either "random",
 "systematic" or "ESzigzag" (equal-spaced zigzag). See details for more information.}
 
+\item{samplers}{the number of samplers you wish the design to generate
+(note that the number actually generated may differ slightly due to the
+shape of the study region).}
+
 \item{line.length}{the total line length you desire.}
 
 \item{effort.allocation}{numeric values used to indicate the proportion of effort
@@ -42,7 +46,8 @@ whether the zigzag transects should be generated using a minimum bounding
 \item{truncation}{A numeric value describing the longest distance at which an
 object may be observed.}
 
-\item{desired.sampler}{the number of samplers you wish the design to generate.}
+\item{coverage.grid}{An object of class Coverage.Grid for use when
+running the coverage simulation.}
 }
 \value{
 object of a class which inherits from class Survey.Design

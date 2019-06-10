@@ -8,12 +8,10 @@
 \S4method{show}{Survey.Design}(object)
 }
 \arguments{
-\item{x}{object of class Survey.Design}
-
-\item{y}{not used}
+\item{object}{an object which inherits from the Survey.Design class}
 
 \item{...}{other general plot parameters}
 }
 \description{
-Summarises an S4 object of class 'Survey.Design'
+Summarises and displays an S4 object of class 'Survey.Design'
 }

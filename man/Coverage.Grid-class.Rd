@@ -29,7 +29,4 @@ grid used to assess the coverage scores of different designs.
 }
 }
 
-\seealso{
-\code{\link{make.grid}}
-}
 \keyword{classes}

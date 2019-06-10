@@ -13,6 +13,10 @@ make.coverage(region = make.region(), spacing = numeric(0),
 \item{spacing}{the stratum names (character vector, same length as the
 number of areas in the \code{shapefile} or \code{coords} arguments). If not supplied "A", "B", "C", ... will be assigned.}
 
+\item{n.grid.points}{the desired number of grid points (note that
+the exact number generated may differ slightly depending on the
+shape of the study region).}
+
 \item{grid}{measurement units; either \code{"m"} for metres or \code{"km"} for
 kilometres.}
 }

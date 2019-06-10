@@ -39,6 +39,15 @@ sampling strategy should be used.}
 \item{\code{truncation}}{Object of class \code{"numeric"}; The maximum distance
 at which observations can be made. This is used to determine the covered
 area during the coverage calculations.}
+
+\item{\code{coverage.grid}}{The coverage grid used to assess the uniformity
+of coverage during simulations.}
+
+\item{\code{coverage.scores}}{The average number of times each point in the
+coverage grid is included in a survey.}
+
+\item{\code{design.statistics}}{A list of values obtained when investigating
+coverage. This includes the minimum, maximum, mean and median}
 }}
 
 \seealso{

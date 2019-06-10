@@ -18,6 +18,14 @@ single set of transects.
 
 \item{\code{samplers}}{Contains the survey transects}
 
+\item{\code{strata.area}}{The areas of the strata in the design}
+
+\item{\code{cov.area}}{The total areas sampled within each strata. Areas sampled
+twice are counted twice.}
+
+\item{\code{cov.area.polys}}{The polygons representing the covered area of the
+survey.}
+
 \item{\code{samp.count}}{Numeric value(s) giving the number of realised transects.}
 
 \item{\code{effort.allocation}}{a vector of probabilities determining how effort is
@@ -32,8 +40,6 @@ axis for the zigzag design.}
 
 \item{\code{edge.protocol}}{character value indicating whether a "plus" sampling or
 "minum" sampling protocol is used.}
-
-\item{\code{cover.poly}}{polygons outlining the covered area}
 }}
 
 \seealso{
