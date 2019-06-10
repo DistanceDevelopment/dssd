@@ -134,7 +134,7 @@ This next example demonstrates when the user would like even coverage and would 
 
 design <- make.design(region, "point", "systematic", 
                       samplers = c(40), 
-                      edge.protocol = c("minus"), 
+                      edge.protocol = c("minus"),
                       design.angle = c(0,45),
                       truncation = 1)
 transects <- generate.transects(design)
