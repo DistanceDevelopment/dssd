@@ -73,14 +73,24 @@ setMethod(
     #Get a vector of designs
     if(length(object@design) == 1){
       object@design <- rep(object@design, strata.no)
+      unique.design <- TRUE
     }else{
       object@design <- object@design
+      if(length(unique(object@design)) == 1){
+        unique.design <- TRUE
+      }else{
+        uniqie.design <- FALSE
+      }
     }
     #Calculate effort allocation if using only one design and only if spacing has not been specified.
     if(length(unique(object@design)) == 1  && length(object@spacing) == 0){
       if(length(object@effort.allocation) == 0){
         #Use area
         effort.allocation <- region@area/sum(region@area)
+        # if(unique(object@design) == "systematic"){
+        #   #Calculate a global spacing
+        #   spacing <-
+        # }
       }else{
         effort.allocation <- object@effort.allocation
       }
@@ -100,10 +110,17 @@ setMethod(
     #If spacing has not been provided for any
     if(all(!by.spacing)){
       #If only a total number of samplers has been provided (and there is only one design)
-      if(length(samplers) == 1 && length(object@design) == 1){
-        #Calculate spacing from the number of desired samplers across whole region
-        spacing <- sum(abs(region@area))^0.5 / object@samplers^0.5
-        spacing <- rep(spacing, strata.no)
+      if(length(samplers) == 1 && unique.design){
+        if(unique(object@design) == "systematic" && length(object@effort.allocation) == 0){
+          spacing <- sum(abs(region@area))^0.5 / object@samplers^0.5
+          spacing <- rep(spacing, strata.no)
+          object@spacing <- spacing
+        }else if(unique(object@design) == "systematic" && length(object@effort.allocation) > 0){
+          samplers <- effort.allocation*object@samplers
+          spacing <- abs(region@area)^0.5 / samplers^0.5
+        }else{
+          #assign sampler numbers based on effort allocation
+        }
       }else if(length(samplers) == strata.no){
         spacing <- apply(matrix(c(region@area, object@samplers), ncol = 2), FUN = function(x){abs(x[1])^0.5 / x[2]^0.5}, MARGIN = 1)
       }
@@ -122,7 +139,7 @@ setMethod(
     #Main grid generation
     for (strat in seq(along = region@region[[sf.column]])) {
       if(object@design[strat] %in% c("systematic")){
-        temp <- generate.systematic.points(design = object, strata.id = strat, spacing = spacing[strat], for.coverage = for.coverage)
+        temp <- generate.systematic.points(design = object, strata.id = strat, spacing = spacing[strat], coverage.grid = for.coverage)
         transects[[strat]] <- temp$transects
         polys[[strat]] <- temp$cover.polys
       #}else if(object@design[strat] == "random"){
@@ -183,7 +200,7 @@ setMethod(
     #  all.transects <- list()
     #}
     #Make a survey object
-    survey <- new(Class="Point.Transect", design = object@design, points = all.transects, samp.count = transect.count, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = cov.areas, cov.area.polys = all.polys)
+    survey <- new(Class="Point.Transect", design = object@design, points = all.transects, samp.count = sampler.count, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = cov.areas, cov.area.polys = all.polys, strata.area = region@area)
     return(survey)
   }
 )
