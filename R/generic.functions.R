@@ -1,4 +1,5 @@
 #' @importFrom graphics plot
+#' @importFrom methods show
 NULL
 
 
