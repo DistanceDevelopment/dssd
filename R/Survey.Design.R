@@ -98,6 +98,33 @@ setMethod(
   f="show",
   signature="Survey.Design",
   definition=function(object){
+    strata.names <- object@region@strata.name
+    for(strat in seq(along = strata.names)){
+      title <- paste("\n   Strata ", strata.names[strat], ":", sep = "")
+      len.title <- nchar(title)
+      underline <- paste("   ", paste(rep("_", (len.title-3)), collapse = ""), sep = "")
+      cat(title, fill = T)
+      cat(underline, fill = T)
+      design <- switch(object@design[strat],
+                       "random" = "randomly located transects",
+                       "systematic" = "systematically spaced parallel transects",
+                       "eszigzag" = "equal spaced zigzag",
+                       "eszigzagcom" = "complementaty equal spaced zigzags")
+      cat("Design: ", design, fill = T)
+      if(object@design[strat] %in% c("systematic", "eszigzag", "eszigzagcom")){
+        cat("Spacing: ", object@spacing[strat], fill = T)
+      }
+      if(length(object@samplers) == 1){
+        cat("Number of samplers: ", object@samplers, " (shared across strata)", fill = T)
+      }else{
+        cat("Number of samplers: ", object@samplers[strat], fill = T)
+      }
+      cat("Design angle: ", object@design.angle[strat], fill = T)
+      cat("Edge protocol: ", object@edge.protocol[strat], fill = T)
+    }
+    if(length(object@effort.allocation) > 0){
+      cat("\nEffort allocation across strata: ", paste(object@effort.allocation*100, collapse = " %, "), "%", fill = T)
+    }
     design.stats <- object@design.statistics
     names.stats <- names(design.stats)
     for(i in seq(along = design.stats)){
