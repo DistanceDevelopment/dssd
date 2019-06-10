@@ -40,95 +40,13 @@ setMethod(
     .Object@coverage.scores <- numeric(0)
     .Object@design.statistics <- data.frame()
     #Check object is valid
-    valid <- try(validObject(.Object), silent = TRUE)
-    if(class(valid) == "try-error"){
-      stop(attr(valid, "condition")$message, call. = FALSE)
-    }
+    # valid <- try(validObject(.Object), silent = TRUE)
+    # if(class(valid) == "try-error"){
+    #   stop(attr(valid, "condition")$message, call. = FALSE)
+    # }
     # return object
     return(.Object)
   }
-)
-
-setValidity("Point.Transect.Design",
-            function(object){
-              #Check how many strata there are
-              strata.count <- length(object@region@strata.name)
-              #Check design
-              if(length(object@design) == 1){
-                object@design <- rep(object@design, strata.count)
-              }else if(length(object@design) > 1 && length(object@design) != strata.count){
-                warning("Design argument has a different number of values than there are strata, only using the 1st value.", call. = FALSE, immediate. = TRUE)
-                object@design <- rep(object@design[1], strata.count)
-              }
-              if(any(!(object@design %in% c("random", "systematic")))){
-                return(paste("Unrecognised designs: ", object@design, sep = ""))
-              }
-              if(all(object@design == "random") && length(object@spacing > 0)){
-                object@spacing <- numeric(0)
-              }
-              #Check for spacing values
-              spacing.for.all = FALSE
-              if(length(object@spacing) == 1){
-                object@spacing <- rep(object@spacing, strata.count)
-                spacing.for.all = TRUE
-                if(length(object@samplers) > 0){
-                  object@samplers <- numeric(0)
-                }
-              }else if(length(object@spacing) > 1 && length(object@spacing) != strata.count){
-                spacing.for.all = FALSE
-              }else if(length(object@spacing) == strata.count && !all(is.na(object@spacing))){
-                spacing.for.all = TRUE
-              }else if(length(object@spacing) == strata.count && any(is.na(object@spacing))){
-                spacing.for.all = FALSE
-              }else if(length(object@spacing) > 1 && length(object@spacing) < strata.count){
-                object@spacing <- c(object@spacing, rep(NA, (strata.count - length(object@spacing))))
-              }
-              #Return TRUE if they are all systematic and spacings have been provided for all
-              if(all(object@design == "systematic") && spacing.for.all){
-                return(TRUE)
-              }
-              #If random selected then check that samplers has been supplied
-              check.effort.allocation = FALSE
-              if(all(object@design == "random")){
-                if(length(object@samplers == 0)){
-                  object@samplers <- 20
-                  check.effort.allocation = TRUE
-                }else if(length(object@samplers == 1)){
-                  check.effort.allocation = TRUE
-                }else if(length(object@samplers == strata.count && !any(is.na(object@samplers)))){
-                  return(TRUE)
-                }else if(length(object@samplers) != strata.count){
-                  return("Incorrect number of sampler values provided, either provide one total or one value for each strata.")
-                }
-              }
-              #Check effort allocation
-              if(check.effort.allocation){
-                if(length(object@effort.allocation > 0) && length(object@effort.allocation) != strata.count){
-                  return("Incorrect number of effort.allocation values supplied, should either be omitted or have the same number of values as there are strata.")
-                }else{
-                  #All ok so return TRUE - random design with single value
-                  return(TRUE)
-                }
-              }
-              #Check if samplers has been supplied
-              if(length(object@samplers) > 0 && spacing.for.all){
-                warning("Samplers argument being ignored as spacings were provided for all strata.", call. = FALSE, immediate. = TRUE)
-                object@samplers <- numeric(0)
-              }
-              #if there is a mixture of designs / design options
-              for(i in 1:strata.count){
-                if(object@design[i] == "random"){
-                  if(!is.numeric(object@samplers[i])){
-                    return(paste("Strata ", i, " has a random design but a non numeric argument has been supplied for the number of samplers.", sep = "" ))
-                  }
-                }else if(object@design[i] == "systematic"){
-                  if(!is.numeric(object@samplers[i]) && !is.numeric(object@spacing[i])){
-                    return(paste("Strata ", i, " has a systematic design but a non numeric argument has been supplied for the both the number of samplers and the spacing.", sep = "" ))
-                  }
-                }
-              }
-              return(TRUE)
-            }
 )
 
 # GENERIC METHODS DEFINITIONS --------------------------------------------

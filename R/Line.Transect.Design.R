@@ -56,14 +56,6 @@ setMethod(
   }
 )
 
-setValidity("Line.Transect.Design",
-            function(object){
-              region <- object@region
-
-              return(TRUE)
-            }
-)
-
 # GENERIC METHODS DEFINITIONS --------------------------------------------
 
 #' @rdname generate.transects-methods
