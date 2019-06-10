@@ -19,10 +19,12 @@ setMethod(
   f="initialize",
   signature="Point.Transect",
   definition=function(.Object, design, points, samp.count, effort.allocation,
-                      spacing, design.angle, edge.protocol, cov.area = numeric(0), cov.area.polys = list()){
+                      spacing, design.angle, edge.protocol, cov.area = numeric(0),
+                      cov.area.polys = list(), strata.area){
     #Set slots
     .Object@design        <- design
     .Object@samplers      <- points
+    .Object@strata.area   <- strata.area
     .Object@cov.area      <- cov.area
     .Object@cov.area.polys <- cov.area.polys
     .Object@samp.count    <- samp.count
@@ -64,7 +66,7 @@ setMethod(
     # If main is not supplied then take it from the object
     additional.args <- list(...)
     add <- ifelse("add" %in% names(additional.args), additional.args$add, FALSE)
-    col <- ifelse("col" %in% names(additional.args), additional.args$col, 5)
+    col <- ifelse("col" %in% names(additional.args), additional.args$col, 4)
     pch <- ifelse("pch" %in% names(additional.args), additional.args$pch, 20)
     if(length(x@samplers) > 0){
       plot(x@samplers, add = add, col = col, pch = pch)
