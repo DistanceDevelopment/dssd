@@ -29,7 +29,7 @@ Collate:
     'Line.Transect.R'
     'Point.Transect.Design.R'
     'Point.Transect.R'
-    'calc.ave.line.height.R'
+    'calc.region.width.R'
     'check.line.design.R'
     'check.point.design.R'
     'check.shape.R'

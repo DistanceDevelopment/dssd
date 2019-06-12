@@ -16,6 +16,18 @@ generate.eqspace.zigzags <- function(design, strata.id, samplers, line.length, s
   }
   #Find the minimum and maximum x and y values
   bbox <- sf::st_bbox(rot.strata)
+  if(!by.spacing && is.na(samplers)){
+    #Calculate from line.length
+    width <- bbox$xmax - bbox$xmin
+    names(width) <- NULL
+    ave.line.height <- sf::st_area(rot.strata)/width
+    if(design@design[strata.id] == "eszigzag"){
+      spacing = (width * ave.line.height) / sqrt(line.length^2 - width^2)
+    }else{
+      spacing = (width * ave.line.height) / sqrt((line.length/2)^2 - width^2)
+    }
+    by.spacing = TRUE
+  }
   if(!by.spacing){
     spacing <- (bbox[["xmax"]]-bbox[["xmin"]])/(samplers)
     if(design@design[strata.id] == "eszigzagcom"){

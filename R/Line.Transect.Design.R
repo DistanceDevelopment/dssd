@@ -82,7 +82,7 @@ setMethod(
       design <- object@design
     }
     #Calculate effort allocation if only only one design or if using total line length and only if spacing has not been specified.
-    if((length(object@design) == 1 || length(object@line.length) == 1) && length(object@spacing) == 0){
+    if((length(object@design) == 1 || length(object@line.length) == 1 || length(object@samplers) == 1) && length(object@spacing) == 0){
       if(length(object@effort.allocation) == 0){
         #Use area
         effort.allocation <- region@area/sum(region@area)
@@ -106,12 +106,40 @@ setMethod(
     #If spacing has not been provided for any
     if(all(!by.spacing)){
       #If only a total number of samplers has been provided (and there is only one design)
-      if(length(samplers) == 1 && length(object@design) == 1){
-        samplers <- samplers*effort.allocation
+      if(length(samplers) == 1){
+        if(!"random" %in% object@design && length(object@effort.allocation) == 0){
+          #Calculate spacing across entire study region for more equal effort (it will only be truly equal if the same design is used across strata)
+          width <- calc.region.width(object)
+          spacing <- width/samplers
+          spacing <- ifelse(design == "eszigzagcom", spacing*2, spacing)
+          by.spacing <- rep(TRUE, strata.no)
+        }else{
+          #Have to allocate number of samplers per strata
+          samplers <- samplers*effort.allocation
+        }
       }
       #If only a total line.length has been supplied
       if(length(line.length) == 1){
-        line.length <- line.length*effort.allocation
+        width <- calc.region.width(object)
+        ave.line.height <- (sum(object@region@area)/width)
+        if(length(object@effort.allocation) == 0){
+          if(all(design == "systematic")){
+            tot.samplers <- line.length/ave.line.height
+            spacing <- rep(width/tot.samplers, strata.no)
+            by.spacing <- rep(TRUE, strata.no)
+          }else if(all(design == "eszigzag")){
+            spacing = (width * ave.line.height) / sqrt(line.length^2 - width^2)
+            spacing <- rep(spacing, strata.no)
+            by.spacing <- rep(TRUE, strata.no)
+          }else if(all(design == "eszigzagcom")){
+            spacing = (width * ave.line.height) / sqrt((line.length/2)^2 - width^2)
+            spacing <- rep(spacing, strata.no)
+            by.spacing <- rep(TRUE, strata.no)
+          }
+        }else{
+          #Have to allocate line.length / number of samplers per strata
+          line.length <- line.length*effort.allocation
+        }
       }
     #If spacing has been provided for some but not all - deal with this in validation function!
     #Need to check only one option supplied for each strata

@@ -17,6 +17,14 @@ generate.parallel.lines <- function(design, strata.id, samplers, line.length, sp
   }
   #Find the minimum and maximum x and y values
   bbox <- sf::st_bbox(rot.strata)
+  #Find the number of samplers
+  if(!by.spacing && is.na(samplers)){
+    #Calculate from line.length
+    width <- bbox$xmax - bbox$xmin
+    names(width) <- NULL
+    ave.line.height <- sf::st_area(rot.strata)/width
+    samplers <- line.length/ave.line.height
+  }
   if(!by.spacing && design@design[strata.id] == "systematic"){
     spacing <- (bbox[["xmax"]]-bbox[["xmin"]])/(samplers)
   }

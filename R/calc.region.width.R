@@ -1,4 +1,4 @@
-calc.ave.line.height <- function(design, strata.id = NULL){
+calc.region.width <- function(design, strata.id = NULL){
   region <- design@region
   sf.column <- attr(region@region, "sf_column")
   width <- 0
@@ -19,5 +19,6 @@ calc.ave.line.height <- function(design, strata.id = NULL){
     bbox <- sf::st_bbox(rot.strata)
     width <- width + (bbox$xmax - bbox$xmin)
   }
-  return(sum(region@area[index])/width)
+  names(width) <- NULL
+  return(width)
 }
