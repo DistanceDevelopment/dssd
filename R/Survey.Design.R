@@ -76,10 +76,12 @@ setMethod(
     coverage.scores <- x@coverage.scores
     pmar <- par(mar = c(1, 1, 4, 5))
     on.exit(par(mar = pmar))
-    plot(x@region@region$geometry, main = "Coverage Scores", cex.main = 1.5)
+    sf.column.region <- attr(x@region@region, "sf_column")
+    sf.column.grid <- attr(x@coverage.grid@grid, "sf_column")
+    plot(x@region@region[[sf.column.region]], main = "Coverage Scores", cex.main = 1.5)
     cols <- heat.colors(col.breaks)[as.numeric(cut(coverage.scores, breaks = col.breaks))]
-    plot(x@coverage.grid@grid$geometry, pch = 20, col = cols, add = T)
-    plot(x@region@region$geometry, add = T)
+    plot(x@coverage.grid@grid[[sf.column.grid]], pch = 20, col = cols, add = T)
+    plot(x@region@region[[sf.column.region]], add = T)
     plot3D::colkey(side = 4, clim = range(coverage.scores), col = heat.colors(col.breaks), add = TRUE, length = 0.7)
     invisible(x)
   }

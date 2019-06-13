@@ -66,13 +66,14 @@ setMethod(
     add <- ifelse("add" %in% names(additional.args), additional.args$add, FALSE)
     col <- ifelse("col" %in% names(additional.args), additional.args$col, 5)
     lwd <- ifelse("lwd" %in% names(additional.args), additional.args$lwd, 2)
-    add.cover.area <- ifelse("add.cover.area" %in% names(additional.args), additional.args$add.cover.area, FALSE)
-    sf.column <- attr(region@region, "sf_column")
+    #add.cover.area <- ifelse("add.cover.area" %in% names(additional.args), additional.args$add.cover.area, FALSE)
+    sf.column.poly <- attr(x@cov.area.polys, "sf_column")
+    sf.column.samps <- attr(x@samplers, "sf_column")
     if(length(x@samplers) > 0){
-      if(add.cover.area){
-        plot(x@cov.area.polys[[sf.column]], add = add, col = 4)
-      }
-      plot(x@samplers[[sf.column]], add = add, col = col, lwd = lwd)
+      #if(add.cover.area){
+      #  plot(x@cov.area.polys[[sf.column.poly]], add = add, col = 4)
+      #}
+      plot(x@samplers[[sf.column.samps]], add = add, col = col, lwd = lwd)
     }else{
       warning("No samplers to plot", call. = F, immediate. = F)
     }
