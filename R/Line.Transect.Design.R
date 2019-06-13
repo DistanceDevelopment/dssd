@@ -135,6 +135,9 @@ setMethod(
             spacing = (width * ave.line.height) / sqrt((line.length/2)^2 - width^2)
             spacing <- rep(spacing, strata.no)
             by.spacing <- rep(TRUE, strata.no)
+          }else{
+            #there is a mix of designs or they are random
+            line.length <- line.length*effort.allocation
           }
         }else{
           #Have to allocate line.length / number of samplers per strata
