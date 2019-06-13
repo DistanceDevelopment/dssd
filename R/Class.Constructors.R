@@ -96,29 +96,31 @@ make.region <- function(region.name = "region",
 #' the user may select either a minus or plus sampling edge protocol.
 #'
 #' For line transect designs the user may either specify "random" (randomly
-#' placed full width lines), "systematic" (systematically placed full width lines)
-#' or "ESzigzag" (equally placed zigzag lines). If the user specifies "random", they
+#' placed full width lines), "systematic" (systematically placed full width lines),
+#' "eszigzag" (equally spaced zigzag lines) or "eszigzagcom" (two sets of complementary
+#' equally spaced zigzag lines). If the user specifies "random", they
 #' should provide the either the number of samplers they wish the design to generate
 #' or the total line length they wish to achieve. If the user specifies "systematic"
 #' they should specify either the number of samplers, the desired total line length
 #' or the spacing between lines. The design angle for these parallel line designs
-#' refers to the angle of the lines. If the user specifies the zigzag design they
-#' should specify the systematic spacing value to be used and should choose between
-#' generating the design in a minimum bounding rectangle or a convex hull. The
-#' designs may be generated using plus or minus sampling protocols. Similar to
-#' the point transect designs different values may be specified for each strata
-#' for all of the above options.
+#' refers to the angle of the lines. If the user specifies a zigzag design they
+#' should specify the systematic spacing value, number of samplers or line length
+#' to be used and should choose between generating the design in a minimum bounding
+#' rectangle or a convex hull. The designs may be generated using plus or minus
+#' sampling protocols. Similar to the point transect designs different values may
+#' be specified for each strata for all of the above options.
 #'
 #' @param region an object of class Region defining the survey region.
 #' @param transect.type character variable specifying either "line" or "point"
 #' @param design a character variable describing the type of design. Either "random",
-#' "systematic" or "ESzigzag" (equal-spaced zigzag). See details for more information.
+#' "systematic", "eszigzag" (equal-spaced zigzag) or "eszigzagcom" (equal spaced zigzag with complementary lines). See details for more information.
 #' @param samplers the number of samplers you wish the design to generate
 #' (note that the number actually generated may differ slightly due to the
 #' shape of the study region).
 #' @param line.length the total line length you desire.
 #' @param effort.allocation numeric values used to indicate the proportion of effort
-#' to be allocated to each strata from number of samplers or line length. If length 0,
+#' to be allocated to each strata from number of samplers or line length. If length is
+#' 0 (the default) and only a total line length or total number of samplers is supplied,
 #' effort allocated based on stratum area.
 #' @param design.angle numeric value detailing the angle of the design. Can provide
 #' multiple values relating to strata. The use of the angle varies with design, it
