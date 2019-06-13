@@ -29,6 +29,16 @@ check.line.design <- function(object){
     index <- which(!(object@edge.protocol %in% c("minus", "plus")))
     object@edge.protocol[index] <- "minus"
   }
+  #Check bounding shape
+  if(any(object@design %in% c("eszigzag", "eszigzagcom"))){
+    if(length(object@bounding.shape) == 1){
+      object@bounding.shape <- rep(object@bounding.shape, strata.count)
+    }
+    index <- which(object@design %in% c("eszigzag", "eszigzagcom"))
+    if(any(is.na(object@bounding.shape[index]))){
+      return("Bounding shapes need to be provided for all strata where zigzag designs have been selected.")
+    }
+  }
   #DESIGN ANGLE
   #Check the design angle
   if(length(object@design.angle) == 1){
