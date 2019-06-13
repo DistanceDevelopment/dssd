@@ -121,6 +121,16 @@ setMethod(
       }else{
         cat("Number of samplers: ", object@samplers[strat], fill = T)
       }
+      line.length <- try(object@line.length)
+      if(class(line.length) != "try-error"){
+        if(length(line.length) == 1){
+          cat("Line length: ", line.length, " (shared across strata)", fill = T)
+        }else if(length(line.length) == length(strata.names)){
+          cat("Line length: ", line.length[strat], fill = T)
+        }else{
+          cat("Line Length: NA", fill = T)
+        }
+      }
       cat("Design angle: ", object@design.angle[strat], fill = T)
       cat("Edge protocol: ", object@edge.protocol[strat], fill = T)
     }
