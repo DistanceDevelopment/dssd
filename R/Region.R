@@ -41,9 +41,13 @@ setClass(Class = "Region",
 setMethod(
   f="initialize",
   signature="Region",
-  definition=function(.Object, region.name = character(0), strata.name = character(0), units = "m", sf.shape = NULL){
+  definition=function(.Object, region.name = character(0), strata.name = character(0), units = character(0), sf.shape = NULL){
     #calculates the strata areas
-    area <- sf::st_area(sf.shape)
+    area <- as.numeric(sf::st_area(sf.shape))
+    if(length(units) == 0){
+      tmp <- sf::st_crs(sf.shape)
+      units <- ifelse(is.na(tmp), units, tmp$units)
+    }
     #Set slots
     .Object@region.name <- region.name
     .Object@strata.name <- strata.name
