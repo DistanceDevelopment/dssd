@@ -10,8 +10,7 @@ make.coverage(region = make.region(), spacing = numeric(0),
 \arguments{
 \item{region}{the region name}
 
-\item{spacing}{the stratum names (character vector, same length as the
-number of areas in the \code{shapefile} or \code{coords} arguments). If not supplied "A", "B", "C", ... will be assigned.}
+\item{spacing}{spacing to be used to create the coverage grid}
 
 \item{n.grid.points}{the desired number of grid points (note that
 the exact number generated may differ slightly depending on the

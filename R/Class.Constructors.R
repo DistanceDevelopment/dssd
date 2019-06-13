@@ -200,8 +200,7 @@ make.design <- function(region = make.region(), transect.type = "line", design =
 #' @title Creates a Coverage.Grid object
 #' @description This creates an instance of the Coverage.Grid class.
 #' @param region the region name
-#' @param spacing the stratum names (character vector, same length as the
-#'   number of areas in the \code{shapefile} or \code{coords} arguments). If not supplied "A", "B", "C", ... will be assigned.
+#' @param spacing spacing to be used to create the coverage grid
 #' @param n.grid.points the desired number of grid points (note that
 #'   the exact number generated may differ slightly depending on the
 #'   shape of the study region).
