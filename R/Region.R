@@ -114,16 +114,25 @@ setMethod(
 #' @param y optionally a Survey object to plot with the Region
 #' @param main the main title for the plot
 #' @param cols colours for the strata
+#' @param legend.params a list of parameters which affect the location and appearance
+#' of the legend. 'inset' affects the location of the legend, 'cex' affects the text
+#' size and 'wrap' is the number of character in a line before the text is wrapped on
+#' to the next line.
 #' @param ... other general plot parameters
 #' @rdname plot.Region-methods
 #' @exportMethod plot
 setMethod(
   f="plot",
   signature="Region",
-  definition=function(x, y, main = "", cols = "default", ...){
+  definition=function(x, y, main = "", cols = "default", legend.params = list(inset = c(-0.2,0), cex = 0.75, wrap = 15), ...){
     # If main is not supplied then take it from the object
     if(main == ""){
       main <- x@region.name
+    }
+    if(length(x@strata.name) > 0){
+      strata.names <- x@strata.name
+    }else{
+      strata.names <- x@region.name
     }
     if(cols == "default"){
       if(length(x@strata.name) <= 15){
@@ -132,17 +141,32 @@ setMethod(
         cols <-  rep(c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1"),3)[1:(length(x@strata.name))]
       }
     }
+    label_wrap <- function(text, width) {
+      lapply(strwrap(as.character(text), width=width, simplify=FALSE),
+             paste, collapse="\n")
+    }
+    strata.names <- unlist(label_wrap(strata.names, legend.params$wrap))
     region <- x@region
     sf.column <- attr(region, "sf_column")
     bbox <- sf::st_bbox(region)
+    if(length(strata.names) > 1){
+      par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
+    }
     plot(c(0,0), col = "white", xlim = c(bbox$xmin, bbox$xmax), ylim = c(bbox$ymin, bbox$ymax), main = main, xlab = "x-coordinates", ylab = "y-coordinates")
     for(i in seq(along = region[[sf.column]])){
       plot(region[[sf.column]][[i]], add = TRUE, col = cols[i])
     }
-    #plot(x@region, main = main, ...)
+    if(length(strata.names) > 1){
+      legend("topright", inset=legend.params$inset,
+             legend=strata.names,
+             pch = 20, col=cols, horiz=FALSE, bty='n',
+             pt.cex = 3, cex = legend.params$cex)
+    }
     invisible(x)
   }
 )
+
+
 
 #' Plot
 #'

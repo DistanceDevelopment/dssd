@@ -6,7 +6,8 @@
 \alias{plot,Region,Transect-method}
 \title{Plot}
 \usage{
-\S4method{plot}{Region,ANY}(x, y, main = "", cols = "default", ...)
+\S4method{plot}{Region,ANY}(x, y, main = "", cols = "default",
+  legend.params = list(inset = c(-0.2, 0), cex = 0.75, wrap = 15), ...)
 
 \S4method{plot}{Region,Transect}(x, y, main = "",
   region.col = "default", ...)
@@ -19,6 +20,11 @@
 \item{main}{the main title for the plot}
 
 \item{cols}{colours for the strata}
+
+\item{legend.params}{a list of parameters which affect the location and appearance
+of the legend. 'inset' affects the location of the legend, 'cex' affects the text
+size and 'wrap' is the number of character in a line before the text is wrapped on
+to the next line.}
 
 \item{...}{other general plot parameters}
 
