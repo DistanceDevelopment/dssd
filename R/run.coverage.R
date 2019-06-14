@@ -67,7 +67,7 @@ run.coverage <- function(design, reps = 10){
   sampler.summary[2,1:strata.count] <- apply(transect.count, 2, mean)
   sampler.summary[3,1:strata.count] <- apply(transect.count, 2, median)
   sampler.summary[4,1:strata.count] <- apply(transect.count, 2, max)
-  sampler.totals <- apply(transect.count, 1, FUN = sum)
+  sampler.totals <- apply(transect.count, 1, FUN = sum, na.rm = T)
   sampler.summary[1,(strata.count+1)] <- min(sampler.totals)
   sampler.summary[2,(strata.count+1)] <- mean(sampler.totals)
   sampler.summary[3,(strata.count+1)] <- median(sampler.totals)
@@ -80,7 +80,7 @@ run.coverage <- function(design, reps = 10){
   cov.area.summary[2,1:strata.count] <- apply(cov.area, 2, mean)
   cov.area.summary[3,1:strata.count] <- apply(cov.area, 2, median)
   cov.area.summary[4,1:strata.count] <- apply(cov.area, 2, max)
-  cov.area.totals <- apply(cov.area, 1, FUN = sum)
+  cov.area.totals <- apply(cov.area, 1, FUN = sum, na.rm = T)
   cov.area.summary[1,(strata.count+1)] <- min(cov.area.totals)
   cov.area.summary[2,(strata.count+1)] <- mean(cov.area.totals)
   cov.area.summary[3,(strata.count+1)] <- median(cov.area.totals)
@@ -93,7 +93,7 @@ run.coverage <- function(design, reps = 10){
   cov.area.percent[2,1:strata.count] <- apply(cov.area, 2, mean)/areas
   cov.area.percent[3,1:strata.count] <- apply(cov.area, 2, median)/areas
   cov.area.percent[4,1:strata.count] <- apply(cov.area, 2, max)/areas
-  cov.area.totals <- apply(cov.area, 1, FUN = sum)/sum(areas)
+  cov.area.totals <- apply(cov.area, 1, FUN = sum, na.rm = T)/sum(areas)
   cov.area.percent[1,(strata.count+1)] <- min(cov.area.totals)
   cov.area.percent[2,(strata.count+1)] <- mean(cov.area.totals)
   cov.area.percent[3,(strata.count+1)] <- median(cov.area.totals)
@@ -110,7 +110,7 @@ run.coverage <- function(design, reps = 10){
     line.len.summary[2,1:strata.count] <- apply(line.length, 2, mean)
     line.len.summary[3,1:strata.count] <- apply(line.length, 2, median)
     line.len.summary[4,1:strata.count] <- apply(line.length, 2, max)
-    line.len.totals <- apply(line.length, 1, FUN = sum)
+    line.len.totals <- apply(line.length, 1, FUN = sum, na.rm = T)
     line.len.summary[1,(strata.count+1)] <- min(line.len.totals)
     line.len.summary[2,(strata.count+1)] <- mean(line.len.totals)
     line.len.summary[3,(strata.count+1)] <- median(line.len.totals)
