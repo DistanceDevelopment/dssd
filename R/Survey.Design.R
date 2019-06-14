@@ -121,7 +121,7 @@ setMethod(
       }else{
         cat("Number of samplers: ", object@samplers[strat], fill = T)
       }
-      line.length <- try(object@line.length)
+      line.length <- try(object@line.length, silent = TRUE)
       if(class(line.length) != "try-error"){
         if(length(line.length) == 1){
           cat("Line length: ", line.length, " (shared across strata)", fill = T)
