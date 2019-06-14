@@ -180,7 +180,7 @@ setMethod(
       all.polys <- sf::st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp.poly))
     }
     #Make a survey object
-    survey <- new(Class="Point.Transect", design = object@design, points = all.transects, samp.count = sampler.count, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = cov.areas, cov.area.polys = all.polys, strata.area = region@area)
+    survey <- new(Class="Point.Transect", design = object@design, points = all.transects, samp.count = sampler.count, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = cov.areas, cov.area.polys = all.polys, strata.area = region@area, strata.names <- strata.names)
     return(survey)
   }
 )

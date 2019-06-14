@@ -27,7 +27,8 @@
 #' @importFrom methods validObject
 #' @seealso \code{\link{make.design}}
 setClass(Class = "Transect",
-         representation = representation(design = "character",
+         representation = representation(strata.names = "character",
+                                         design = "character",
                                          samplers = "list",
                                          strata.area  = "numeric",
                                          cov.area = "numeric",

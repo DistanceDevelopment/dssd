@@ -20,8 +20,9 @@ setMethod(
   signature="Line.Transect",
   definition=function(.Object, design, lines, samp.count, line.length, effort.allocation,
                       spacing, design.angle, edge.protocol, cov.area = numeric(0),
-                      cov.area.polys = list(), strata.area){
+                      cov.area.polys = list(), strata.area, strata.names){
     #Set slots
+    .Object@strata.names  <- strata.names
     .Object@design        <- design
     .Object@samplers      <- lines
     .Object@strata.area   <- strata.area
@@ -92,7 +93,7 @@ setMethod(
   f="show",
   signature="Line.Transect",
   definition=function(object){
-    strata.names <- as.character(unique(object@samplers$strata))
+    strata.names <- object@strata.names
     for(strat in seq(along = object@design)){
       title <- paste("\n   Strata ", strata.names[strat], ":", sep = "")
       len.title <- nchar(title)
@@ -119,13 +120,14 @@ setMethod(
     #Now print totals
     cat("\n   Study Area Totals:", fill = T)
     cat("   _________________", fill = T)
-    cat("Line length:", sum(object@line.length), fill = T)
-    cat("Number of samplers: ", sum(object@samp.count), fill = T)
+    cat("Line length:", sum(object@line.length, na.rm = T), fill = T)
+    cat("Number of samplers: ", sum(object@samp.count, na.rm = T), fill = T)
     if(length(object@effort.allocation) > 0){
       cat("Effort allocation: ", paste(object@effort.allocation*100, collapse = "%, "), "%", fill = T)
     }
-    cat("Covered area: ", sum(object@cov.area), fill = T)
-    cat("Average coverage: ", round((sum(object@cov.area)/sum(object@strata.area))*100,2), "%", fill = T)
+    cat("Covered area: ", sum(object@cov.area, na.rm = T), fill = T)
+    index <- which(!is.na(object@cov.area))
+    cat("Average coverage: ", round((sum(object@cov.area[index])/sum(object@strata.area))*100,2), "%", fill = T)
     invisible(object)
   }
 )
