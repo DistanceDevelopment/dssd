@@ -18,8 +18,8 @@ generate.systematic.points <- function(design, strata.id, spacing, coverage.grid
   bbox <- sf::st_bbox(rot.strata)
   #Check spacing is appropriate
   if(sspace > (bbox[["xmax"]]-bbox[["xmin"]]) || sspace > (bbox[["ymax"]]-bbox[["ymin"]])){
-    warning(paste("The spacing allocated to strata number ", strata.id, " is larger than either or both of the x or y dimensions of the region. Cannot generate samplers in this strata.", sep = ""), call. = FALSE, immediate. = TRUE)
-    transects <- NA
+    warning(paste("The spacing allocated to strata ", strata.id, " is larger than either one or both of the x / y dimensions of the region. Cannot generate samplers in this strata.", sep = ""), call. = FALSE, immediate. = TRUE)
+    return(NULL)
   }else{
     if(coverage.grid){
       x.diff <- bbox[["xmax"]]-bbox[["xmin"]]

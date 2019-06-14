@@ -210,19 +210,6 @@ plot(design.mix)
 
 ```
 
-
-### Enhancements/issues yet to do... in order of importance
-
- - Generating line transect surveys by line length (working on it!)
- - Generating line transect surveys by total number of samplers
- - Dealing with zero effort in some strata
- - Cyclic trackline distances for line transect surveys
- - Merge/union problematic covered areas rather than removing small ones and hence remove the following warnings: Warning: Removing covered area greater than 100,000th of the strata 
- - Random point design
- - Speed up systematic point design
- - Add option to clip covered area polygons to the entire study area rather than the strata polygons (this will give higher coverage where two strata meet)
- - Enhanced effort allocation by a sub section of strata only
-
 ### Appendices
 
 ## Manual creation of study areas

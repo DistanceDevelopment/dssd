@@ -34,6 +34,10 @@ generate.eqspace.zigzags <- function(design, strata.id, samplers, line.length, s
       spacing <- spacing * 2
     }
   }
+  if(spacing > (bbox[["xmax"]]-bbox[["xmin"]])){
+    warning(paste("Spacing larger than x-range cannot generate samplers in strata ", strata.id, sep = ""), immediate. = T, call. = F)
+    return(NULL)
+  }
   start.x <- bbox[["xmin"]] + runif(1, 0, spacing) - spacing
   x.vals <- seq(start.x, (bbox[["xmax"]] + spacing), by = spacing)
   start.y <- rep(bbox[["ymin"]], length(x.vals))

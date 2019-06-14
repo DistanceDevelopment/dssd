@@ -173,26 +173,31 @@ setMethod(
     }
     #Put transects into a multipart, linestring/multilinestring objects
     #Need to retain transect IDs as well as strata for lines
+    index <- which(sapply(transects, Negate(is.null)))
+    if(length(index) == 0){
+      warning("No samplers generated.", immediate. = T, call. = FALSE)
+      return(NULL)
+    }
     cov.areas <- line.length <- sampler.count <- numeric(0)
     transect.count <- 0
     strata.id <- character(0)
-    for(strat in seq(along = transects)){
-      for(i in seq(along = transects[[strat]])){
+    for(strat in seq(along = index)){
+      for(i in seq(along = transects[[index[strat]]])){
         if(strat == 1 && i == 1){
-          temp <- sf::st_sfc(transects[[strat]][[i]])
-          temp.poly <- sf::st_sfc(polys[[strat]][[i]])
+          temp <- sf::st_sfc(transects[[index[strat]]][[i]])
+          temp.poly <- sf::st_sfc(polys[[index[strat]]][[i]])
           transect.count <- 1
-          strata.id <- strata.names[strat]
+          strata.id <- strata.names[index[strat]]
         }else{
-          temp <- c(temp, sf::st_sfc(transects[[strat]][[i]]))
-          temp.poly <- c(temp.poly, sf::st_sfc(polys[[strat]][[i]]))
+          temp <- c(temp, sf::st_sfc(transects[[index[strat]]][[i]]))
+          temp.poly <- c(temp.poly, sf::st_sfc(polys[[index[strat]]][[i]]))
           transect.count <- transect.count + 1
-          strata.id <- c(strata.id, strata.names[strat])
+          strata.id <- c(strata.id, strata.names[index[strat]])
         }
       }
-      line.length[strat] <- sum(unlist(lapply(transects[[strat]], FUN = sf::st_length)))
-      cov.areas[strat] <- sum(unlist(lapply(polys[[strat]], FUN = sf::st_area)))
-      sampler.count[strat] <- length(transects[[strat]])
+      line.length[index[strat]] <- sum(unlist(lapply(transects[[index[strat]]], FUN = sf::st_length)))
+      cov.areas[index[strat]] <- sum(unlist(lapply(polys[[index[strat]]], FUN = sf::st_area)))
+      sampler.count[index[strat]] <- length(transects[[index[strat]]])
     }
     all.transects <- sf::st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp))
     all.polys <- sf::st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp.poly))

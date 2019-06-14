@@ -143,51 +143,34 @@ setMethod(
         transects[[strat]] <- temp$transects
         polys[[strat]] <- temp$cover.polys
       #}else if(object@design[strat] == "random"){
-      #  transects[[strat]] <- generate.random.points(object, strat, samplers[strat], line.length[strat], spacing[strat], by.spacing[strat])
+      #  transects[[strat]] <- generate.random.points(object, strat, samplers[strat], line.length[strat])
       }else{
         message("This design is not supported at present")
         transects[[strat]] = NULL
       }
     }
-    #Put transects into a point sf object defined by
-    #the strata name
-    #counter <- 1
-    #transect.count <- 0
-    # #Find first strata where there are transects
-    # while(is.na(transects[[counter]]) && counter < length(transects)){
-    #   counter <- counter + 1
-    #   cat(counter)
-    # }
-    #If there are some transects somewhere
-    # if(!is.na(transects[[counter]][[1]])){
-    #   transect.count <- dim(transects[[counter]])[1]
-    #   temp <- sf::st_sfc(transects[[counter]])
-    #   #Now add in transects from other strata
-    #   if(length(transects) > counter){
-    #     for(strat in (counter+1):length(transects)){
-    #       if(!is.na(transects[[strat]][[1]])){
-    #         transect.count <- transect.count + dim(transects[[strat]])[1]
-    #         temp <- c(temp, sf::st_sfc(transects[[strat]]))
-    #       }
-    #     }
-    #   }
+    index <- which(sapply(transects, Negate(is.null)))
+    if(length(index) == 0){
+      warning("No samplers generated.", immediate. = T, call. = FALSE)
+      return(NULL)
+    }
     cov.areas <- sampler.count <- numeric(0)
     transect.count <- 0
     strata.id <- character(0)
-    for(strat in seq(along = transects)){
+    for(strat in seq(along = index)){
       if(strat == 1 ){
-        temp <- sf::st_sfc(transects[[strat]])
-        temp.poly <- sf::st_sfc(polys[[strat]])
-        transect.count <- length(transects[[strat]])
-        strata.id <- rep(strata.names[strat], length(transects[[strat]]))
+        temp <- sf::st_sfc(transects[[index[strat]]])
+        temp.poly <- sf::st_sfc(polys[[index[strat]]])
+        transect.count <- length(transects[[index[strat]]])
+        strata.id <- rep(strata.names[index[strat]], length(transects[[index[strat]]]))
       }else{
-        temp <- c(temp, sf::st_sfc(transects[[strat]]))
-        temp.poly <- c(temp.poly, sf::st_sfc(polys[[strat]]))
-        transect.count <- transect.count + length(transects[[strat]])
-        strata.id <- c(strata.id, rep(strata.names[strat], length(transects[[strat]])))
+        temp <- c(temp, sf::st_sfc(transects[[index[strat]]]))
+        temp.poly <- c(temp.poly, sf::st_sfc(polys[[index[strat]]]))
+        transect.count <- transect.count + length(transects[[index[strat]]])
+        strata.id <- c(strata.id, rep(strata.names[index[strat]], length(transects[[index[strat]]])))
       }
-      cov.areas[strat] <- sum(unlist(lapply(polys[[strat]], FUN = sf::st_area)))
-      sampler.count[strat] <- length(transects[[strat]])
+      cov.areas[index[strat]] <- sum(unlist(lapply(polys[[index[strat]]], FUN = sf::st_area)))
+      sampler.count[index[strat]] <- length(transects[[index[strat]]])
     }
     if(for.coverage){
       all.transects <- sf::st_sf(data.frame(coverage.scores = rep(NA, transect.count), geom = temp))
@@ -196,9 +179,6 @@ setMethod(
       all.transects <- sf::st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp))
       all.polys <- sf::st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp.poly))
     }
-    #}else{
-    #  all.transects <- list()
-    #}
     #Make a survey object
     survey <- new(Class="Point.Transect", design = object@design, points = all.transects, samp.count = sampler.count, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = cov.areas, cov.area.polys = all.polys, strata.area = region@area)
     return(survey)
