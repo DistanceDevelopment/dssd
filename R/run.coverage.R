@@ -42,7 +42,7 @@ run.coverage <- function(design, reps = 10){
   total.hits <- rep(0, grid.count)
   for(rep in 1:reps){
     #Generate transects
-    transects <- generate.transects(design)
+    transects <- generate.transects(design, silent = TRUE)
     #Check coverage hits
     polys <- transects@cov.area.polys$geometry
     hits <- lapply(polys, FUN = inout, pts = pts)

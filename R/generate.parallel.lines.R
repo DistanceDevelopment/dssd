@@ -1,6 +1,6 @@
 #' @importFrom stats runif
 #' @importFrom methods new
-generate.parallel.lines <- function(design, strata.id, samplers, line.length, spacing, by.spacing, calc.cov.area = TRUE, clip.to.strata = TRUE){
+generate.parallel.lines <- function(design, strata.id, samplers, line.length, spacing, by.spacing, calc.cov.area = TRUE, clip.to.strata = TRUE, silent = FALSE){
   #Generates either random or systematic parallel lines
   region <- design@region
   sf.column <- attr(region@region, "sf_column")
@@ -25,7 +25,9 @@ generate.parallel.lines <- function(design, strata.id, samplers, line.length, sp
     ave.line.height <- sf::st_area(rot.strata)/width
     samplers <- line.length/ave.line.height
     if(samplers < 1){
-      warning(paste("Line length is less than the average transect length cannot generate samplers in strata ", strata.id, sep = ""), immediate. = T, call. = F)
+      if(!silent){
+        warning(paste("Line length is less than the average transect length cannot generate samplers in strata ", strata.id, sep = ""), immediate. = T, call. = F)
+      }
       return(NULL)
     }
   }
@@ -33,7 +35,9 @@ generate.parallel.lines <- function(design, strata.id, samplers, line.length, sp
     spacing <- (bbox[["xmax"]]-bbox[["xmin"]])/(samplers)
   }
   if(spacing > (bbox[["xmax"]]-bbox[["xmin"]])){
-    warning(paste("Spacing larger than x-range cannot generate samplers in strata ", strata.id, sep = ""), immediate. = T, call. = F)
+    if(!silent){
+      warning(paste("Spacing larger than x-range cannot generate samplers in strata ", strata.id, sep = ""), immediate. = T, call. = F)
+    }
     return(NULL)
   }
   start.y <- bbox[["ymin"]]

@@ -1,6 +1,6 @@
 #' @importFrom stats runif rbinom
 #' @importFrom methods new
-generate.eqspace.zigzags <- function(design, strata.id, samplers, line.length, spacing, by.spacing, calc.cov.area = TRUE, clip.to.strata = TRUE){
+generate.eqspace.zigzags <- function(design, strata.id, samplers, line.length, spacing, by.spacing, calc.cov.area = TRUE, clip.to.strata = TRUE, silent = FALSE){
   region <- design@region
   sf.column <- attr(region@region, "sf_column")
   #Get the current strata and spacing
@@ -35,7 +35,9 @@ generate.eqspace.zigzags <- function(design, strata.id, samplers, line.length, s
     }
   }
   if(spacing > (bbox[["xmax"]]-bbox[["xmin"]])){
-    warning(paste("Spacing larger than x-range cannot generate samplers in strata ", strata.id, sep = ""), immediate. = T, call. = F)
+    if(!silent){
+      warning(paste("Spacing larger than x-range cannot generate samplers in strata ", strata.id, sep = ""), immediate. = T, call. = F)
+    }
     return(NULL)
   }
   start.x <- bbox[["xmin"]] + runif(1, 0, spacing) - spacing

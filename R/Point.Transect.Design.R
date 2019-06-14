@@ -139,11 +139,11 @@ setMethod(
     #Main grid generation
     for (strat in seq(along = region@region[[sf.column]])) {
       if(object@design[strat] %in% c("systematic")){
-        temp <- generate.systematic.points(design = object, strata.id = strat, spacing = spacing[strat], coverage.grid = for.coverage)
+        temp <- generate.systematic.points(design = object, strata.id = strat, spacing = spacing[strat], coverage.grid = for.coverage, silent = silent)
         transects[[strat]] <- temp$transects
         polys[[strat]] <- temp$cover.polys
       #}else if(object@design[strat] == "random"){
-      #  transects[[strat]] <- generate.random.points(object, strat, samplers[strat], line.length[strat])
+      #  transects[[strat]] <- generate.random.points(object, strat, samplers[strat], line.length[strat], silent = silent)
       }else{
         message("This design is not supported at present")
         transects[[strat]] = NULL

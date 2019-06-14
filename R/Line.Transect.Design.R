@@ -159,11 +159,11 @@ setMethod(
     #Main grid generation
     for (strat in seq(along = region@region[[sf.column]])) {
       if(design[strat] %in% c("systematic","random")){
-        temp <- generate.parallel.lines(object, strat, samplers[strat], line.length[strat], spacing[strat], by.spacing[strat])
+        temp <- generate.parallel.lines(object, strat, samplers[strat], line.length[strat], spacing[strat], by.spacing[strat], silent = silent)
         transects[[strat]] <- temp$transects
         polys[[strat]] <- temp$cover.polys
       }else if(design[strat] == "eszigzag" || design[strat] == "eszigzagcom"){
-        temp <-  generate.eqspace.zigzags(object, strat, samplers[strat], line.length[strat], spacing[strat], by.spacing[strat])
+        temp <-  generate.eqspace.zigzags(object, strat, samplers[strat], line.length[strat], spacing[strat], by.spacing[strat], silent = silent)
         transects[[strat]] <- temp$transects
         polys[[strat]] <- temp$cover.polys
       }else{
