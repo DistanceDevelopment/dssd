@@ -120,6 +120,7 @@ setMethod(
           spacing <- abs(region@area)^0.5 / samplers^0.5
         }else{
           #assign sampler numbers based on effort allocation
+          samplers <- effort.allocation*object@samplers
         }
       }else if(length(samplers) == strata.no){
         spacing <- apply(matrix(c(region@area, object@samplers), ncol = 2), FUN = function(x){abs(x[1])^0.5 / x[2]^0.5}, MARGIN = 1)
@@ -142,8 +143,10 @@ setMethod(
         temp <- generate.systematic.points(design = object, strata.id = strat, spacing = spacing[strat], coverage.grid = for.coverage, silent = silent)
         transects[[strat]] <- temp$transects
         polys[[strat]] <- temp$cover.polys
-      #}else if(object@design[strat] == "random"){
-      #  transects[[strat]] <- generate.random.points(object, strat, samplers[strat], line.length[strat], silent = silent)
+      }else if(object@design[strat] == "random"){
+        temp <- generate.random.points(object, strat, samplers = round(samplers[strat]), silent = silent)
+        transects[[strat]] <- temp$transects
+        polys[[strat]] <- temp$cover.polys
       }else{
         message("This design is not supported at present")
         transects[[strat]] = NULL

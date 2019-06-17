@@ -35,6 +35,7 @@ Collate:
     'check.shape.R'
     'generate.eqspace.zigzags.R'
     'generate.parallel.lines.R'
+    'generate.random.points.R'
     'generate.systematic.points.R'
     'get.intersection.points.R'
     'run.coverage.R'

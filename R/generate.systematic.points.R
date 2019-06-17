@@ -1,5 +1,5 @@
 generate.systematic.points <- function(design, strata.id, spacing, coverage.grid = FALSE, calc.cov.area = TRUE, clip.to.strata = TRUE, silent = FALSE){
-  #Generates either random or systematic parallel lines
+  #Generates systematic points
   region <- design@region
   #Get the current strata and spacing
   sf.column <- attr(region@region, "sf_column")
