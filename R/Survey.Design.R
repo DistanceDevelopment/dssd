@@ -73,6 +73,7 @@ setMethod(
     # If main is not supplied then take it from the object
     additional.args <- list(...)
     col.breaks <- ifelse("col.breaks" %in% names(additional.args), additional.args$col.breaks, 10)
+    subtitle <- ifelse("subtitle" %in% names(additional.args), additional.args$subtitle, "")
     coverage.scores <- x@coverage.scores
     pmar <- par(mar = c(1, 1, 4, 5))
     on.exit(par(mar = pmar))
@@ -83,6 +84,7 @@ setMethod(
     plot(x@coverage.grid@grid[[sf.column.grid]], pch = 20, col = cols, add = T)
     plot(x@region@region[[sf.column.region]], add = T)
     plot3D::colkey(side = 4, clim = range(coverage.scores), col = heat.colors(col.breaks), add = TRUE, length = 0.7)
+    mtext(subtitle, side = 3, line = 0, outer = FALSE)
     invisible(x)
   }
 )

@@ -129,6 +129,8 @@ setMethod(
     if(main == ""){
       main <- x@region.name
     }
+    additional.args <- list(...)
+    subtitle <- ifelse("subtitle" %in% names(additional.args), additional.args$subtitle, "")
     if(length(x@strata.name) > 0){
       strata.names <- x@strata.name
     }else{
@@ -149,8 +151,15 @@ setMethod(
     region <- x@region
     sf.column <- attr(region, "sf_column")
     bbox <- sf::st_bbox(region)
-    if(length(strata.names) > 1){
-      par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
+    if(length(strata.names) > 1 && subtitle == ""){
+      pmar <- par(mar=c(4, 4, 1, 8), xpd=TRUE)
+      on.exit(par(mar = pmar))
+    }else if(length(strata.names) > 1 && subtitle != ""){
+      pmar <- par(mar=c(4, 4, 4, 8), xpd=TRUE)
+      on.exit(par(mar = pmar))
+    }else if(length(strata.names) == 1 && subtitle != ""){
+      pmar <- par(mar=c(4, 4, 4, 1), xpd=TRUE)
+      on.exit(par(mar = pmar))
     }
     plot(c(0,0), col = "white", xlim = c(bbox$xmin, bbox$xmax), ylim = c(bbox$ymin, bbox$ymax), main = main, xlab = "x-coordinates", ylab = "y-coordinates")
     for(i in seq(along = region[[sf.column]])){
@@ -162,6 +171,7 @@ setMethod(
              pch = 20, col=cols, horiz=FALSE, bty='n',
              pt.cex = 3, cex = legend.params$cex)
     }
+    mtext(subtitle, side = 3, line = 0.5, outer = FALSE)
     invisible(x)
   }
 )
@@ -182,6 +192,8 @@ setMethod(
     if(main == ""){
       main <- x@region.name
     }
+    additional.args <- list(...)
+    subtitle <- ifelse("subtitle" %in% names(additional.args), additional.args$subtitle, "")
     if(region.col == "default"){
       if(length(x@strata.name) <= 15){
         region.col <-  c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1")[1:(length(x@strata.name))]
@@ -197,6 +209,10 @@ setMethod(
     #Set up bounding box for samplers (necessary when plus sampling used and extent of samplers is greater than the region)
     bbox.samps <- sf::st_bbox(y@samplers)
     bbox.region <- sf::st_bbox(x@region)
+    if(subtitle != ""){
+      pmar <- par(mar=c(4, 4, 5, 1), xpd=TRUE)
+      on.exit(par(mar = pmar))
+    }
     plot(c(0,0), col = "white", xlim = c(min(bbox.samps$xmin, bbox.region$xmin), max(bbox.samps$xmax, bbox.region$xmax)), ylim = c(min(bbox.samps$ymin, bbox.region$ymin), max(bbox.samps$ymax, bbox.region$ymax)), main = main, xlab = "x-coordinates", ylab = "y-coordinates")
     for(i in seq(along = region[[sf.column]])){
       plot(region[[sf.column]][[i]], add = TRUE, col = region.col[i])
@@ -211,6 +227,7 @@ setMethod(
       }
     }
     plot(y, add = TRUE, ...)
+    mtext(subtitle, side = 3, line = 0.5, outer = FALSE)
     invisible(x)
   }
 )
