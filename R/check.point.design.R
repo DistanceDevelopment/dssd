@@ -63,7 +63,7 @@ check.point.design <- function(object){
     }
   }else if(length(object@spacing) > 1 && length(object@spacing) != strata.count){
     spacing.for.all = FALSE
-  }else if(length(object@spacing) == strata.count && !all(is.na(object@spacing))){
+  }else if(length(object@spacing) == strata.count && !any(is.na(object@spacing))){
     spacing.for.all = TRUE
   }else if(length(object@spacing) == strata.count && any(is.na(object@spacing))){
     spacing.for.all = FALSE
