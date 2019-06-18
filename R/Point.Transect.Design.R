@@ -75,11 +75,10 @@ setMethod(
       object@design <- rep(object@design, strata.no)
       unique.design <- TRUE
     }else{
-      object@design <- object@design
       if(length(unique(object@design)) == 1){
         unique.design <- TRUE
       }else{
-        uniqie.design <- FALSE
+        unique.design <- FALSE
       }
     }
     #Calculate effort allocation if using only one design and only if spacing has not been specified.
@@ -124,6 +123,9 @@ setMethod(
         }
       }else if(length(samplers) == strata.no){
         spacing <- apply(matrix(c(region@area, object@samplers), ncol = 2), FUN = function(x){abs(x[1])^0.5 / x[2]^0.5}, MARGIN = 1)
+      }else{
+        #assign sampler numbers based on effort allocation
+        samplers <- effort.allocation*object@samplers
       }
     #If spacing has been provided for some but not all need to calculate spacing for others
     }else if(any(!by.spacing) && !all(!by.spacing)){
@@ -140,7 +142,7 @@ setMethod(
     #Main grid generation
     for (strat in seq(along = region@region[[sf.column]])) {
       if(object@design[strat] %in% c("systematic")){
-        temp <- generate.systematic.points(design = object, strata.id = strat, spacing = spacing[strat], coverage.grid = for.coverage, silent = silent)
+        temp <- generate.systematic.points(design = object, strata.id = strat, spacing = spacing[strat], samplers = samplers[strat], coverage.grid = for.coverage, silent = silent)
         transects[[strat]] <- temp$transects
         polys[[strat]] <- temp$cover.polys
       }else if(object@design[strat] == "random"){

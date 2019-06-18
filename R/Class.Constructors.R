@@ -159,17 +159,17 @@ make.design <- function(region = make.region(), transect.type = "line", design =
     #Create line transect object
     design <- new(Class="Line.Transect.Design", region, truncation, design, line.length, effort.allocation, spacing, samplers, design.angle, edge.protocol, bounding.shape, coverage.grid)
   }else if(transect.type %in% c("Point", "point", "Point Transect", "point transect")){
-    if(design == "random"){
+    if(all(design == "random")){
       if(length(samplers) == 0){
         samplers = 20
         spacing = numeric(0)
       }
-    }else if(design == "systematic"){
-      # if(length(samplers) > 0  && length(spacing) > 0){
-      #   warning("You have supplied multiple effort definitions, the sampler spacing will be used.", call. = FALSE)
-      #   samplers <- numeric(0)
-      # }else
+    }else if(all(design == "systematic")){
       if(length(samplers) == 0 && length(spacing) == 0){
+        samplers = 20
+      }
+    }else if(all(design %in% c("random", "systematic"))){
+      if(length(samplers) == 0){
         samplers = 20
       }
     }else{

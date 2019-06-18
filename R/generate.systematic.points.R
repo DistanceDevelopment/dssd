@@ -1,4 +1,4 @@
-generate.systematic.points <- function(design, strata.id, spacing, coverage.grid = FALSE, calc.cov.area = TRUE, clip.to.strata = TRUE, silent = FALSE){
+generate.systematic.points <- function(design, strata.id, spacing, samplers, coverage.grid = FALSE, calc.cov.area = TRUE, clip.to.strata = TRUE, silent = FALSE){
   #Generates systematic points
   region <- design@region
   #Get the current strata and spacing
@@ -16,6 +16,9 @@ generate.systematic.points <- function(design, strata.id, spacing, coverage.grid
   }
   #Find the minimum and maximum x and y values
   bbox <- sf::st_bbox(rot.strata)
+  if(is.na(spacing)){
+    sspace <- abs(sf::st_area(strata))^0.5 / samplers^0.5
+  }
   #Check spacing is appropriate
   if(sspace > (bbox[["xmax"]]-bbox[["xmin"]]) || sspace > (bbox[["ymax"]]-bbox[["ymin"]])){
     if(!silent){
