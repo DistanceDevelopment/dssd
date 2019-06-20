@@ -1,6 +1,6 @@
 #' @importFrom stats runif
 #' @importFrom methods new
-generate.parallel.lines <- function(design, strata.id, samplers, line.length, spacing, by.spacing, calc.cov.area = TRUE, clip.to.strata = TRUE, silent = FALSE){
+generate.parallel.lines <- function(design, strata.id, samplers, line.length, spacing, by.spacing, silent = FALSE, calc.cov.area = TRUE, clip.to.strata = TRUE){
   #Generates either random or systematic parallel lines
   region <- design@region
   sf.column <- attr(region@region, "sf_column")
@@ -34,19 +34,20 @@ generate.parallel.lines <- function(design, strata.id, samplers, line.length, sp
   if(!by.spacing && design@design[strata.id] == "systematic"){
     spacing <- (bbox[["xmax"]]-bbox[["xmin"]])/(samplers)
   }
-  if(spacing > (bbox[["xmax"]]-bbox[["xmin"]])){
-    if(!silent){
-      warning(paste("Spacing larger than x-range cannot generate samplers in strata ", strata.id, sep = ""), immediate. = T, call. = F)
-    }
-    return(NULL)
-  }
   start.y <- bbox[["ymin"]]
   end.y <- bbox[["ymax"]]
   if(design@design[strata.id] == "systematic"){
+    if(spacing > (bbox[["xmax"]]-bbox[["xmin"]])){
+      if(!silent){
+        warning(paste("Spacing larger than x-range cannot generate samplers in strata ", strata.id, sep = ""), immediate. = T, call. = F)
+      }
+      return(NULL)
+    }
     start.x <- bbox[["xmin"]] + runif(1, 0, spacing)
     x.vals <- seq(start.x, bbox[["xmax"]], by = spacing)
   }else if(design@design[strata.id] == "random"){
     x.vals <- runif(samplers, bbox[["xmin"]], bbox[["xmax"]])
+    #sorting important for calculating trackline
     x.vals <- sort(x.vals)
   }
   #Create transects lines
