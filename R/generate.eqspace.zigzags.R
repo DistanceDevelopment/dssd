@@ -53,15 +53,17 @@ generate.eqspace.zigzags <- function(design, strata.id, samplers, line.length, s
   random.start <- rbinom(1, 1, 0.5)
   #Create the lines
   lines <- list()
-  counter <- 1
+  #counter <- 1
+  zz.set <- "A"
   if(design@design[strata.id] == "eszigzagcom"){
     for(i in 1:(length(x.vals)-1)){
       #Do zig
-      lines[[counter]] <- sf::st_linestring(matrix(c(x.vals[i], x.vals[i+1], start.y[i], end.y[i+1]), ncol = 2))
-      counter <- counter + 1
+      lines[[paste("set", zz.set, ".tr", i, sep = "")]] <- sf::st_linestring(matrix(c(x.vals[i], x.vals[i+1], start.y[i], end.y[i+1]), ncol = 2))
+      #counter <- counter + 1
+      zz.set <- ifelse(zz.set == "A", "B", "A")
       #and complementing zag
-      lines[[counter]] <- sf::st_linestring(matrix(c(x.vals[i], x.vals[i+1], end.y[i], start.y[i+1]), ncol = 2))
-      counter <- counter + 1
+      lines[[paste("set", zz.set, ".tr", i, sep = "")]] <- sf::st_linestring(matrix(c(x.vals[i], x.vals[i+1], end.y[i], start.y[i+1]), ncol = 2))
+      #counter <- counter + 1
     }
   }else{
     zig <- ifelse(random.start == 1, TRUE, FALSE)

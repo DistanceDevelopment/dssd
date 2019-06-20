@@ -63,7 +63,7 @@ setMethod(
 setMethod(
   f="generate.transects",
   signature="Line.Transect.Design",
-  definition=function(object, silent = FALSE){
+  definition=function(object, silent = FALSE, ...){
 #This function separates the design generation by strata so different strata can have different designs in them. Assumes that the validation method called when the class is initialised checks that all design options either have length 1 or length equal to the number of strata. Also assumes that the region object has been checked and confimred to have the correct number of strata names for the size of the geometry.
     # Get strata names
     region <- object@region
@@ -155,6 +155,7 @@ setMethod(
     #Store all lines in a list
     transects <- list()
     polys <- list()
+    trackline <- cyclictrackline <- numeric(0)
     #Iterate over strata calling the appropriate method for the design.
     #Main grid generation
     for (strat in seq(along = region@region[[sf.column]])) {
@@ -162,10 +163,25 @@ setMethod(
         temp <- generate.parallel.lines(object, strat, samplers[strat], line.length[strat], spacing[strat], by.spacing[strat], silent = silent)
         transects[[strat]] <- temp$transects
         polys[[strat]] <- temp$cover.polys
+        #If there are transects calculate the trackline
+        if(!is.null(transects[[strat]])){
+          temp <- calculate.trackline.pl(transects[[strat]])
+          trackline[strat] <- temp$trackline
+          cyclictrackline[strat] <- temp$cyclictrackline
+        }
       }else if(design[strat] == "eszigzag" || design[strat] == "eszigzagcom"){
         temp <-  generate.eqspace.zigzags(object, strat, samplers[strat], line.length[strat], spacing[strat], by.spacing[strat], silent = silent)
         transects[[strat]] <- temp$transects
         polys[[strat]] <- temp$cover.polys
+        if(!is.null(transects[[strat]])){
+          if(design[strat] == "eszigzag"){
+            temp <- calculate.trackline.zz(transects[[strat]])
+          }else if(design[strat] == "eszigzagcom"){
+            temp <- calculate.trackline.zzcom(transects[[strat]])
+          }
+          trackline[strat] <- temp$trackline
+          cyclictrackline[strat] <- temp$cyclictrackline
+        }
       }else{
         message("This design is not supported at present")
         transects[[strat]] = NULL
@@ -202,7 +218,7 @@ setMethod(
     all.transects <- sf::st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp))
     all.polys <- sf::st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp.poly))
     #Make a survey object
-    transect <- new(Class="Line.Transect", design = object@design, lines = all.transects, samp.count = sampler.count, line.length = line.length, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = cov.areas, cov.area.polys = all.polys, strata.area = region@area, strata.names = strata.names)
+    transect <- new(Class="Line.Transect", design = object@design, lines = all.transects, samp.count = sampler.count, line.length = line.length, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = cov.areas, cov.area.polys = all.polys, strata.area = region@area, strata.names = strata.names, trackline = trackline, cyclictrackline = cyclictrackline)
     return(transect)
   }
 )

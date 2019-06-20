@@ -11,7 +11,7 @@
 generate.transects(object, silent, ...)
 
 \S4method{generate.transects}{Line.Transect.Design}(object,
-  silent = FALSE)
+  silent = FALSE, ...)
 
 \S4method{generate.transects}{Point.Transect.Design}(object,
   silent = FALSE, ...)

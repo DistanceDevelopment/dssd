@@ -12,7 +12,9 @@
 #' @seealso \code{\link{make.design}}
 #' @export
 setClass(Class = "Line.Transect",
-         representation = representation(line.length = "numeric"),
+         representation = representation(line.length = "numeric",
+                                         trackline = "numeric",
+                                         cyclictrackline = "numeric"),
          contains = "Transect")
 
 setMethod(
@@ -20,7 +22,8 @@ setMethod(
   signature="Line.Transect",
   definition=function(.Object, design, lines, samp.count, line.length, effort.allocation,
                       spacing, design.angle, edge.protocol, cov.area = numeric(0),
-                      cov.area.polys = list(), strata.area, strata.names){
+                      cov.area.polys = list(), strata.area, strata.names, trackline,
+                      cyclictrackline){
     #Set slots
     .Object@strata.names  <- strata.names
     .Object@design        <- design
@@ -29,6 +32,8 @@ setMethod(
     .Object@cov.area      <- cov.area
     .Object@cov.area.polys <- cov.area.polys
     .Object@line.length   <- line.length
+    .Object@trackline     <- trackline
+    .Object@cyclictrackline <- cyclictrackline
     .Object@samp.count    <- samp.count
     .Object@effort.allocation <- effort.allocation
     .Object@spacing       <- spacing
@@ -110,6 +115,8 @@ setMethod(
         cat("Spacing: ", object@spacing[strat], fill = T)
       }
       cat("Line length:", object@line.length[strat], fill = T)
+      cat("Trackline length:", object@trackline[strat], fill = T)
+      cat("Cyclic trackline length:", object@cyclictrackline[strat], fill = T)
       cat("Number of samplers: ", object@samp.count[strat], fill = T)
       cat("Design angle: ", object@design.angle[strat], fill = T)
       cat("Edge protocol: ", object@edge.protocol[strat], fill = T)
@@ -121,6 +128,8 @@ setMethod(
     cat("\n   Study Area Totals:", fill = T)
     cat("   _________________", fill = T)
     cat("Line length:", sum(object@line.length, na.rm = T), fill = T)
+    cat("Trackline length:", sum(object@trackline, na.rm = T), fill = T)
+    cat("Cyclic trackline length:", sum(object@cyclictrackline, na.rm = T), fill = T)
     cat("Number of samplers: ", sum(object@samp.count, na.rm = T), fill = T)
     if(length(object@effort.allocation) > 0){
       cat("Effort allocation: ", paste(object@effort.allocation*100, collapse = "%, "), "%", fill = T)
