@@ -143,7 +143,9 @@ setMethod(
     if(length(object@effort.allocation) > 0){
       cat("Effort allocation across strata: ", paste(object@effort.allocation*100, collapse = "%, "), "%", sep = "", fill = T)
     }
-    cat("Coverage Simulation repetitions: ", object@coverage.reps, fill = T)
+    if(length(object@coverage.scores) > 0){
+      cat("Coverage Simulation repetitions: ", object@coverage.reps, fill = T)
+    }
 
     design.stats <- object@design.statistics
     names.stats <- names(design.stats)
@@ -160,14 +162,16 @@ setMethod(
      cat("   ", underline, fill = T)
      print(design.stats[[i]])
     }
-    title <- "Coverage Score Summary:"
-    cat("\n   ", title, fill = T)
-    underline <- paste(rep("", (nchar(title)-3)), collapse = "")
-    cat("   ", underline, fill = T)
-    cat("Minimum coverage score: ", min(object@coverage.scores, na.rm = T), fill = T)
-    cat("Maximum coverage score: ", max(object@coverage.scores, na.rm = T), fill = T)
-    cat("Mean coverage score: ", mean(object@coverage.scores, na.rm = T), fill = T)
-    cat("Coverage score sd: ", sd(object@coverage.scores, na.rm = T), fill = T)
+    if(length(object@coverage.scores) > 0){
+      title <- "Coverage Score Summary:"
+      cat("\n   ", title, fill = T)
+      underline <- paste(rep("", (nchar(title)-3)), collapse = "")
+      cat("   ", underline, fill = T)
+      cat("Minimum coverage score: ", min(object@coverage.scores, na.rm = T), fill = T)
+      cat("Maximum coverage score: ", max(object@coverage.scores, na.rm = T), fill = T)
+      cat("Mean coverage score: ", mean(object@coverage.scores, na.rm = T), fill = T)
+      cat("Coverage score sd: ", sd(object@coverage.scores, na.rm = T), fill = T)
+    }
   }
 )
 
