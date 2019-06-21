@@ -46,6 +46,8 @@ of coverage during simulations.}
 \item{\code{coverage.scores}}{The average number of times each point in the
 coverage grid is included in a survey.}
 
+\item{\code{coverage.reps}}{The number of times the coverage simulation was repeated.}
+
 \item{\code{design.statistics}}{A list of values obtained when investigating
 coverage. This includes the minimum, maximum, mean and median}
 }}

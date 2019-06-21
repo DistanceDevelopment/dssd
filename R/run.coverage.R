@@ -38,7 +38,7 @@ run.coverage <- function(design, reps = 10){
   pts <- coverage@grid$geometry
   grid.count <- length(coverage@grid$geometry)
   #Store values
-  cov.area <- transect.count <- line.length <- matrix(rep(NA, reps*strata.count), ncol = strata.count, dimnames = list(1:reps, strata.names))
+  cov.area <- transect.count <- line.length <- trackline <- cyclictrackline <- matrix(rep(NA, reps*strata.count), ncol = strata.count, dimnames = list(1:reps, strata.names))
   total.hits <- rep(0, grid.count)
   for(rep in 1:reps){
     #Generate transects
@@ -57,47 +57,55 @@ run.coverage <- function(design, reps = 10){
     #Transect Length
     if(class(design) == "Line.Transect.Design"){
       line.length[rep,] <- transects@line.length
+      trackline[rep,] <- transects@trackline
+      cyclictrackline[rep,] <- transects@cyclictrackline
     }
     percent.complete <- round((rep/reps)*100, 1)
     cat("\r", percent.complete, "% complete \r")
   }
   #Calculate summary statistics
-  sampler.summary <- matrix(rep(NA, 4*(strata.count+1)), ncol = (strata.count+1), dimnames = list(c("Minimum", "Mean", "Median", "Maximum"), c(strata.names, "Total")))
+  sampler.summary <- matrix(rep(NA, 5*(strata.count+1)), ncol = (strata.count+1), dimnames = list(c("Minimum", "Mean", "Median", "Maximum", "sd"), c(strata.names, "Total")))
   sampler.summary[1,1:strata.count] <- apply(transect.count, 2, min)
   sampler.summary[2,1:strata.count] <- apply(transect.count, 2, mean)
   sampler.summary[3,1:strata.count] <- apply(transect.count, 2, median)
   sampler.summary[4,1:strata.count] <- apply(transect.count, 2, max)
+  sampler.summary[5,1:strata.count] <- apply(transect.count, 2, sd)
   sampler.totals <- apply(transect.count, 1, FUN = sum, na.rm = T)
   sampler.summary[1,(strata.count+1)] <- min(sampler.totals)
   sampler.summary[2,(strata.count+1)] <- mean(sampler.totals)
   sampler.summary[3,(strata.count+1)] <- median(sampler.totals)
   sampler.summary[4,(strata.count+1)] <- max(sampler.totals)
+  sampler.summary[5,(strata.count+1)] <- sd(sampler.totals)
   sampler.summary <- round(sampler.summary, 1)
 
 
-  cov.area.summary <- matrix(rep(NA, 4*(strata.count+1)), ncol = (strata.count+1), dimnames = list(c("Minimum", "Mean", "Median", "Maximum"), c(strata.names, "Total")))
+  cov.area.summary <- matrix(rep(NA, 5*(strata.count+1)), ncol = (strata.count+1), dimnames = list(c("Minimum", "Mean", "Median", "Maximum", "sd"), c(strata.names, "Total")))
   cov.area.summary[1,1:strata.count] <- apply(cov.area, 2, min)
   cov.area.summary[2,1:strata.count] <- apply(cov.area, 2, mean)
   cov.area.summary[3,1:strata.count] <- apply(cov.area, 2, median)
   cov.area.summary[4,1:strata.count] <- apply(cov.area, 2, max)
+  cov.area.summary[5,1:strata.count] <- apply(cov.area, 2, sd)
   cov.area.totals <- apply(cov.area, 1, FUN = sum, na.rm = T)
   cov.area.summary[1,(strata.count+1)] <- min(cov.area.totals)
   cov.area.summary[2,(strata.count+1)] <- mean(cov.area.totals)
   cov.area.summary[3,(strata.count+1)] <- median(cov.area.totals)
   cov.area.summary[4,(strata.count+1)] <- max(cov.area.totals)
+  cov.area.summary[5,(strata.count+1)] <- sd(cov.area.totals)
   cov.area.summary <- round(cov.area.summary, 2)
 
   areas <- region@area
-  cov.area.percent <- matrix(rep(NA, 4*(strata.count+1)), ncol = (strata.count+1), dimnames = list(c("Minimum", "Mean", "Median", "Maximum"), c(strata.names, "Total")))
-  cov.area.percent[1,1:strata.count] <- apply(cov.area, 2, min)/areas
-  cov.area.percent[2,1:strata.count] <- apply(cov.area, 2, mean)/areas
-  cov.area.percent[3,1:strata.count] <- apply(cov.area, 2, median)/areas
-  cov.area.percent[4,1:strata.count] <- apply(cov.area, 2, max)/areas
-  cov.area.totals <- apply(cov.area, 1, FUN = sum, na.rm = T)/sum(areas)
+  cov.area.percent <- matrix(rep(NA, 5*(strata.count+1)), ncol = (strata.count+1), dimnames = list(c("Minimum", "Mean", "Median", "Maximum", "sd"), c(strata.names, "Total")))
+  cov.area.percent[1,1:strata.count] <- (apply(cov.area, 2, min)/areas)*100
+  cov.area.percent[2,1:strata.count] <- (apply(cov.area, 2, mean)/areas)*100
+  cov.area.percent[3,1:strata.count] <- (apply(cov.area, 2, median)/areas)*100
+  cov.area.percent[4,1:strata.count] <- (apply(cov.area, 2, max)/areas)*100
+  cov.area.percent[5,1:strata.count] <- (apply(cov.area, 2, sd)/areas)*100
+  cov.area.totals <- apply(cov.area, 1, FUN = sum, na.rm = T)/sum(areas)*100
   cov.area.percent[1,(strata.count+1)] <- min(cov.area.totals)
   cov.area.percent[2,(strata.count+1)] <- mean(cov.area.totals)
   cov.area.percent[3,(strata.count+1)] <- median(cov.area.totals)
   cov.area.percent[4,(strata.count+1)] <- max(cov.area.totals)
+  cov.area.percent[5,(strata.count+1)] <- sd(cov.area.totals)
   cov.area.percent <- round(cov.area.percent, 2)
 
   summary.stats <- list(sampler.count = sampler.summary,
@@ -105,21 +113,54 @@ run.coverage <- function(design, reps = 10){
                         p.cov.area = cov.area.percent)
 
   if(class(design) == "Line.Transect.Design"){
-    line.len.summary <- matrix(rep(NA, 4*(strata.count+1)), ncol = (strata.count+1), dimnames = list(c("Minimum", "Mean", "Median", "Maximum"), c(strata.names, "Total")))
+    line.len.summary <- matrix(rep(NA, 5*(strata.count+1)), ncol = (strata.count+1), dimnames = list(c("Minimum", "Mean", "Median", "Maximum", "sd"), c(strata.names, "Total")))
     line.len.summary[1,1:strata.count] <- apply(line.length, 2, min)
     line.len.summary[2,1:strata.count] <- apply(line.length, 2, mean)
     line.len.summary[3,1:strata.count] <- apply(line.length, 2, median)
     line.len.summary[4,1:strata.count] <- apply(line.length, 2, max)
+    line.len.summary[5,1:strata.count] <- apply(line.length, 2, sd)
     line.len.totals <- apply(line.length, 1, FUN = sum, na.rm = T)
     line.len.summary[1,(strata.count+1)] <- min(line.len.totals)
     line.len.summary[2,(strata.count+1)] <- mean(line.len.totals)
     line.len.summary[3,(strata.count+1)] <- median(line.len.totals)
     line.len.summary[4,(strata.count+1)] <- max(line.len.totals)
+    line.len.summary[5,(strata.count+1)] <- sd(line.len.totals)
     line.len.summary <- round(line.len.summary, 2)
     summary.stats$line.length <- line.len.summary
+
+    trackline.summary <- matrix(rep(NA, 5*(strata.count+1)), ncol = (strata.count+1), dimnames = list(c("Minimum", "Mean", "Median", "Maximum", "sd"), c(strata.names, "Total")))
+    trackline.summary[1,1:strata.count] <- apply(trackline, 2, min)
+    trackline.summary[2,1:strata.count] <- apply(trackline, 2, mean)
+    trackline.summary[3,1:strata.count] <- apply(trackline, 2, median)
+    trackline.summary[4,1:strata.count] <- apply(trackline, 2, max)
+    trackline.summary[5,1:strata.count] <- apply(trackline, 2, sd)
+    trackline.totals <- apply(trackline, 1, FUN = sum, na.rm = T)
+    trackline.summary[1,(strata.count+1)] <- min(trackline.totals)
+    trackline.summary[2,(strata.count+1)] <- mean(trackline.totals)
+    trackline.summary[3,(strata.count+1)] <- median(trackline.totals)
+    trackline.summary[4,(strata.count+1)] <- max(trackline.totals)
+    trackline.summary[5,(strata.count+1)] <- sd(trackline.totals)
+    trackline.summary <- round(trackline.summary, 2)
+    summary.stats$trackline <- trackline.summary
+
+    cyclictrackline.summary <- matrix(rep(NA, 5*(strata.count+1)), ncol = (strata.count+1), dimnames = list(c("Minimum", "Mean", "Median", "Maximum", "sd"), c(strata.names, "Total")))
+    cyclictrackline.summary[1,1:strata.count] <- apply(cyclictrackline, 2, min)
+    cyclictrackline.summary[2,1:strata.count] <- apply(cyclictrackline, 2, mean)
+    cyclictrackline.summary[3,1:strata.count] <- apply(cyclictrackline, 2, median)
+    cyclictrackline.summary[4,1:strata.count] <- apply(cyclictrackline, 2, max)
+    cyclictrackline.summary[5,1:strata.count] <- apply(cyclictrackline, 2, sd)
+    cyclictrackline.totals <- apply(cyclictrackline, 1, FUN = sum, na.rm = T)
+    cyclictrackline.summary[1,(strata.count+1)] <- min(cyclictrackline.totals)
+    cyclictrackline.summary[2,(strata.count+1)] <- mean(cyclictrackline.totals)
+    cyclictrackline.summary[3,(strata.count+1)] <- median(cyclictrackline.totals)
+    cyclictrackline.summary[4,(strata.count+1)] <- max(cyclictrackline.totals)
+    cyclictrackline.summary[5,(strata.count+1)] <- sd(cyclictrackline.totals)
+    cyclictrackline.summary <- round(cyclictrackline.summary, 2)
+    summary.stats$cyclictrackline <- cyclictrackline.summary
   }
   design@coverage.scores <- total.hits/reps
   design@design.statistics <- summary.stats
+  design@coverage.reps <- reps
   return(design)
 }
 

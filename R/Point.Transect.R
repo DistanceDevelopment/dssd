@@ -107,7 +107,7 @@ setMethod(
       cat("Design angle: ", object@design.angle[strat], fill = T)
       cat("Edge protocol: ", object@edge.protocol[strat], fill = T)
       cat("Covered area: ", object@cov.area[strat], fill = T)
-      cat("Strata coverage: ", round((object@cov.area[strat]/object@strata.area[strat])*100,2), "%", fill = T)
+      cat("Strata coverage: ", round((object@cov.area[strat]/object@strata.area[strat])*100,2), "%", fill = T, sep = "")
       cat("Strata area: ", object@strata.area[strat], fill = T)
     }
     #Now print totals
@@ -115,11 +115,11 @@ setMethod(
     cat("   _________________", fill = T)
     cat("Number of samplers: ", sum(object@samp.count, na.rm = T), fill = T)
     if(length(object@effort.allocation) > 0){
-      cat("Effort allocation: ", paste(object@effort.allocation*100, collapse = "%, "), "%", fill = T)
+      cat("Effort allocation: ", paste(object@effort.allocation*100, collapse = "%, "), "%", fill = T, sep = "")
     }
     cat("Covered area: ", sum(object@cov.area, na.rm = T), fill = T)
     index <- which(!is.na(object@cov.area))
-    cat("Average coverage: ", round((sum(object@cov.area[index])/sum(object@strata.area))*100,2), "%", fill = T)
+    cat("Average coverage: ", round((sum(object@cov.area[index])/sum(object@strata.area))*100,2), "%", fill = T, sep = "")
     invisible(object)
   }
 )

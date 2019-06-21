@@ -27,6 +27,7 @@
 #' of coverage during simulations.
 #' @slot coverage.scores The average number of times each point in the
 #' coverage grid is included in a survey.
+#' @slot coverage.reps The number of times the coverage simulation was repeated.
 #' @slot design.statistics A list of values obtained when investigating
 #' coverage. This includes the minimum, maximum, mean and median
 #' @keywords classes
@@ -44,6 +45,7 @@ setClass(Class = "Survey.Design",
                                          truncation = "numeric",
                                          coverage.grid = "Coverage.Grid",
                                          coverage.scores = "numeric",
+                                         coverage.reps = "numeric",
                                          design.statistics = "list", "VIRTUAL")
 )
 
@@ -136,9 +138,13 @@ setMethod(
       cat("Design angle: ", object@design.angle[strat], fill = T)
       cat("Edge protocol: ", object@edge.protocol[strat], fill = T)
     }
+    dp <- ifelse(any(object@region@area < 10), 3, 0)
+    cat("\nStrata areas: ", paste(round(object@region@area, dp), collapse = ", "), fill = T)
     if(length(object@effort.allocation) > 0){
-      cat("\nEffort allocation across strata: ", paste(object@effort.allocation*100, collapse = " %, "), "%", fill = T)
+      cat("Effort allocation across strata: ", paste(object@effort.allocation*100, collapse = "%, "), "%", sep = "", fill = T)
     }
+    cat("Coverage Simulation repetitions: ", object@coverage.reps, fill = T)
+
     design.stats <- object@design.statistics
     names.stats <- names(design.stats)
     for(i in seq(along = design.stats)){
@@ -146,12 +152,22 @@ setMethod(
                      "sampler.count" = "Number of samplers:",
                      "cov.area" = "Covered area:",
                      "p.cov.area" = "% of region covered:",
-                     "line.length" = "Line length:")
+                     "line.length" = "Line length:",
+                     "trackline" = "Trackline length:",
+                     "cyclictrackline" = "Cyclic trackline length:")
      cat("\n   ", title, fill = T)
      underline <- paste(rep("", (nchar(title)-3)), collapse = "")
      cat("   ", underline, fill = T)
      print(design.stats[[i]])
     }
+    title <- "Coverage Score Summary:"
+    cat("\n   ", title, fill = T)
+    underline <- paste(rep("", (nchar(title)-3)), collapse = "")
+    cat("   ", underline, fill = T)
+    cat("Minimum coverage score: ", min(object@coverage.scores, na.rm = T), fill = T)
+    cat("Maximum coverage score: ", max(object@coverage.scores, na.rm = T), fill = T)
+    cat("Mean coverage score: ", mean(object@coverage.scores, na.rm = T), fill = T)
+    cat("Coverage score sd: ", sd(object@coverage.scores, na.rm = T), fill = T)
   }
 )
 
