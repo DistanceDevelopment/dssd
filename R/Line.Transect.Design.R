@@ -63,7 +63,7 @@ setMethod(
 setMethod(
   f="generate.transects",
   signature="Line.Transect.Design",
-  definition=function(object, silent = FALSE, ...){
+  definition=function(object, quiet = FALSE, ...){
 #This function separates the design generation by strata so different strata can have different designs in them. Assumes that the validation method called when the class is initialised checks that all design options either have length 1 or length equal to the number of strata. Also assumes that the region object has been checked and confimred to have the correct number of strata names for the size of the geometry.
     # Get strata names
     region <- object@region
@@ -160,20 +160,20 @@ setMethod(
     #Main grid generation
     for (strat in seq(along = region@region[[sf.column]])) {
       if(design[strat] %in% c("systematic","random")){
-        temp <- generate.parallel.lines(object, strat, samplers[strat], line.length[strat], spacing[strat], by.spacing[strat], silent = silent)
+        temp <- generate.parallel.lines(object, strat, samplers[strat], line.length[strat], spacing[strat], by.spacing[strat], quiet = quiet)
         transects[[strat]] <- temp$transects
         polys[[strat]] <- temp$cover.polys
         #If there are transects calculate the trackline
-        if(!is.null(transects[[strat]])){
+        if(!is.null(temp)){
           temp <- calculate.trackline.pl(transects[[strat]])
           trackline[strat] <- temp$trackline
           cyclictrackline[strat] <- temp$cyclictrackline
         }
       }else if(design[strat] == "eszigzag" || design[strat] == "eszigzagcom"){
-        temp <-  generate.eqspace.zigzags(object, strat, samplers[strat], line.length[strat], spacing[strat], by.spacing[strat], silent = silent)
+        temp <-  generate.eqspace.zigzags(object, strat, samplers[strat], line.length[strat], spacing[strat], by.spacing[strat], quiet = quiet)
         transects[[strat]] <- temp$transects
         polys[[strat]] <- temp$cover.polys
-        if(!is.null(transects[[strat]])){
+        if(!is.null(temp)){
           if(design[strat] == "eszigzag"){
             temp <- calculate.trackline.zz(transects[[strat]])
           }else if(design[strat] == "eszigzagcom"){
@@ -189,11 +189,11 @@ setMethod(
     }
     #Put transects into a multipart, linestring/multilinestring objects
     #Need to retain transect IDs as well as strata for lines
-    index <- which(sapply(transects, Negate(is.null)))
-    if(length(index) == 0){
+    if(length(transects) == 0){
       warning("No samplers generated.", immediate. = T, call. = FALSE)
       return(NULL)
     }
+    index <- which(sapply(transects, Negate(is.null)))
     cov.areas <- line.length <- sampler.count <- numeric(0)
     transect.count <- 0
     strata.id <- character(0)

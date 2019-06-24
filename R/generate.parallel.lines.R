@@ -1,6 +1,6 @@
 #' @importFrom stats runif
 #' @importFrom methods new
-generate.parallel.lines <- function(design, strata.id, samplers, line.length, spacing, by.spacing, silent = FALSE, calc.cov.area = TRUE, clip.to.strata = TRUE){
+generate.parallel.lines <- function(design, strata.id, samplers, line.length, spacing, by.spacing, quiet = FALSE, calc.cov.area = TRUE, clip.to.strata = TRUE){
   #Generates either random or systematic parallel lines
   region <- design@region
   sf.column <- attr(region@region, "sf_column")

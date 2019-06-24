@@ -15,7 +15,7 @@ NULL
 #' @return an object of class Line.Transect
 #' @export
 #' @rdname generate.transects-methods
-setGeneric("generate.transects", function(object, silent, ...){standardGeneric ("generate.transects")})
+setGeneric("generate.transects", function(object, quiet = FALSE, ...){standardGeneric ("generate.transects")})
 
 if (!isGeneric("plot")){
   setGeneric(name = "plot", def = function(x, y, ...){standardGeneric("plot")})

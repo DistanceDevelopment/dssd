@@ -154,11 +154,11 @@ setMethod(
         transects[[strat]] = NULL
       }
     }
-    index <- which(sapply(transects, Negate(is.null)))
-    if(length(index) == 0){
+    if(length(transects) == 0){
       warning("No samplers generated.", immediate. = T, call. = FALSE)
       return(NULL)
     }
+    index <- which(sapply(transects, Negate(is.null)))
     cov.areas <- sampler.count <- numeric(0)
     transect.count <- 0
     strata.id <- character(0)

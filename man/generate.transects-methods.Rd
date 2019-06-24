@@ -8,10 +8,10 @@
 \alias{generate.transects,Point.Transect.Design-method}
 \title{S4 generic method to generate an instance of a design}
 \usage{
-generate.transects(object, silent, ...)
+generate.transects(object, quiet = FALSE, ...)
 
 \S4method{generate.transects}{Line.Transect.Design}(object,
-  silent = FALSE, ...)
+  quiet = FALSE, ...)
 
 \S4method{generate.transects}{Point.Transect.Design}(object,
   silent = FALSE, ...)
@@ -19,9 +19,9 @@ generate.transects(object, silent, ...)
 \arguments{
 \item{object}{an object which inherits from class Survey.Design}
 
-\item{silent}{silences some warnings}
-
 \item{...}{optional arguments used for internal calls}
+
+\item{silent}{silences some warnings}
 }
 \value{
 an object of class Line.Transect
