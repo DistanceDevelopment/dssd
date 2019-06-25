@@ -24,7 +24,7 @@
 #' plot(region)
 make.region <- function(region.name = "region",
                         strata.name = character(0),
-                        units = "m",
+                        units = character(0),
                         shape = NULL){
   #Process shape
   if("sf" %in% class(shape)){
