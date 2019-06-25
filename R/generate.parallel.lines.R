@@ -25,8 +25,15 @@ generate.parallel.lines <- function(design, strata.id, samplers, line.length, sp
     ave.line.height <- sf::st_area(rot.strata)/width
     samplers <- line.length/ave.line.height
     if(samplers < 1){
-      if(!silent){
+      if(!quiet){
         warning(paste("Line length is less than the average transect length cannot generate samplers in strata ", strata.id, sep = ""), immediate. = T, call. = F)
+      }
+      return(NULL)
+    }
+  }else if(!by.spacing && !is.na(samplers)){
+    if(samplers < 1){
+      if(!quiet){
+        warning(paste("Number of samplers < 1, cannot allocate samplers in strata ", strata.id, sep = ""), immediate. = T, call. = F)
       }
       return(NULL)
     }
@@ -38,7 +45,7 @@ generate.parallel.lines <- function(design, strata.id, samplers, line.length, sp
   end.y <- bbox[["ymax"]]
   if(design@design[strata.id] == "systematic"){
     if(spacing > (bbox[["xmax"]]-bbox[["xmin"]])){
-      if(!silent){
+      if(!quiet){
         warning(paste("Spacing larger than x-range cannot generate samplers in strata ", strata.id, sep = ""), immediate. = T, call. = F)
       }
       return(NULL)

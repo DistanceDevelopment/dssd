@@ -190,7 +190,9 @@ setMethod(
     #Put transects into a multipart, linestring/multilinestring objects
     #Need to retain transect IDs as well as strata for lines
     if(length(transects) == 0){
-      warning("No samplers generated.", immediate. = T, call. = FALSE)
+      if(!quiet){
+        warning("No samplers generated.", immediate. = T, call. = FALSE)
+      }
       return(NULL)
     }
     index <- which(sapply(transects, Negate(is.null)))

@@ -155,8 +155,9 @@ setMethod(
       }
     }
     if(length(transects) == 0){
-      warning("No samplers generated.", immediate. = T, call. = FALSE)
-      return(NULL)
+      if(!quiet){
+        warning("No samplers generated.", immediate. = T, call. = FALSE)
+      }
     }
     index <- which(sapply(transects, Negate(is.null)))
     cov.areas <- sampler.count <- numeric(0)

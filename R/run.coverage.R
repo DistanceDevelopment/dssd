@@ -42,7 +42,11 @@ run.coverage <- function(design, reps = 10){
   total.hits <- rep(0, grid.count)
   for(rep in 1:reps){
     #Generate transects
-    transects <- generate.transects(design, silent = TRUE)
+    transects <- generate.transects(design, quiet = TRUE)
+    if(is.null(transects)){
+      warning("No transects generated, coverage run cancelled. Please check your design.", immediate. = T, call. = FALSE)
+      return(design)
+    }
     #Check coverage hits
     polys <- transects@cov.area.polys$geometry
     hits <- lapply(polys, FUN = inout, pts = pts)
