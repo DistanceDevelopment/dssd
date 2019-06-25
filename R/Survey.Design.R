@@ -140,6 +140,9 @@ setMethod(
     }
     dp <- ifelse(any(object@region@area < 10), 3, 0)
     cat("\nStrata areas: ", paste(round(object@region@area, dp), collapse = ", "), fill = T)
+    if(length(object@region@units) > 0){
+      cat("Region coordinate units: ", object@region@units, fill = T)
+    }
     if(length(object@effort.allocation) > 0){
       cat("Effort allocation across strata: ", paste(object@effort.allocation*100, collapse = "%, "), "%", sep = "", fill = T)
     }
