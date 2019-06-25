@@ -90,7 +90,7 @@ check.line.design <- function(object){
   #If random selected then check that samplers or line.length has been supplied
   check.effort.allocation = FALSE
   if(all(object@design == "random")){
-    if(length(object@samplers == 0) && length(object@line.length) == 0){
+    if(length(object@samplers) == 0 && length(object@line.length) == 0){
       object@samplers <- 20
       check.effort.allocation = TRUE
     }else if(length(object@samplers == 1) || length(object@line.length == 1)){
