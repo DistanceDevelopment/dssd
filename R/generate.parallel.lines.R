@@ -105,7 +105,7 @@ generate.parallel.lines <- function(design, strata.id, samplers, line.length, sp
   #Also rotate covered region
   if(calc.cov.area){
     cover.polys.unrot <- lapply(cover.polys, mat.mult, y = rot.mat.rev)
-    return(list(transects = transects, cover.polys = cover.polys.unrot))
+    return(list(transects = transects, cover.polys = cover.polys.unrot, spacing = spacing))
   }
-  return(list(transects = transects, cover.polys = list()))
+  return(list(transects = transects, cover.polys = list(), spacing = spacing))
 }

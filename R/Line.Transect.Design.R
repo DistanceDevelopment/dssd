@@ -163,6 +163,7 @@ setMethod(
         temp <- generate.parallel.lines(object, strat, samplers[strat], line.length[strat], spacing[strat], by.spacing[strat], quiet = quiet)
         transects[[strat]] <- temp$transects
         polys[[strat]] <- temp$cover.polys
+        spacing[[strat]] <- temp$spacing
         #If there are transects calculate the trackline
         if(!is.null(temp)){
           temp <- calculate.trackline.pl(transects[[strat]])
@@ -173,6 +174,7 @@ setMethod(
         temp <-  generate.eqspace.zigzags(object, strat, samplers[strat], line.length[strat], spacing[strat], by.spacing[strat], quiet = quiet)
         transects[[strat]] <- temp$transects
         polys[[strat]] <- temp$cover.polys
+        spacing[[strat]] <- temp$spacing
         if(!is.null(temp)){
           if(design[strat] == "eszigzag"){
             temp <- calculate.trackline.zz(transects[[strat]])
