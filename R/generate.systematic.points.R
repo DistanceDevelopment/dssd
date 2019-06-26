@@ -38,21 +38,24 @@ generate.systematic.points <- function(design, strata.id, spacing, samplers, cov
     x.vals <- seq(start.x, bbox[["xmax"]], by = sspace)
     y.vals <- seq(start.y, bbox[["ymax"]], by = sspace)
     temp.coords <- expand.grid(x.vals, y.vals)
+    coords.list <- split(temp.coords, seq(nrow(temp.coords)))
+    points <- lapply(coords.list, FUN = function(x){return(sf::st_point(as.matrix(x)))})
     #keep everything within the polygon strata
-    points <- list()
-    for(p in seq(along = temp.coords[,1])){
-      points[[p]] <- sf::st_point(as.matrix(temp.coords)[p,])
-    }
+    #points <- list()
+    #for(p in seq(along = temp.coords[,1])){
+    #  points[[p]] <- sf::st_point(as.matrix(temp.coords)[p,])
+    #}
     #points <- sf::st_multipoint(as.matrix(temp.coords))
     to.keep <- lapply(points, FUN = sf::st_intersection, y = rot.strata)
-    points.inside <- list()
-    count <- 1
-    for(p in seq(along = to.keep)){
-      if(length(to.keep[[p]]) > 0){
-        points.inside[[count]] <- to.keep[[p]]
-        count <- count + 1
-      }
-    }
+    index <- which(sapply(to.keep, function(x){ifelse(length(x) > 0, TRUE, FALSE)}))
+    points.inside <- to.keep[index]
+    #count <- 1
+    #for(p in seq(along = to.keep)){
+    #  if(length(to.keep[[p]]) > 0){
+    #    points.inside[[count]] <- to.keep[[p]]
+    #    count <- count + 1
+    #  }
+    #}
     #Rotate back again
     reverse.theta <- rot.angle.rad
     rot.mat.rev <- matrix(c(cos(reverse.theta), sin(reverse.theta), -sin(reverse.theta), cos(reverse.theta)), ncol = 2, byrow = FALSE)
