@@ -42,3 +42,4 @@ Collate:
     'generate.systematic.points.R'
     'get.intersection.points.R'
     'run.coverage.R'
+    'write.transects.R'
