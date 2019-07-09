@@ -8,9 +8,12 @@
 #' class.
 #' @param reps the number of times you wish the coverage simulation
 #' to be carried out.
+#' @param save.transects a directory where the shapefiles for the
+#' transects can be saved. The shapefile names will be S1, S2, ...
+#' existing files in the directory will not be overwritten.
 #' @export
 #' @importFrom stats median
-run.coverage <- function(design, reps = 10){
+run.coverage <- function(design, reps = 10, save.transects = ""){
 #Calculates the coverage scores for the design supplied
 #Also stores summary statistics
 #All values are returned within the design object
@@ -43,6 +46,10 @@ run.coverage <- function(design, reps = 10){
   for(rep in 1:reps){
     #Generate transects
     transects <- generate.transects(design, quiet = TRUE)
+    #if the user wants the transects saved write them to file
+    if(save.transects != ""){
+     write.transects(transects, paste(save.transects, "/S", rep, ".shp", sep = ""))
+    }
     if(is.null(transects)){
       warning("No transects generated, coverage run cancelled. Please check your design.", immediate. = T, call. = FALSE)
       return(design)

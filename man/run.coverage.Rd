@@ -4,7 +4,7 @@
 \alias{run.coverage}
 \title{run.coverage}
 \usage{
-run.coverage(design, reps = 10)
+run.coverage(design, reps = 10, save.transects = "")
 }
 \arguments{
 \item{design}{an object which inherits from the Survey.Design
@@ -12,6 +12,10 @@ class.}
 
 \item{reps}{the number of times you wish the coverage simulation
 to be carried out.}
+
+\item{save.transects}{a directory where the shapefiles for the
+transects can be saved. The shapefile names will be S1, S2, ...
+existing files in the directory will not be overwritten.}
 }
 \description{
 This function can be used to assess the coverage of
