@@ -179,3 +179,19 @@ setMethod(
 )
 
 
+#' @rdname get.coverage-methods
+#' @exportMethod get.coverage
+setMethod(
+  f="get.coverage",
+  signature="Survey.Design",
+  definition=function(object){
+    #Check coverage has been run
+    if(all(is.na(object@coverage.scores))){
+      stop("Design has not been run yet, all coverage scores are NA.", call. = FALSE)
+    }else{
+      return(object@coverage.scores)
+    }
+  }
+)
+
+

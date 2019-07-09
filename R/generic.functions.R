@@ -17,6 +17,16 @@ NULL
 #' @rdname generate.transects-methods
 setGeneric("generate.transects", function(object, quiet = FALSE, ...){standardGeneric ("generate.transects")})
 
+#' S4 generic method to extract coverage scores
+#'
+#' Obtains the coverage scores from the survey design object.
+#'
+#' @param object an object which inherits from class Survey.Design
+#' @return a vector of coverage scores
+#' @export
+#' @rdname get.coverage-methods
+setGeneric("get.coverage", function(object){standardGeneric ("get.coverage")})
+
 if (!isGeneric("plot")){
   setGeneric(name = "plot", def = function(x, y, ...){standardGeneric("plot")})
 }
