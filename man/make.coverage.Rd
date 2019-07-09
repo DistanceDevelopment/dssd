@@ -5,7 +5,7 @@
 \title{Creates a Coverage.Grid object}
 \usage{
 make.coverage(region = make.region(), spacing = numeric(0),
-  n.grid.points = 1000, grid = list())
+  n.grid.points = 1000)
 }
 \arguments{
 \item{region}{the region name}
@@ -15,9 +15,6 @@ make.coverage(region = make.region(), spacing = numeric(0),
 \item{n.grid.points}{the desired number of grid points (note that
 the exact number generated may differ slightly depending on the
 shape of the study region).}
-
-\item{grid}{measurement units; either \code{"m"} for metres or \code{"km"} for
-kilometres.}
 }
 \value{
 object of class Coverage.Grid

@@ -3,16 +3,19 @@
 NULL
 
 
-#' S4 generic method to generate an instance of a design
+#' @title S4 generic method to generate an instance of a design
 #'
-#' Uses the Survey.Design details to generate transects. Currently this
-#' involves loading a survey shapefile from the path specified in the
-#' Survey.Design object and can only work with line transect designs.
+#' @description Uses the Survey.Design details to generate a set of transects.
+#' The transects are returned within an object of class Transect which records
+#' some of the design options used to generate it along with the samplers as
+#' an sf object of class 'POINT' or 'LINESTRING'/'MULTILINESTRING'. The
+#' Transect object also contains the covered areas as a 'POLYGON' or
+#' 'MULTIPOLYGON' sf object.
 #'
 #' @param object an object which inherits from class Survey.Design
-#' @param silent silences some warnings
+#' @param quiet silences some warnings
 #' @param ... optional arguments used for internal calls
-#' @return an object of class Line.Transect
+#' @return an object of class Transect
 #' @export
 #' @rdname generate.transects-methods
 setGeneric("generate.transects", function(object, quiet = FALSE, ...){standardGeneric ("generate.transects")})

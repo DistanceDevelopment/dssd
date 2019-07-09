@@ -2,25 +2,28 @@
 #' @importFrom stats na.omit
 
 #' @title Creates a Region object
-#' @description This creates an instance of the Region class. If the
-#' \code{shapefile} argument is supplied, all information will be extracted from
-#' there. Otherwise, the a list of polygons describing the areas of interest needs
-#' to be supplied (\code{coords}) and optionally a list of polygons describing the
-#' areas to be excluded (\code{gaps}). If \code{area} is not specified it will be
-#' calculated.
+#' @description This creates an instance of the Region class which defines the study
+#' area for the survey.
 #' @param region.name the region name
 #' @param strata.name the stratum names (character vector, same length as the
-#'   number of areas in the \code{shapefile} or \code{coords} arguments). If not supplied "A", "B", "C", ... will be assigned.
+#'   number of areas in the shapefile / sf object). If not supplied "A", "B",
+#'   "C", ... will be assigned.
 #' @param units measurement units; either \code{"m"} for metres or \code{"km"} for
-#'   kilometres.
-#' @param shape sf object, sp object, shapefile path to .shp file or a
-#' data.frame of coordinates.
+#'   kilometres. If the shapefile has a projection file associated with it the unit
+#'   will be taken from there.
+#' @param shape shapefile path to .shp file or an sf object of class sf, sfc or sfg.
 #' @return object of class Region
 #' @export
 #' @author Laura Marshall
 #' @examples
-#' # A basic study region with two strata
+#' # A basic study rectangular study region
 #' region <- make.region()
+#' plot(region)
+#'
+#' #Load the region from shapefile
+#' shapefile.name <- system.file("extdata", "TrackExample.shp", package = "dssd")
+#' region <- make.region(region.name = "study area",
+#'                      shape = shapefile.name)
 #' plot(region)
 make.region <- function(region.name = "region",
                         strata.name = character(0),
@@ -86,29 +89,40 @@ make.region <- function(region.name = "region",
 #' @details For point transect designs the user may either specify "random" or
 #' "systematic" for the design argument. If the user specifies "random", they
 #' should also provide a value for effort detailing the number of point transects
-#' they wish their survey to have (for stratified designs they may specify a vector
+#' they wish their survey to have. For stratified designs they may specify a vector
 #' of numbers detailing the number of transects per strata or alternatively use the
-#' effort.allocation argument to allocate effort proportionally). If the user specified
-#' "systematic" they may either provide their desired number of samplers or a value
-#' for spacing which defines the gap between each of the points (again a vector
-#' of spacing values can be provided for each strata). Optionally the user may
-#' select a design.angle. For both random and systematic point transect designs
-#' the user may select either a minus or plus sampling edge protocol.
+#' effort.allocation argument to allocate a total effort amount proportionally. If
+#' effort.allocation is left blank then effort will be allocated according to strata
+#' area. If the user specified"systematic" they may either provide their desired number
+#' of samplers or a value for spacing which defines the gap between each of the
+#' points (again a vector of spacing values can be provided for each strata).
+#' Optionally the user may select a design.angle. For both random and systematic
+#' point transect designs the user may select either a minus or plus sampling edge
+#' protocol.
 #'
 #' For line transect designs the user may either specify "random" (randomly
 #' placed full width lines), "systematic" (systematically placed full width lines),
 #' "eszigzag" (equally spaced zigzag lines) or "eszigzagcom" (two sets of complementary
 #' equally spaced zigzag lines). If the user specifies "random", they
 #' should provide the either the number of samplers they wish the design to generate
-#' or the total line length they wish to achieve. If the user specifies "systematic"
-#' they should specify either the number of samplers, the desired total line length
-#' or the spacing between lines. The design angle for these parallel line designs
-#' refers to the angle of the lines. If the user specifies a zigzag design they
+#' or the line length they wish to achieve, either by strata or as a total. If the
+#' user specifies "systematic" they should specify either the number of samplers,
+#' the desired line length or the spacing between lines. The design angle for these
+#' parallel line designs refers to the angle of the lines where 0 is a vertical line
+#' and moving round in a clockwise direction. If the user specifies a zigzag design they
 #' should specify the systematic spacing value, number of samplers or line length
 #' to be used and should choose between generating the design in a minimum bounding
-#' rectangle or a convex hull. The designs may be generated using plus or minus
-#' sampling protocols. Similar to the point transect designs different values may
-#' be specified for each strata for all of the above options.
+#' rectangle or a convex hull. The default is minimum bounding rectangle which gives
+#' more even coverage but the convex hull is generally more efficient. The designs
+#' may be generated using plus or minus sampling protocols. Similar to the point
+#' transect designs different values may be specified for each strata for all of
+#' the above options. The design angle for the zigzag designs refers to the angle
+#' of a line which would run through the middle of each zigzag transect if the
+#' zigzags were to be generated within a rectangle. The design angle for zigzags
+#' should usually run along the longest dimesion of the study region.
+#'
+#' See the Multi Strata Vignette for more complex examples of defining designs
+#' across multiple strata.
 #'
 #' @param region an object of class Region defining the survey region.
 #' @param transect.type character variable specifying either "line" or "point"
@@ -116,8 +130,10 @@ make.region <- function(region.name = "region",
 #' "systematic", "eszigzag" (equal-spaced zigzag) or "eszigzagcom" (equal spaced zigzag with complementary lines). See details for more information.
 #' @param samplers the number of samplers you wish the design to generate
 #' (note that the number actually generated may differ slightly due to the
-#' shape of the study region).
-#' @param line.length the total line length you desire.
+#' shape of the study region for some designs). This may be one value of a value
+#' per strata.
+#' @param line.length the total line length you desire or a vector of line lengths
+#' the same length as the number of strata.
 #' @param effort.allocation numeric values used to indicate the proportion of effort
 #' to be allocated to each strata from number of samplers or line length. If length is
 #' 0 (the default) and only a total line length or total number of samplers is supplied,
@@ -125,16 +141,16 @@ make.region <- function(region.name = "region",
 #' @param design.angle numeric value detailing the angle of the design. Can provide
 #' multiple values relating to strata. The use of the angle varies with design, it
 #' can be either the angle of the grid of points, the angle of lines or the design
-#' axis for the zigzag design.
+#' axis for the zigzag design. See details.
 #' @param spacing used by systematic designs, numeric value to define spacing
-#' between transects.
+#' between transects. Can be a vector of values with one value per strata.
 #' @param edge.protocol character value indicating whether a "plus" sampling or
-#' "minum" sampling protocol is used.
+#' "minus" sampling protocol is used.
 #' @param bounding.shape only applicable to zigzag designs. A character value saying
 #' whether the zigzag transects should be generated using a minimum bounding
 #' "rectangle" or a "convex hull".
-#' @param truncation A numeric value describing the longest distance at which an
-#' object may be observed.
+#' @param truncation A single numeric value describing the longest distance at which
+#' an object may be observed. Truncation distance is constant across strata.
 #' @param coverage.grid An object of class Coverage.Grid for use when
 #' running the coverage simulation.
 #' @return object of a class which inherits from class Survey.Design
@@ -204,8 +220,6 @@ make.design <- function(region = make.region(), transect.type = "line", design =
 #' @param n.grid.points the desired number of grid points (note that
 #'   the exact number generated may differ slightly depending on the
 #'   shape of the study region).
-#' @param grid measurement units; either \code{"m"} for metres or \code{"km"} for
-#'   kilometres.
 #' @return object of class Coverage.Grid
 #' @export
 #' @author Laura Marshall
@@ -215,8 +229,7 @@ make.design <- function(region = make.region(), transect.type = "line", design =
 #' plot(region, grid)
 make.coverage <- function(region = make.region(),
                       spacing = numeric(0),
-                      n.grid.points = 1000,
-                      grid = list()){
+                      n.grid.points = 1000){
   #if neither, spacing, no.grid.points, or grid is provided make an empty coverage - used when this is called from within this function to generate a design to create the coverage grid.
   if(length(spacing) == 0 && length(n.grid.points) == 0 && length(grid) == 0){
     return(new("Coverage.Grid", list(), numeric(0)))

@@ -11,28 +11,31 @@ make.region(region.name = "region", strata.name = character(0),
 \item{region.name}{the region name}
 
 \item{strata.name}{the stratum names (character vector, same length as the
-number of areas in the \code{shapefile} or \code{coords} arguments). If not supplied "A", "B", "C", ... will be assigned.}
+number of areas in the shapefile / sf object). If not supplied "A", "B",
+"C", ... will be assigned.}
 
 \item{units}{measurement units; either \code{"m"} for metres or \code{"km"} for
-kilometres.}
+kilometres. If the shapefile has a projection file associated with it the unit
+will be taken from there.}
 
-\item{shape}{sf object, sp object, shapefile path to .shp file or a
-data.frame of coordinates.}
+\item{shape}{shapefile path to .shp file or an sf object of class sf, sfc or sfg.}
 }
 \value{
 object of class Region
 }
 \description{
-This creates an instance of the Region class. If the
-\code{shapefile} argument is supplied, all information will be extracted from
-there. Otherwise, the a list of polygons describing the areas of interest needs
-to be supplied (\code{coords}) and optionally a list of polygons describing the
-areas to be excluded (\code{gaps}). If \code{area} is not specified it will be
-calculated.
+This creates an instance of the Region class which defines the study
+area for the survey.
 }
 \examples{
-# A basic study region with two strata
+# A basic study rectangular study region
 region <- make.region()
+plot(region)
+
+#Load the region from shapefile
+shapefile.name <- system.file("extdata", "TrackExample.shp", package = "dssd")
+region <- make.region(region.name = "study area",
+                     shape = shapefile.name)
 plot(region)
 }
 \author{
