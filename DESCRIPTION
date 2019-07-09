@@ -1,4 +1,4 @@
-Package: dsuds
+Package: dssd
 Imports:
     sf,
     plot3D,
@@ -23,8 +23,8 @@ Collate:
     'Coverage.Grid.R'
     'Transect.R'
     'Region.R'
-    'Survey.Design.R'
     'generic.functions.R'
+    'Survey.Design.R'
     'Line.Transect.Design.R'
     'Line.Transect.R'
     'Point.Transect.Design.R'
