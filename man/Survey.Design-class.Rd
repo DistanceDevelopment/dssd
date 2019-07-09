@@ -3,11 +3,8 @@
 \docType{class}
 \name{Survey.Design-class}
 \alias{Survey.Design-class}
-\title{S4 Class "Survey.Design"}
+\title{Virtual Class "Survey.Design"}
 \description{
-Virtual Class "Survey.Design"
-}
-\details{
 Virtual Class \code{"Survey.Design"} is an S4 class detailing the survey
 design.
 }

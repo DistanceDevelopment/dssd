@@ -1,6 +1,8 @@
-#' Virtual Class "Survey.Design"
+#' @include generic.functions.R
+
+#' @title Virtual Class "Survey.Design"
 #'
-#' Virtual Class \code{"Survey.Design"} is an S4 class detailing the survey
+#' @description Virtual Class \code{"Survey.Design"} is an S4 class detailing the survey
 #' design.
 #'
 #' @name Survey.Design-class
@@ -90,7 +92,6 @@ setMethod(
     invisible(x)
   }
 )
-
 
 #' show
 #'
