@@ -93,6 +93,43 @@ generate.parallel.lines <- function(design, strata.id, samplers, line.length, sp
       }
     }
   }
+  #Check if any polygons are invalid - sometimes tiny pieces of line are generated on the boundaries which lead to overlapping multi polygons
+  invalid <- which(!unlist(lapply(cover.polys, sf::st_is_valid)))
+  for(i in seq(along = invalid)){
+    tmp <- cover.polys[[invalid[i]]]
+    polys.tmp <- list()
+    mat.tmp <- list()
+    for(poly in seq(along = tmp)){
+      polys.tmp[[poly]] <- sf::st_polygon(tmp[[poly]])
+      mat.tmp[[poly]] <- tmp[[poly]]
+    }
+    to.rem <- numeric(0)
+    for(poly in seq(along = polys.tmp)){
+      intsec <- which(unlist(lapply(polys.tmp, sf::st_intersects, polys.tmp[poly][[1]], sparse = FALSE)))[-poly]
+      if(length(intsec) > 0){
+        intsec <- sort(c(intsec, poly))
+        areas <- unlist(lapply(polys.tmp[intsec], sf::st_area))
+        to.rem <- c(to.rem, intsec[which(areas == min(areas))])
+        #if(min(areas) > sf::st_area(rot.strata)/50000){
+        #  warning("Removing covered area greater than 50,000th of the strata area.", immediate. = TRUE, call. = FALSE)
+        #}
+      }
+    }
+    to.rem <- unique(to.rem)
+    new.polys <- mat.tmp[-to.rem]
+    if(length(new.polys) == 1){
+      cover.polys[[invalid[i]]] <- sf::st_polygon(new.polys[[1]])
+    }else{
+      cover.polys[[invalid[i]]] <- sf::st_multipolygon(new.polys)
+    }
+    #Also remove strange corresponding transect part
+    tmp <- to.keep[[invalid[i]]]
+    if(length(tmp[-to.rem]) == 1){
+      to.keep[[invalid[i]]] <- sf::st_linestring(tmp[-to.rem][[1]])
+    }else{
+      to.keep[[invalid[i]]] <- sf::st_multilinestring(tmp[-to.rem])
+    }
+  }
   if(clip.to.strata){
     cover.polys <- lapply(cover.polys, sf::st_intersection, y = rot.strata)
   }

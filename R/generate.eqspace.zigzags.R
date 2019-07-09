@@ -151,10 +151,6 @@ generate.eqspace.zigzags <- function(design, strata.id, samplers, line.length, s
   }
   #Check if any polygons are invalid - sometimes tiny pieces of line are generated on the boundaries which lead to overlapping multi polygons
   invalid <- which(!unlist(lapply(cover.polys, sf::st_is_valid)))
-  if(length(invalid) > 0){
-    cat("found", fill = T)
-    write.to.global <<- list(cover.polys)
-  }
   for(i in seq(along = invalid)){
     tmp <- cover.polys[[invalid[i]]]
     polys.tmp <- list()
@@ -170,9 +166,9 @@ generate.eqspace.zigzags <- function(design, strata.id, samplers, line.length, s
         intsec <- sort(c(intsec, poly))
         areas <- unlist(lapply(polys.tmp[intsec], sf::st_area))
         to.rem <- c(to.rem, intsec[which(areas == min(areas))])
-        if(min(areas) > sf::st_area(rot.strata)/50000){
-          warning("Removing covered area greater than 50,000th of the strata area.", immediate. = TRUE, call. = FALSE)
-        }
+        #if(min(areas) > sf::st_area(rot.strata)/50000){
+        #  warning("Removing covered area greater than 50,000th of the strata area.", immediate. = TRUE, call. = FALSE)
+        #}
       }
     }
     to.rem <- unique(to.rem)
@@ -181,6 +177,13 @@ generate.eqspace.zigzags <- function(design, strata.id, samplers, line.length, s
       cover.polys[[invalid[i]]] <- sf::st_polygon(new.polys[[1]])
     }else{
       cover.polys[[invalid[i]]] <- sf::st_multipolygon(new.polys)
+    }
+    #Also remove strange corresponding transect part
+    tmp <- to.keep[[invalid[i]]]
+    if(length(tmp[-to.rem]) == 1){
+      to.keep[[invalid[i]]] <- sf::st_linestring(tmp[-to.rem][[1]])
+    }else{
+      to.keep[[invalid[i]]] <- sf::st_multilinestring(tmp[-to.rem])
     }
   }
   #Clip to strata
