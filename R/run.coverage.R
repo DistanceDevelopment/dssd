@@ -59,6 +59,7 @@ run.coverage <- function(design, reps = 10, save.transects = ""){
     hits <- lapply(polys, FUN = inout, pts = pts)
     hits <- matrix(unlist(hits), nrow = grid.count)
     hits <- apply(hits, FUN = sum, MARGIN = 1)
+    hits <- ifelse(hits > 1, 1, hits)
     total.hits <- total.hits + hits
     #Harvest statistics
     #Coverered Area
