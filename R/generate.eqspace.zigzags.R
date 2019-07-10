@@ -1,12 +1,14 @@
 #' @importFrom stats runif rbinom
 #' @importFrom methods new
 generate.eqspace.zigzags <- function(design, strata.id, samplers, line.length, spacing, by.spacing, calc.cov.area = TRUE, clip.to.strata = TRUE, quiet = FALSE){
+  #Generates equal spaced zigzags, optionally with a complementary set of zigzags
   region <- design@region
   sf.column <- attr(region@region, "sf_column")
   #Get the current strata and spacing
   strata <- region@region[[sf.column]][[strata.id]]
   #Spin round so design angle lies along x axis
-  rot.angle.rad <- design@design.angle[strata.id]/180*pi
+  rot.angle.rad <- design@design.angle[strata.id]+90
+  rot.angle.rad <- rot.angle.rad/180*pi
   theta <- ifelse(rot.angle.rad == 0, 0, 2*pi-rot.angle.rad)
   rot.mat <- matrix(c(cos(theta), sin(theta), -sin(theta), cos(theta)), ncol = 2, byrow = FALSE)
   rot.strata <- strata*rot.mat

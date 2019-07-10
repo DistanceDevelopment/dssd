@@ -12,6 +12,10 @@ calc.region.width <- function(design, strata.id = NULL){
     strata <- region@region[[sf.column]][[index[strat]]]
     #Rotate by design angle
     rot.angle.rad <- design@design.angle[index[strat]]/180*pi
+    if(design@design[strat] %in% c("eszigzag", "eszigzagcom")){
+      #apply angle correction for zigzag designs add 90 degrees
+      rot.angle.rad <- rot.angle.rad + (90/180*pi)
+    }
     theta <- ifelse(rot.angle.rad == 0, 0, 2*pi-rot.angle.rad)
     rot.mat <- matrix(c(cos(theta), sin(theta), -sin(theta), cos(theta)), ncol = 2, byrow = FALSE)
     rot.strata <- strata*rot.mat
