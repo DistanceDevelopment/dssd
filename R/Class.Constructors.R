@@ -20,11 +20,28 @@
 #' region <- make.region()
 #' plot(region)
 #'
-#' #Load the region from shapefile
+#' #Load the region from a projected shapefile
 #' shapefile.name <- system.file("extdata", "TrackExample.shp", package = "dssd")
 #' region <- make.region(region.name = "study area",
-#'                      shape = shapefile.name)
+#'                       shape = shapefile.name)
 #' plot(region)
+#'
+#' #Load a multi strata unprojected shapefile
+#' shapefile.name <- system.file("extdata", "AreaRStrata.shp", package = "dssd")
+#' # Need to load shapefile first as it is not projected
+#' sf.shape <- sf::read_sf(shapefile.name)
+#' # Check current coordinate reference system
+#' sf::st_crs(sf.shape)
+#' # Define a European Albers Equal Area projection
+#' proj4string <- "+proj=aea +lat_1=43 +lat_2=62 +lat_0=30 +lon_0=-9 +x_0=0 +y_0=0 +ellps=intl +units=km"
+#' # Project the study area on to a flat plane
+#' projected.shape <- sf::st_transform(sf.shape, crs = proj4string)
+#' # Create region with default strata names
+#' region <- make.region(region.name = "study area",
+#'                       shape = projected.shape)
+#' # By plotting the region we can verify the order of the strata
+#' plot(region)
+#'
 make.region <- function(region.name = "region",
                         strata.name = character(0),
                         units = character(0),
@@ -157,7 +174,51 @@ make.region <- function(region.name = "region",
 #' @export
 #' @author Laura Marshall
 #' @examples
-#' design <- make.design(transect.type = "point", samplers = 25, design.angle = 45)
+#' #Point transect example
+#' shapefile.name <- system.file("extdata", "TrackExample.shp", package = "dssd")
+#' region <- make.region(region.name = "study area",
+#'                      shape = shapefile.name)
+#'
+#' cover <- make.coverage(region,
+#'                        n.grid.points = 500)
+#'
+#' design <- make.design(region = region,
+#'                       transect.type = "point",
+#'                       design = "random",
+#'                       samplers = 25,
+#'                       design.angle = 45,
+#'                       edge.protocol = "minus",
+#'                       truncation = 3,
+#'                       coverage.grid = cover)
+#'
+#' survey <- generate.transects(design)
+#' plot(region, survey, covered.area = T)
+#'
+#' #Multi-strata line transect example
+#' shapefile.name <- system.file("extdata", "AreaRProjStrata.shp", package = "dssd")
+#' region <- make.region(region.name = "study area",
+#'                      strata.name = c("North", "NW", "West Upper",
+#'                                      "West Lower", "SW", "South"),
+#'                      shape = shapefile.name)
+#' plot(region)
+#'
+#' cover <- make.coverage(region,
+#'                        n.grid.points = 1000)
+#'
+#' design <- make.design(region = region,
+#'                       transect.type = "line",
+#'                       design = c("systematic", "systematic",
+#'                                  "eszigzag", "systematic",
+#'                                  "systematic", "eszigzagcom"),
+#'                       line.length = 5000*1000, #5000km x 1000m (projection in m)
+#'                       design.angle = c(160, 135, 170, 135, 50, 60),
+#'                       edge.protocol = "minus",
+#'                       truncation = 3000,
+#'                       coverage.grid = cover)
+#'
+#' survey <- generate.transects(design)
+#' plot(region, survey, covered.area = T)
+#'
 make.design <- function(region = make.region(), transect.type = "line", design = "systematic", samplers = numeric(0), line.length = numeric(0), effort.allocation = numeric(0), design.angle =  0, spacing = numeric(0), edge.protocol = "minus", bounding.shape = "rectangle", truncation = 1, coverage.grid = NULL){
   #Check if a coverage grid has been passed in - if not create one
   if(class(coverage.grid) != "Coverage.Grid"){

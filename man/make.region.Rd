@@ -32,11 +32,28 @@ area for the survey.
 region <- make.region()
 plot(region)
 
-#Load the region from shapefile
+#Load the region from a projected shapefile
 shapefile.name <- system.file("extdata", "TrackExample.shp", package = "dssd")
 region <- make.region(region.name = "study area",
-                     shape = shapefile.name)
+                      shape = shapefile.name)
 plot(region)
+
+#Load a multi strata unprojected shapefile
+shapefile.name <- system.file("extdata", "AreaRStrata.shp", package = "dssd")
+# Need to load shapefile first as it is not projected
+sf.shape <- sf::read_sf(shapefile.name)
+# Check current coordinate reference system
+sf::st_crs(sf.shape)
+# Define a European Albers Equal Area projection
+proj4string <- "+proj=aea +lat_1=43 +lat_2=62 +lat_0=30 +lon_0=-9 +x_0=0 +y_0=0 +ellps=intl +units=km"
+# Project the study area on to a flat plane
+projected.shape <- sf::st_transform(sf.shape, crs = proj4string)
+# Create region with default strata names
+region <- make.region(region.name = "study area",
+                      shape = projected.shape)
+# By plotting the region we can verify the order of the strata
+plot(region)
+
 }
 \author{
 Laura Marshall

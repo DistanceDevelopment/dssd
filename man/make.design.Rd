@@ -100,7 +100,51 @@ See the Multi Strata Vignette for more complex examples of defining designs
 across multiple strata.
 }
 \examples{
-design <- make.design(transect.type = "point", samplers = 25, design.angle = 45)
+#Point transect example
+shapefile.name <- system.file("extdata", "TrackExample.shp", package = "dssd")
+region <- make.region(region.name = "study area",
+                     shape = shapefile.name)
+
+cover <- make.coverage(region,
+                       n.grid.points = 500)
+
+design <- make.design(region = region,
+                      transect.type = "point",
+                      design = "random",
+                      samplers = 25,
+                      design.angle = 45,
+                      edge.protocol = "minus",
+                      truncation = 3,
+                      coverage.grid = cover)
+
+survey <- generate.transects(design)
+plot(region, survey, covered.area = T)
+
+#Multi-strata line transect example
+shapefile.name <- system.file("extdata", "AreaRProjStrata.shp", package = "dssd")
+region <- make.region(region.name = "study area",
+                     strata.name = c("North", "NW", "West Upper",
+                                     "West Lower", "SW", "South"),
+                     shape = shapefile.name)
+plot(region)
+
+cover <- make.coverage(region,
+                       n.grid.points = 1000)
+
+design <- make.design(region = region,
+                      transect.type = "line",
+                      design = c("systematic", "systematic",
+                                 "eszigzag", "systematic",
+                                 "systematic", "eszigzagcom"),
+                      line.length = 5000*1000, #5000km x 1000m (projection in m)
+                      design.angle = c(160, 135, 170, 135, 50, 60),
+                      edge.protocol = "minus",
+                      truncation = 3000,
+                      coverage.grid = cover)
+
+survey <- generate.transects(design)
+plot(region, survey, covered.area = T)
+
 }
 \author{
 Laura Marshall
