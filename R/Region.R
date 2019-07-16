@@ -71,6 +71,7 @@ setMethod(
     return(.Object)
   }
 )
+
 setValidity("Region",
             function(object){
               if(length(object@strata.name) > 0){
@@ -169,7 +170,14 @@ setMethod(
       pmar <- par(mar=c(4, 4, 4, 1), xpd=TRUE)
       on.exit(par(mar = pmar))
     }
-    plot(c(0,0), col = "white", xlim = c(bbox$xmin, bbox$xmax), ylim = c(bbox$ymin, bbox$ymax), main = main, xlab = "x-coordinates", ylab = "y-coordinates")
+    if(length(x@units) > 0){
+      x.label <- paste("x-coords (", x@units, ")", sep = "")
+      y.label <- paste("y-coords (", x@units, ")", sep = "")
+    }else{
+      x.label <- "x.coordinates"
+      y.label <- "y.coordinates"
+    }
+    plot(c(0,0), col = "white", xlim = c(bbox$xmin, bbox$xmax), ylim = c(bbox$ymin, bbox$ymax), main = main, xlab = x.label, ylab = y.label)
     for(i in seq(along = region[[sf.column]])){
       plot(region[[sf.column]][[i]], add = TRUE, col = cols[i])
     }
