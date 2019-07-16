@@ -144,7 +144,7 @@ test_that("Can deal with various forms of user input", {
                         design = "random",
                         line.length = 150,
                         truncation = 1)
-  expect_equal(design@line.length, 50)
+  expect_equal(design@line.length, 150)
 
   #Test make.design for systematic line
   design <- make.design(region, transect.type = "line",
