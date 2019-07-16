@@ -4,7 +4,8 @@
 \alias{run.coverage}
 \title{run.coverage}
 \usage{
-run.coverage(design, reps = 10, save.transects = "")
+run.coverage(design, reps = 10, method = "inclusion",
+  save.transects = "")
 }
 \arguments{
 \item{design}{an object which inherits from the Survey.Design
@@ -13,14 +14,55 @@ class.}
 \item{reps}{the number of times you wish the coverage simulation
 to be carried out.}
 
+\item{method}{either 'inclusion' or 'coverage'. If 'inclusion'
+inclusion probabilities are calculated for each coverage grid
+point, otherwise if 'coverage' coverage scores are calculated.
+See details.}
+
 \item{save.transects}{a directory where the shapefiles for the
 transects can be saved. The shapefile names will be S1, S2, ...
 existing files in the directory will not be overwritten.}
 }
 \description{
 This function can be used to assess the coverage of
-a design. It generates many sets of transects from the design
-supplied and counts how many times each point in the coverage
-grid is sampled on each survey. These 'hits' are then averaged
-across the number of repetitions.
+a design. It generates many surveys from the design and looks to
+see which of the coverage grid points are included in each survey.
+The way coverage is calculated can be done in two ways as either
+inclusion probabilities or as coverage scores. Which you require
+will depend on your field methods, see details.
+}
+\details{
+Coverage can either be calculated as an inclusion
+probability or as a coverage score. When calculating inclusion
+probabilities, for each survey that is generated this function only
+looks to see if each coverage grid point is included or not and
+allocates either a 0 or 1 to each grid point. If a point is
+included in the covered area of two different transects it still
+only gets a value of 1 for that survey. Conversely, when
+calculating coverage scores the values assigned to each coverage
+grid point is the count of the number of transects which would
+sample that grid point and values > 1 are permitted. Which you
+require will depend on your sampling protocol, if you will survey
+areas of sampler overlap twice during your survey you should use
+coverage scores. However, if you will only sample areas of sampler
+overlap once then you should use inclusion probabilities. For
+non-overlapping designs such as systematic points or systematic
+parallel lines both methods will give the same results as long as
+the truncation distance is < than half the distance between
+transects. When assessing zigzag designs as the covered area
+overlap does not usually have temporal independence it may be the
+case that you take a single coverage approach and so would use
+inclusion probabilities to assess coverage. However, note that for
+the complementary zigzag design under the incusion probability
+approach you will see an area of lower coverage where the
+two sets of zigzags cross each other along the centre of the
+study region. As the sampling of this part of the study region
+will be temporally independent you can ignore this artefact
+and continue to sample this part of the study region twice
+when carrying out the survey, you will see that under the
+coverage score approach there is no area of lower coverage for
+complementary zigzags in the centre of the survey region. For
+entirely random designs if you can ensure some temporal
+independence between the sampling of overlapping transects during
+the survey then coverage scores should be used.
 }
