@@ -46,7 +46,15 @@ setMethod(
     area <- as.numeric(sf::st_area(sf.shape))
     if(length(units) == 0){
       tmp <- sf::st_crs(sf.shape)
-      units <- ifelse(is.na(tmp), units, tmp$units)
+      if(!is.na(tmp)){
+        if(is.null(tmp$units)){
+          units <- units
+          warning("Coordinate reference system detected but no units can be found. Has this shape been projected - shapefiles should be projected on to a flat plane before surveys are designed. ", call. = FALSE, immediate. = TRUE)
+        }else
+          units <- tmp$units
+      }else{
+        units <- units
+      }
     }
     #Set slots
     .Object@region.name <- region.name
