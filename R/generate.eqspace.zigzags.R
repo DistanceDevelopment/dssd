@@ -24,8 +24,20 @@ generate.eqspace.zigzags <- function(design, strata.id, samplers, line.length, s
     names(width) <- NULL
     ave.line.height <- sf::st_area(rot.strata)/width
     if(design@design[strata.id] == "eszigzag"){
+      if(line.length < width){
+        if(!quiet){
+          warning("Line length in strata ", strata.id, " is not sufficient to carry out an equal spaced zigzag design. No samplers generated for this strata.", immediate. = TRUE, call. = FALSE)
+        }
+        return(NULL)
+      }
       spacing = (width * ave.line.height) / sqrt(line.length^2 - width^2)
     }else{
+      if(line.length/2 < width){
+        if(!quiet){
+          warning("Line length in strata ", strata.id, " is not sufficient to carry out a complementary equal spaced zigzag design. No samplers generated for this strata.", immediate. = TRUE, call. = FALSE)
+        }
+        return(NULL)
+      }
       spacing = (width * ave.line.height) / sqrt((line.length/2)^2 - width^2)
     }
     by.spacing = TRUE
