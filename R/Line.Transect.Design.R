@@ -75,7 +75,7 @@ setMethod(
       strata.names <- region@region.name
       strata.no <- 1
     }
-    #Get a vector of designs
+    #Get a vector of designs (should be redundant now due to checks)
     if(length(object@design) == 1){
       design <- rep(object@design, strata.no)
     }else{
@@ -140,7 +140,7 @@ setMethod(
             line.length <- line.length*effort.allocation
           }
         }else{
-          #Have to allocate line.length / number of samplers per strata
+          #Have to allocate line.length per strata
           line.length <- line.length*effort.allocation
         }
       }
@@ -163,9 +163,9 @@ setMethod(
         temp <- generate.parallel.lines(object, strat, samplers[strat], line.length[strat], spacing[strat], by.spacing[strat], quiet = quiet)
         transects[[strat]] <- temp$transects
         polys[[strat]] <- temp$cover.polys
-        spacing[[strat]] <- temp$spacing
         #If there are transects calculate the trackline
         if(!is.null(temp)){
+          spacing[strat] <- temp$spacing
           temp <- calculate.trackline.pl(transects[[strat]])
           trackline[strat] <- temp$trackline
           cyclictrackline[strat] <- temp$cyclictrackline
@@ -174,8 +174,8 @@ setMethod(
         temp <-  generate.eqspace.zigzags(object, strat, samplers[strat], line.length[strat], spacing[strat], by.spacing[strat], quiet = quiet)
         transects[[strat]] <- temp$transects
         polys[[strat]] <- temp$cover.polys
-        spacing[[strat]] <- temp$spacing
         if(!is.null(temp)){
+          spacing[strat] <- temp$spacing
           if(design[strat] == "eszigzag"){
             temp <- calculate.trackline.zz(transects[[strat]])
           }else if(design[strat] == "eszigzagcom"){
