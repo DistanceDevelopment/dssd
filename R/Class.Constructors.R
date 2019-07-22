@@ -94,7 +94,7 @@ make.region <- function(region.name = "region",
   # Check the format of the shape
   sf.shape <- check.shape(sf.shape)
   # Call to make the region object
-  region <- new(Class="Region", region.name = region.name, strata.name = strata.name, sf.shape = sf.shape)
+  region <- new(Class="Region", region.name = region.name, strata.name = strata.name, units = units, sf.shape = sf.shape)
   return(region)
 }
 
