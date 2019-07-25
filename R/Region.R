@@ -248,9 +248,6 @@ setMethod(
 )
 
 #' Plot
-#'
-#' Plots an S4 object of class 'Region'
-#' @param region.col fill colours for strata
 #' @rdname plot.Region-methods
 #' @exportMethod plot
 #' @importFrom graphics mtext

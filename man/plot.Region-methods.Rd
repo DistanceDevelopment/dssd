@@ -33,11 +33,7 @@ to the next line.}
 \item{...}{other general plot parameters}
 
 \item{region.col}{fill colours for strata}
-
-\item{region.col}{fill colours for strata}
 }
 \description{
-Plots an S4 object of class 'Region'
-
 Plots an S4 object of class 'Region'
 }
