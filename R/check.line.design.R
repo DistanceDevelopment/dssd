@@ -50,7 +50,7 @@ check.line.design <- function(object){
     warning("Design angle argument has a different number of values than there are strata, only using the 1st value.", call. = FALSE, immediate. = TRUE)
     object@design.angle <- rep(object@design.angle[1], strata.count)
   }
-  if(any(object@design.angle < 0 || object@design.angle >= 180)){
+  if(any(object@design.angle < 0) || any(object@design.angle >= 180)){
     return("The design angle should be >= 0 and < 180 degrees.")
   }
   #Check design
