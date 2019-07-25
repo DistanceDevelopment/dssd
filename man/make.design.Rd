@@ -101,6 +101,7 @@ across multiple strata.
 }
 \examples{
 #Point transect example
+\dontrun{
 shapefile.name <- system.file("extdata", "TrackExample.shp", package = "dssd")
 region <- make.region(region.name = "study area",
                      shape = shapefile.name)
@@ -144,7 +145,7 @@ design <- make.design(region = region,
 
 survey <- generate.transects(design)
 plot(region, survey, covered.area = TRUE)
-
+}
 }
 \author{
 Laura Marshall

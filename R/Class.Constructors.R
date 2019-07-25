@@ -176,6 +176,7 @@ make.region <- function(region.name = "region",
 #' @author Laura Marshall
 #' @examples
 #' #Point transect example
+#' \dontrun{
 #' shapefile.name <- system.file("extdata", "TrackExample.shp", package = "dssd")
 #' region <- make.region(region.name = "study area",
 #'                      shape = shapefile.name)
@@ -219,7 +220,7 @@ make.region <- function(region.name = "region",
 #'
 #' survey <- generate.transects(design)
 #' plot(region, survey, covered.area = TRUE)
-#'
+#' }
 make.design <- function(region = make.region(), transect.type = "line", design = "systematic", samplers = numeric(0), line.length = numeric(0), effort.allocation = numeric(0), design.angle =  0, spacing = numeric(0), edge.protocol = "minus", bounding.shape = "rectangle", truncation = 1, coverage.grid = NULL){
   #Check if a coverage grid has been passed in - if not create one
   if(class(coverage.grid) != "Coverage.Grid"){
