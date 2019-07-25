@@ -1,4 +1,4 @@
-library(dsuds)
+library(dssd)
 library(testthat)
 
 context("User Input Checks")
