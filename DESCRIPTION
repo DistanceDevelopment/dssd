@@ -3,7 +3,8 @@ Imports:
     sf,
     plot3D,
     methods
-Suggests: knitr
+Suggests: knitr,
+          testthat
 VignetteBuilder: knitr
 Type: Package
 Title: Distance Sampling Survey Design
