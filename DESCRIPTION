@@ -4,6 +4,8 @@ Imports:
     plot3D,
     methods
 Suggests: knitr,
+          rmarkdown,
+          tibble,
           testthat
 VignetteBuilder: knitr
 Type: Package
