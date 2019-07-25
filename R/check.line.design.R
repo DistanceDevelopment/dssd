@@ -123,7 +123,7 @@ check.line.design <- function(object){
     object@samplers <- numeric(0)
     object@line.length <- numeric(0)
   }
-  if(any(object@design) == "random" && length(samplers) > 1){
+  if(any(object@design == "random") && length(object@samplers) > 1){
     index <- which(object@design == "random")
     samplers <- object@samplers[index]
     if(any(is.na(samplers))){
