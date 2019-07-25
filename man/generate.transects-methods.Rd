@@ -14,7 +14,7 @@ generate.transects(object, quiet = FALSE, ...)
   quiet = FALSE, ...)
 
 \S4method{generate.transects}{Point.Transect.Design}(object,
-  silent = FALSE, ...)
+  quiet = FALSE, ...)
 }
 \arguments{
 \item{object}{an object which inherits from class Survey.Design}

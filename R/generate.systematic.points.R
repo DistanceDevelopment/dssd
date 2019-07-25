@@ -1,4 +1,4 @@
-generate.systematic.points <- function(design, strata.id, spacing, samplers, coverage.grid = FALSE, calc.cov.area = TRUE, clip.to.strata = TRUE, silent = FALSE){
+generate.systematic.points <- function(design, strata.id, spacing, samplers, coverage.grid = FALSE, calc.cov.area = TRUE, clip.to.strata = TRUE, quiet = FALSE){
   #Generates systematic points
   region <- design@region
   #Get the current strata and spacing
@@ -21,7 +21,7 @@ generate.systematic.points <- function(design, strata.id, spacing, samplers, cov
   }
   #Check spacing is appropriate
   if(sspace > (bbox[["xmax"]]-bbox[["xmin"]]) || sspace > (bbox[["ymax"]]-bbox[["ymin"]])){
-    if(!silent){
+    if(!quiet){
       warning(paste("The spacing allocated to strata ", strata.id, " is larger than either one or both of the x / y dimensions of the region. Cannot generate samplers in this strata.", sep = ""), call. = FALSE, immediate. = TRUE)
     }
     return(NULL)

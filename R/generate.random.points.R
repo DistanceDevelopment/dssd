@@ -1,7 +1,7 @@
-generate.random.points <- function(design, strata.id, samplers, calc.cov.area = TRUE, clip.to.strata = TRUE, silent = FALSE){
+generate.random.points <- function(design, strata.id, samplers, calc.cov.area = TRUE, clip.to.strata = TRUE, quiet = FALSE){
   #Check positive number of samplers
   if(samplers <= 0){
-    if(!silent){
+    if(!quiet){
       warning(paste("No samplers allocated to strata ", strata.id, ". Cannot generate samplers.", sep = ""), call. = FALSE, immediate. = TRUE)
     }
     return(NULL)

@@ -56,7 +56,7 @@ setMethod(
 setMethod(
   f="generate.transects",
   signature="Point.Transect.Design",
-  definition=function(object, silent = FALSE, ...){
+  definition=function(object, quiet = FALSE, ...){
     # Process additional arguments
     additional.args <- list(...)
     for.coverage <- ifelse("for.coverage" %in% names (additional.args), additional.args$for.coverage, FALSE)
@@ -142,11 +142,11 @@ setMethod(
     #Main grid generation
     for (strat in seq(along = region@region[[sf.column]])) {
       if(object@design[strat] %in% c("systematic")){
-        temp <- generate.systematic.points(design = object, strata.id = strat, spacing = spacing[strat], samplers = samplers[strat], coverage.grid = for.coverage, silent = silent)
+        temp <- generate.systematic.points(design = object, strata.id = strat, spacing = spacing[strat], samplers = samplers[strat], coverage.grid = for.coverage, quiet = quiet)
         transects[[strat]] <- temp$transects
         polys[[strat]] <- temp$cover.polys
       }else if(object@design[strat] == "random"){
-        temp <- generate.random.points(object, strat, samplers = round(samplers[strat]), silent = silent)
+        temp <- generate.random.points(object, strat, samplers = round(samplers[strat]), quiet = quiet)
         transects[[strat]] <- temp$transects
         polys[[strat]] <- temp$cover.polys
       }else{
