@@ -23,7 +23,7 @@ generate.random.points <- function(design, strata.id, samplers, calc.cov.area = 
   random_pt <- sf::st_sample(rot.strata , size = samplers, type = "random")
   while (length(random_pt) < samplers) {
     diff <- samplers - length(random_pt)
-    random_pt_new <- sf::st_sample(x , size = diff, type = "random")
+    random_pt_new <- sf::st_sample(rot.strata , size = diff, type = "random")
     random_pt <- c(random_pt, random_pt_new)
   }
   #Rotate back again
