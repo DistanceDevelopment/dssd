@@ -45,7 +45,8 @@ sf.shape <- sf::read_sf(shapefile.name)
 # Check current coordinate reference system
 sf::st_crs(sf.shape)
 # Define a European Albers Equal Area projection
-proj4string <- "+proj=aea +lat_1=43 +lat_2=62 +lat_0=30 +lon_0=-9 +x_0=0 +y_0=0 +ellps=intl +units=km"
+proj4string <- "+proj=aea +lat_1=43 +lat_2=62 +lat_0=30 +lon_0=-9 +x_0=0 +
+                y_0=0 +ellps=intl +units=km"
 # Project the study area on to a flat plane
 projected.shape <- sf::st_transform(sf.shape, crs = proj4string)
 # Create region with default strata names

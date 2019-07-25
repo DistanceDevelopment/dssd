@@ -118,7 +118,7 @@ design <- make.design(region = region,
                       coverage.grid = cover)
 
 survey <- generate.transects(design)
-plot(region, survey, covered.area = T)
+plot(region, survey, covered.area = TRUE)
 
 #Multi-strata line transect example
 shapefile.name <- system.file("extdata", "AreaRProjStrata.shp", package = "dssd")
