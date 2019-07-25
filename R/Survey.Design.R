@@ -35,6 +35,7 @@
 #' @keywords classes
 #' @export
 #' @importFrom methods validObject
+#' @importFrom stats sd
 #' @seealso \code{\link{make.design}}
 setClass(Class = "Survey.Design",
          representation = representation(region = "Region",
@@ -64,7 +65,7 @@ setClass(Class = "Survey.Design",
 #' @rdname plot.Survey.Design-methods
 #' @exportMethod plot
 #' @importFrom plot3D colkey
-#' @importFrom graphics par
+#' @importFrom graphics par mtext
 #' @importFrom grDevices heat.colors
 setMethod(
   f="plot",

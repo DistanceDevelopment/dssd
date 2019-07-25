@@ -22,7 +22,7 @@
 #' transects can be saved. The shapefile names will be S1, S2, ...
 #' existing files in the directory will not be overwritten.
 #' @export
-#' @importFrom stats median
+#' @importFrom stats median sd
 run.coverage <- function(design, reps = 10, save.transects = ""){
 #Calculates the coverage scores for the design supplied
 #Also stores summary statistics

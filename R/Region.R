@@ -126,6 +126,7 @@ setMethod(
 #' to the next line.
 #' @param ... other general plot parameters
 #' @rdname plot.Region-methods
+#' @importFrom graphics legend mtext
 #' @exportMethod plot
 setMethod(
   f="plot",
@@ -197,6 +198,7 @@ setMethod(
 #' @param region.col fill colours for strata
 #' @rdname plot.Region-methods
 #' @exportMethod plot
+#' @importFrom graphics mtext
 setMethod(
   f="plot",
   signature=c("Region", "Transect"),
