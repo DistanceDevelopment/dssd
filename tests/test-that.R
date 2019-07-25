@@ -1,5 +1,5 @@
 library(testthat)
-library(dsuds)
+library(dssd)
 
-#test_check("DSsim")
+#test_check("dssd")
 
