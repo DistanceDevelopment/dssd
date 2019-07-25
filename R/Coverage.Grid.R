@@ -66,7 +66,8 @@ setMethod(
     col <- ifelse("col" %in% names(additional.args), additional.args$col, 5)
     pch <- ifelse("pch" %in% names(additional.args), additional.args$pch, 20)
     if(length(x@grid) > 0){
-      plot(x@grid, add = add, col = col, pch = pch)
+      sf.column <- attr(x@grid, "sf_column")
+      plot(x@grid[[sf.column]], add = add, col = col, pch = pch)
     }else{
       warning("No grid points to plot", call. = F, immediate. = F)
     }

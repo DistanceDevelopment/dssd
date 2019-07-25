@@ -247,3 +247,49 @@ setMethod(
   }
 )
 
+#' Plot
+#'
+#' Plots an S4 object of class 'Region'
+#' @param region.col fill colours for strata
+#' @rdname plot.Region-methods
+#' @exportMethod plot
+#' @importFrom graphics mtext
+setMethod(
+  f="plot",
+  signature=c("Region", "Coverage.Grid"),
+  definition=function(x, y, main = "", region.col = "default", ...){
+    # If main is not supplied then take it from the object
+    if(main == ""){
+      main <- x@region.name
+    }
+    additional.args <- list(...)
+    subtitle <- ifelse("subtitle" %in% names(additional.args), additional.args$subtitle, "")
+    if(region.col == "default"){
+      if(length(x@strata.name) <= 15){
+        region.col <-  c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1")[1:(length(x@strata.name))]
+      }else{
+        region.col <-  rep(c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1"),3)[1:(length(x@strata.name))]
+      }
+    }
+    #Check additional attributes
+    add.attrs <- list(...)
+    cov.area <- ifelse("covered.area" %in% names(add.attrs), add.attrs$covered.area, FALSE)
+    region <- x@region
+    sf.column <- attr(region, "sf_column")
+    #Set up bounding box for samplers (necessary when plus sampling used and extent of samplers is greater than the region)
+    #bbox.samps <- sf::st_bbox(y@samplers)
+    bbox.region <- sf::st_bbox(x@region)
+    if(subtitle != ""){
+      pmar <- par(mar=c(4, 4, 5, 1), xpd=TRUE)
+      on.exit(par(mar = pmar))
+    }
+    plot(c(0,0), col = "white", xlim = c(min(bbox.region$xmin), max(bbox.region$xmax)), ylim = c(min( bbox.region$ymin), max(bbox.region$ymax)), main = main, xlab = "x-coordinates", ylab = "y-coordinates")
+    for(i in seq(along = region[[sf.column]])){
+      plot(region[[sf.column]][[i]], add = TRUE, col = region.col[i])
+    }
+    plot(y, add = TRUE, ...)
+    mtext(subtitle, side = 3, line = 0.5, outer = FALSE)
+    invisible(x)
+  }
+)
+

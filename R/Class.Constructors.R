@@ -287,8 +287,15 @@ make.design <- function(region = make.region(), transect.type = "line", design =
 #' @author Laura Marshall
 #' @examples
 #' # A coverage grid in a rectangular region of 2000 x 500
-#' region <- make.coverage(make.region(), spacing = 10)
-#' plot(region, grid)
+#' '\dontrun{
+#' region <- make.region()
+#' # Create coverage grid by spacing
+#' cover <- make.coverage(region, spacing = 50)
+#' plot(region, cover)
+#' # Create coverage grid by approx number of grid points
+#' cover <- make.coverage(region, n.grid.points = 100)
+#' plot(region, cover)
+#' }
 make.coverage <- function(region = make.region(),
                       spacing = numeric(0),
                       n.grid.points = 1000){

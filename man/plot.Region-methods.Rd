@@ -4,12 +4,16 @@
 \name{plot,Region,ANY-method}
 \alias{plot,Region,ANY-method}
 \alias{plot,Region,Transect-method}
+\alias{plot,Region,Coverage.Grid-method}
 \title{Plot}
 \usage{
 \S4method{plot}{Region,ANY}(x, y, main = "", cols = "default",
   legend.params = list(inset = c(-0.2, 0), cex = 0.75, wrap = 15), ...)
 
 \S4method{plot}{Region,Transect}(x, y, main = "",
+  region.col = "default", ...)
+
+\S4method{plot}{Region,Coverage.Grid}(x, y, main = "",
   region.col = "default", ...)
 }
 \arguments{
@@ -29,7 +33,11 @@ to the next line.}
 \item{...}{other general plot parameters}
 
 \item{region.col}{fill colours for strata}
+
+\item{region.col}{fill colours for strata}
 }
 \description{
+Plots an S4 object of class 'Region'
+
 Plots an S4 object of class 'Region'
 }

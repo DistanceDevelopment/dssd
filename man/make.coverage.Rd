@@ -22,11 +22,6 @@ object of class Coverage.Grid
 \description{
 This creates an instance of the Coverage.Grid class.
 }
-\examples{
-# A coverage grid in a rectangular region of 2000 x 500
-region <- make.coverage(make.region(), spacing = 10)
-plot(region, grid)
-}
 \author{
 Laura Marshall
 }
