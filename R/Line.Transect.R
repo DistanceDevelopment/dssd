@@ -8,6 +8,11 @@
 #' @name Line.Transect-class
 #' @title S4 Class "Line.Transect"
 #' @slot line.length the total line length for the transect set
+#' @slot trackline the total on and off effort trackline length from
+#' the start of the first transect to the end of the last
+#' @slot cyclictrackline the trackline distance plus the distance
+#' required to return from the end of the last transect to the
+#' beginning of the first
 #' @keywords classes
 #' @seealso \code{\link{make.design}}
 #' @export

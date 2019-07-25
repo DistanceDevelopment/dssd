@@ -12,6 +12,13 @@ detailing a set of transects from a point transect design.
 
 \describe{
 \item{\code{line.length}}{the total line length for the transect set}
+
+\item{\code{trackline}}{the total on and off effort trackline length from
+the start of the first transect to the end of the last}
+
+\item{\code{cyclictrackline}}{the trackline distance plus the distance
+required to return from the end of the last transect to the
+beginning of the first}
 }}
 
 \seealso{

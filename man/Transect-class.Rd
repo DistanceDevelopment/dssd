@@ -14,6 +14,8 @@ single set of transects.
 \section{Slots}{
 
 \describe{
+\item{\code{strata.names}}{a character vector of the strata names}
+
 \item{\code{design}}{Describes the design algorithm used to create the survey.}
 
 \item{\code{samplers}}{Contains the survey transects}

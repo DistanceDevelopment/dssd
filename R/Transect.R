@@ -5,6 +5,7 @@
 #'
 #' @name Transect-class
 #' @title S4 Class "Transect"
+#' @slot strata.names a character vector of the strata names
 #' @slot design Describes the design algorithm used to create the survey.
 #' @slot samplers Contains the survey transects
 #' @slot strata.area The areas of the strata in the design
