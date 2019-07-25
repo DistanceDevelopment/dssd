@@ -32,6 +32,4 @@ to the next line.}
 }
 \description{
 Plots an S4 object of class 'Region'
-
-Plots an S4 object of class 'Region'
 }

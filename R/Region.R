@@ -116,9 +116,6 @@ setMethod(
 )
 
 #' Plot
-#'
-#' Plots an S4 object of class 'Region'
-#'
 #' @param x object of class Region or inheriting from Survey
 #' @param y optionally a Survey object to plot with the Region
 #' @param main the main title for the plot
