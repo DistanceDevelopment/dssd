@@ -78,14 +78,29 @@ setMethod(
     additional.args <- list(...)
     col.breaks <- ifelse("col.breaks" %in% names(additional.args), additional.args$col.breaks, 10)
     subtitle <- ifelse("subtitle" %in% names(additional.args), additional.args$subtitle, "")
-    coverage.scores <- x@coverage.scores
-    pmar <- par(mar = c(1, 1, 4, 5))
-    on.exit(par(mar = pmar))
+    strata.id <- ifelse("strata.id" %in% names(additional.args), additional.args$strata.id, "all")
+    # Get shape column names
     sf.column.region <- attr(x@region@region, "sf_column")
     sf.column.grid <- attr(x@coverage.grid@grid, "sf_column")
-    plot(x@region@region[[sf.column.region]], main = "Coverage Scores", cex.main = 1.5)
+    # Extract coverage scores and region coords
+    coverage.scores <- x@coverage.scores
+    region.coords <- x@region@region[[sf.column.region]]
+    coverage.grid <- x@coverage.grid@grid
+    # If not plotting all extract values for specific strata
+    if(strata.id != "all"){
+      region.coords <- region.coords[[strata.id]]
+      coverage.grid <- x@coverage.grid@grid
+      coverage.grid$coverage.scores <- coverage.scores
+      coverage.grid <- suppressWarnings(sf::st_intersection(coverage.grid, region.coords))
+      coverage.scores <- coverage.grid$coverage.scores
+    }
+    coverage.grid.sfdata <- coverage.grid[[sf.column.grid]]
+    # Plot information
+    pmar <- par(mar = c(1, 1, 4, 5))
+    on.exit(par(mar = pmar))
+    plot(region.coords, main = "Coverage Scores", cex.main = 1.5)
     cols <- heat.colors(col.breaks)[as.numeric(cut(coverage.scores, breaks = col.breaks))]
-    plot(x@coverage.grid@grid[[sf.column.grid]], pch = 20, col = cols, add = T)
+    plot(coverage.grid.sfdata, pch = 20, col = cols, add = T)
     plot(x@region@region[[sf.column.region]], add = T)
     plot3D::colkey(side = 4, clim = range(coverage.scores), col = heat.colors(col.breaks), add = TRUE, length = 0.7)
     mtext(subtitle, side = 3, line = 0, outer = FALSE)
