@@ -22,7 +22,7 @@
 #' can be either the angle of the grid of points, the angle of lines or the design
 #' axis for the zigzag design.
 #' @slot edge.protocol character value indicating whether a "plus" sampling or
-#' "minum" sampling protocol is used.
+#' "minus" sampling protocol is used.
 #' @keywords classes
 #' @export
 #' @importFrom methods validObject
