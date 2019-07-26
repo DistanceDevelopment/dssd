@@ -1,0 +1,21 @@
+DSsim 0.1.0
+-----------
+
+Introducing the new Distance Sampling Survey Design package!
+
+dssd implements the following designs:
+ * Point transects: Simple random sampling
+ * Point trasnects: Systematic grid with random start point
+ * Line transects: Parallel random lines
+ * Line transects: Systematic parallel lines with a random start
+ * Line transects: Equal spaced zigzags with a random start
+ * Line transects: Equal spaced zigzags with complementary set of zigzags
+ 
+dssd also implements the following feature options:
+ * Ability to vary design angle
+ * Survey generation by number of samplers, spacing or line length (can generate by different criteria in each strata)
+ * Ability to use different designs in each strata (as long as they are of the same type, i.e. all point or all line transects)
+ * Generate plus or minus sampling surveys
+ * Generate zigzag design inside minimum bounding rectangles (angled along the design axis) or convex hulls
+ * Calculates the coverage of different design by simulation
+ * Produces summary statistics from the coverage design showing the variability in number of samplers, line length, % coverage across surveys from a given design
