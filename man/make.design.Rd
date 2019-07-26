@@ -94,7 +94,7 @@ transect designs different values may be specified for each strata for all of
 the above options. The design angle for the zigzag designs refers to the angle
 of a line which would run through the middle of each zigzag transect if the
 zigzags were to be generated within a rectangle. The design angle for zigzags
-should usually run along the longest dimesion of the study region.
+should usually run along the longest dimension of the study region.
 
 See the Multi Strata Vignette for more complex examples of defining designs
 across multiple strata.
