@@ -11,12 +11,18 @@ VignetteBuilder: knitr
 Type: Package
 Title: Distance Sampling Survey Design
 Version: 0.1.0
-Author: Laura Marshall <lhm@st-and.ac.uk>
-Maintainer: Laura Marshall <lhm@st-and.ac.uk>
+Author: Laura Marshall <lhm@st-andrews.ac.uk>
+Maintainer: Laura Marshall <lhm@st-andrews.ac.uk>
 Description: Creates survey designs for distance sampling surveys. These
-    designs can then be assessed for various effort and coverage statistics
-    and once happy the user can generate a set of transects to use in their
-    distance sampling survey.
+    designs can be assessed for various effort and coverage statistics.
+    Once the user is satisfied with the design characteristics they can 
+    generate a set of transects to use in their distance sampling survey.
+    Many of the designs implemented in this R package were first made 
+    available in our 'Distance' for Windows software and are detailed in 
+    Chapter 7 of Advanced Distance Sampling, Buckland et. al. (2008, 
+    ISBN-13: 978-0199225873). Find out more about estimating animal/plant 
+    abundance with distance sampling at <http://distancesampling.org/>. 
+BugReports: https://github.com/DistanceDevelopment/dssd/issues
 License: GPL (>=2)
 Encoding: UTF-8
 LazyData: true

@@ -176,14 +176,15 @@ make.region <- function(region.name = "region",
 #' @author Laura Marshall
 #' @examples
 #' #Point transect example
-#' \dontrun{
 #' shapefile.name <- system.file("extdata", "TrackExample.shp", package = "dssd")
 #' region <- make.region(region.name = "study area",
 #'                      shape = shapefile.name)
-#'
+#' \donttest{
+#' # Generate coverage grid
 #' cover <- make.coverage(region,
 #'                        n.grid.points = 500)
 #'
+#' # Define design
 #' design <- make.design(region = region,
 #'                       transect.type = "point",
 #'                       design = "random",
@@ -193,8 +194,16 @@ make.region <- function(region.name = "region",
 #'                       truncation = 3,
 #'                       coverage.grid = cover)
 #'
+#' # Generate a single survey instance
 #' survey <- generate.transects(design)
 #' plot(region, survey, covered.area = TRUE)
+#'
+#' # Warning! this will take some time to run
+#' design <- run.coverage(design, reps = 500)
+#' # Plot the coverage
+#' plot(design)
+#' # Display the design statistics
+#' design
 #'
 #' #Multi-strata line transect example
 #' shapefile.name <- system.file("extdata", "AreaRProjStrata.shp", package = "dssd")
@@ -203,10 +212,10 @@ make.region <- function(region.name = "region",
 #'                                      "West Lower", "SW", "South"),
 #'                      shape = shapefile.name)
 #' plot(region)
-#'
+#' # Make a coverage grid
 #' cover <- make.coverage(region,
-#'                        n.grid.points = 1000)
-#'
+#'                        n.grid.points = 500)
+#' # Define the design
 #' design <- make.design(region = region,
 #'                       transect.type = "line",
 #'                       design = c("systematic", "systematic",
@@ -218,9 +227,37 @@ make.region <- function(region.name = "region",
 #'                       truncation = 3000,
 #'                       coverage.grid = cover)
 #'
+#' # Create a single set of transects to check
 #' survey <- generate.transects(design)
 #' plot(region, survey, covered.area = TRUE)
+#'
+#' # Warning! this will quite a long time to run as it is a complex example.
+#' design <- run.coverage(design, reps = 500)
+#' # Plot the coverage
+#' plot(design)
+#' # Display the design statistics
+#' design
 #' }
+#'
+#' # Fast running example for CRAN testing purposes
+#' # This spacing is too sparse to assess coverage in a real example and
+#' # the number of repetitions is too low to assess design statistics
+#' cover <- make.coverage(region,
+#'                        n.grid.points = 50)
+#' design <- make.design(region = region,
+#'                       transect.type = "point",
+#'                       design = "random",
+#'                       samplers = 25,
+#'                       design.angle = 45,
+#'                       edge.protocol = "minus",
+#'                       truncation = 3,
+#'                       coverage.grid = cover)
+#' survey <- generate.transects(design)
+#' plot(region, survey, covered.area = TRUE)
+#' design <- run.coverage(design, reps = 3)
+#' plot(design)
+#' design
+#'
 make.design <- function(region = make.region(), transect.type = "line", design = "systematic", samplers = numeric(0), line.length = numeric(0), effort.allocation = numeric(0), design.angle =  0, spacing = numeric(0), edge.protocol = "minus", bounding.shape = "rectangle", truncation = 1, coverage.grid = NULL){
   #Check if a coverage grid has been passed in - if not create one
   if(class(coverage.grid) != "Coverage.Grid"){
@@ -287,16 +324,22 @@ make.design <- function(region = make.region(), transect.type = "line", design =
 #' @export
 #' @author Laura Marshall
 #' @examples
+#' \donttest{
+#' # This example will take a bit of time to generate
 #' # A coverage grid in a rectangular region of 2000 x 500
-#' '\dontrun{
 #' region <- make.region()
-#' # Create coverage grid by spacing
 #' cover <- make.coverage(region, spacing = 50)
 #' plot(region, cover)
 #' # Create coverage grid by approx number of grid points
 #' cover <- make.coverage(region, n.grid.points = 100)
 #' plot(region, cover)
 #' }
+#'
+#' # Fast running example for CRAN testing purposes
+#' # This spacing is too sparse to assess coverage in a real example
+#' region <- make.region()
+#' cover <- make.coverage(region, spacing = 250)
+#' plot(region, cover)
 make.coverage <- function(region = make.region(),
                       spacing = numeric(0),
                       n.grid.points = 1000){

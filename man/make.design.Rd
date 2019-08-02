@@ -101,14 +101,15 @@ across multiple strata.
 }
 \examples{
 #Point transect example
-\dontrun{
 shapefile.name <- system.file("extdata", "TrackExample.shp", package = "dssd")
 region <- make.region(region.name = "study area",
                      shape = shapefile.name)
-
+\donttest{
+# Generate coverage grid
 cover <- make.coverage(region,
                        n.grid.points = 500)
 
+# Define design
 design <- make.design(region = region,
                       transect.type = "point",
                       design = "random",
@@ -118,8 +119,16 @@ design <- make.design(region = region,
                       truncation = 3,
                       coverage.grid = cover)
 
+# Generate a single survey instance
 survey <- generate.transects(design)
 plot(region, survey, covered.area = TRUE)
+
+# Warning! this will take some time to run
+design <- run.coverage(design, reps = 500)
+# Plot the coverage
+plot(design)
+# Display the design statistics
+design
 
 #Multi-strata line transect example
 shapefile.name <- system.file("extdata", "AreaRProjStrata.shp", package = "dssd")
@@ -128,10 +137,10 @@ region <- make.region(region.name = "study area",
                                      "West Lower", "SW", "South"),
                      shape = shapefile.name)
 plot(region)
-
+# Make a coverage grid
 cover <- make.coverage(region,
-                       n.grid.points = 1000)
-
+                       n.grid.points = 500)
+# Define the design
 design <- make.design(region = region,
                       transect.type = "line",
                       design = c("systematic", "systematic",
@@ -143,9 +152,37 @@ design <- make.design(region = region,
                       truncation = 3000,
                       coverage.grid = cover)
 
+# Create a single set of transects to check
 survey <- generate.transects(design)
 plot(region, survey, covered.area = TRUE)
+
+# Warning! this will quite a long time to run as it is a complex example.
+design <- run.coverage(design, reps = 500)
+# Plot the coverage
+plot(design)
+# Display the design statistics
+design
 }
+
+# Fast running example for CRAN testing purposes
+# This spacing is too sparse to assess coverage in a real example and
+# the number of repetitions is too low to assess design statistics
+cover <- make.coverage(region,
+                       n.grid.points = 50)
+design <- make.design(region = region,
+                      transect.type = "point",
+                      design = "random",
+                      samplers = 25,
+                      design.angle = 45,
+                      edge.protocol = "minus",
+                      truncation = 3,
+                      coverage.grid = cover)
+survey <- generate.transects(design)
+plot(region, survey, covered.area = TRUE)
+design <- run.coverage(design, reps = 3)
+plot(design)
+design
+
 }
 \author{
 Laura Marshall

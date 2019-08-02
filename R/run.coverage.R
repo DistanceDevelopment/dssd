@@ -86,7 +86,8 @@ run.coverage <- function(design, reps = 10, save.transects = ""){
       cyclictrackline[rep,] <- transects@cyclictrackline
     }
     percent.complete <- round((rep/reps)*100, 1)
-    cat("\r", percent.complete, "% complete \r")
+    #cat("\r", percent.complete, "% complete \r")
+    message("\r  ", percent.complete, "% complete      \r", appendLF = FALSE)
   }
   #Calculate summary statistics
   sampler.summary <- matrix(rep(NA, 5*(strata.count+1)), ncol = (strata.count+1), dimnames = list(c("Minimum", "Mean", "Median", "Maximum", "sd"), c(strata.names, "Total")))

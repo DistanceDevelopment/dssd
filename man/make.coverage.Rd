@@ -22,6 +22,24 @@ object of class Coverage.Grid
 \description{
 This creates an instance of the Coverage.Grid class.
 }
+\examples{
+\donttest{
+# This example will take a bit of time to generate
+# A coverage grid in a rectangular region of 2000 x 500
+region <- make.region()
+cover <- make.coverage(region, spacing = 50)
+plot(region, cover)
+# Create coverage grid by approx number of grid points
+cover <- make.coverage(region, n.grid.points = 100)
+plot(region, cover)
+}
+
+# Fast running example for CRAN testing purposes
+# This spacing is too sparse to assess coverage in a real example
+region <- make.region()
+cover <- make.coverage(region, spacing = 250)
+plot(region, cover)
+}
 \author{
 Laura Marshall
 }

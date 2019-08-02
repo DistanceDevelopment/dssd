@@ -12,11 +12,10 @@
 #' @export
 #' @author Laura Marshall
 #' @examples
-#' # A basic study region with two strata
-#' region <- make.region()
+#' # Make the default design in the default study area
 #' design <- make.design()
 #' transects <- generate.transects(design)
-#' #write.transects(transects, dsn = "transects.shp")
+#' write.transects(transects, dsn = paste0(tempdir(), "/", "transects.shp"))
 write.transects <- function(object, dsn){
   sf::st_write(object@samplers, dsn)
   invisible(object)
