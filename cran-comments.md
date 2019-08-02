@@ -1,31 +1,19 @@
 ## Comments
 
-CRAN re-submission - I have addressed the comments from the 1st submission as follows:
+CRAN re-submission - I have addressed the comments from the previous submission as follows:
 
-"Please rephrase the second sentence of the description."
+"Please write package names, software names and API names in
+single quotes (e.g. 'Distance') in your Description."
 
-* Second sentence of the description has been rephrased 
+* Added single quotes around software name.
 
-If there are references describing the methods in your package, please
-add these in the description field of your DESCRIPTION file in the form
+"Please replace \dontrun{} by \donttest{} in your Rd-files."
 
-* I have added a reference to the description section of the DESCRIPTION file, I have also added a URL to our project website.
+* Replaced \dontrun{} with \donttest{}
 
-"Some code lines in examples are commented out."
+"Please replace cat() by message() or warning() in your functions (except for print() and summary() functions)."
 
-* write.transects.Rd example has been uncommented and now saves to tempdir(). 
-
-"Please only write/save files if the user has specified a directory in
-the function themselves."
-
-* I have double checked and write.transects will only write to file if the user specifies a data soure name. If the user does not supply a data source name an error is generated.
-
-* run.coverage also only saves files if a directory is specified by the user. (No other functions write/save files.)
-
-"Please unwrap the examples if they are executable in < 5 sec, or create
-additionally small toy examples to allow automatic testing."
-
-* The examples enclosed in \dontrun take > 5 seconds to run. I added comments to the user to explain why this code is inside don't run and I also added toy examples at the end of the examples section in the documentation with warnings to the user about the interpretability of these examples. I have also manually run all the examples inside the dontrun sections and can confirm that they run.
+* Replaced cat() used for progress counter with message(). All other cat() usage is in show functions for S4 classes.
 
 ## Test environments
 * local OS X install, R 3.6.1
