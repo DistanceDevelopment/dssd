@@ -4,13 +4,23 @@
 \alias{write.transects}
 \title{Writes transects to file}
 \usage{
-write.transects(object, dsn)
+write.transects(object, dsn, layer = character(0),
+  dataset.options = character(0), overwrite = FALSE,
+  proj4string = character(0))
 }
 \arguments{
-\item{object}{and object inheriting from class Transect}
+\item{object}{an object inheriting from class Transect or an sf spatial
+object extracted from a Transect object.}
 
-\item{dsn}{the data source name, for this simple function this is
-a pathway and filename with a '.shp' extension.}
+\item{dsn}{the data source name, currently a filename with a 'shp'
+or 'gpx' extension.}
+
+\item{layer}{a character vector specifying the layer name, only
+required for gpx files.}
+
+\item{dataset.options}{a character vector of options, which vary by
+driver, and should be treated as experimental. Use to specify
+"GPX_USE_EXTENSIONS=yes" for writing gpx files.}
 }
 \value{
 invisibly the Transect object
@@ -22,6 +32,15 @@ options is to write to shapefile. It is basically a simple wrapper
  around the sf::st_write function. The sf::wt_write function can be
  used directly on the samplers slot of the Transect object if more
   options are required.
+}
+\details{
+To write the transects to shapefile only the dsn is needed with
+a 'shp' file extension. To write a gpx file you need to specify the dsn,
+layer and dataset.options.
+
+Note that to write using the GPX driver the object you supply shoud be
+the samplers extracted from the Transect object in graphical coordinates
+with datum WGS84.
 }
 \examples{
 # Make the default design in the default study area
