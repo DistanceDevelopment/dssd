@@ -1,5 +1,12 @@
-DSsim 0.1.0
------------
+dssd 0.2.0
+----------
+
+New Features
+
+ * Now writes transects to gpx file
+
+dssd 0.1.0
+----------
 
 Introducing the new Distance Sampling Survey Design package!
 
@@ -10,7 +17,7 @@ dssd implements the following designs:
  * Line transects: Systematic parallel lines with a random start
  * Line transects: Equal spaced zigzags with a random start
  * Line transects: Equal spaced zigzags with complementary set of zigzags
- 
+
 dssd also implements the following feature options:
  * Ability to vary design angle
  * Survey generation by number of samplers, spacing or line length (can generate by different criteria in each strata)
