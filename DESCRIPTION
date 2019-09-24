@@ -50,5 +50,7 @@ Collate:
     'generate.random.points.R'
     'generate.systematic.points.R'
     'get.intersection.points.R'
+    'line.coords.as.dataframe.R'
+    'point.coords.as.dataframe.R'
     'run.coverage.R'
     'write.transects.R'

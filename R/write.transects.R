@@ -16,6 +16,7 @@
 #'  "GPX_USE_EXTENSIONS=yes" for writing gpx files.
 #' @return invisibly the Transect object
 #' @export
+#' @importFrom utils write.table write.csv
 #' @author Laura Marshall
 #' @details To write the transects to shapefile only the dsn is needed with
 #' a 'shp' file extension. To write a gpx file you need to specify the dsn,
@@ -36,9 +37,6 @@ write.transects <- function(object, dsn, layer = character(0), dataset.options =
   #check which file type is being written
   dsn.parts <- strsplit(dsn, "[.]")
   dsn.ext <- dsn.parts[[1]][length(dsn.parts[[1]])]
-  if(!(dsn.ext %in% c("shp","gpx"))){
-    stop("dsn type not currently supported.", call. = FALSE)
-  }
   if(dsn.ext == "shp"){
     if(inherits(object, "Transect")){
       sf::st_write(object@samplers, dsn)
@@ -51,16 +49,52 @@ write.transects <- function(object, dsn, layer = character(0), dataset.options =
     if(length(layer) == 0 || length(dataset.options) == 0){
       stop("You must supply a layer and dataset options to write a gpx file. See documentation ", call. = FALSE)
     }else if(inherits(object, "Transect")){
-      writeOGR(as(object@samplers, "Spatial"),
+      rgdal::writeOGR(as(object@samplers, "Spatial"),
                dsn=dsn, layer=layer, driver="GPX",
                dataset_options=dataset.options)
     }else if(any(class(object) %in% c("sf","sfc"))){
-      writeOGR(as(object, "Spatial"),
+      rgdal::writeOGR(as(object, "Spatial"),
                dsn=dsn, layer=layer, driver="GPX",
                dataset_options=dataset.options)
     }else{
       stop("Object of wrong class to write to gpx file.", call. = FALSE)
     }
+  }else if(dsn.ext == "csv"){
+    if(class(object)[1] == "Point.Transect"){
+      samplers <- point.coords.as.dataframe(object@samplers)
+      write.csv(samplers, file = dsn, row.names = FALSE)
+    }else if(class(object)[1] == "Line.Transect"){
+      samplers <- line.coords.as.dataframe(object@samplers)
+      write.csv(samplers, file = dsn, row.names = FALSE)
+    }else if(any(class(object) %in% c("sf","sfc"))){
+      sf.column <- attr(object, "sf_column")
+      if(any(class(object[[sf.column]])) %in% c("sfc_LINESTRING","sfc_MULTILINESTRING","LINESTRING","MULTILINESTRING")){
+        samplers <- line.coords.as.dataframe(object)
+        write.csv(samplers, file = dsn, row.names = FALSE)
+      }else if(any(class(object[[sf.column]])) %in% c("sfc_POINT","POINT")){
+        samplers <- point.coords.as.dataframe(object)
+        write.csv(samplers, file = dsn, row.names = FALSE)
+      }
+    }
+  }else if(dsn.ext == "txt"){
+    if(class(object)[1] == "Point.Transect"){
+      samplers <- point.coords.as.dataframe(object@samplers)
+      write.table(samplers, file = dsn, sep = "\t", row.names = FALSE)
+    }else if(class(object)[1] == "Line.Transect"){
+      samplers <- line.coords.as.dataframe(object@samplers)
+      write.table(samplers, file = dsn, sep = "\t", row.names = FALSE)
+    }else if(any(class(object) %in% c("sf","sfc"))){
+      sf.column <- attr(object, "sf_column")
+      if(any(class(object[[sf.column]])) %in% c("sfc_LINESTRING","sfc_MULTILINESTRING","LINESTRING","MULTILINESTRING")){
+        samplers <- line.coords.as.dataframe(object)
+        write.table(samplers, file = dsn, sep = "\t", row.names = FALSE)
+      }else if(any(class(object[[sf.column]])) %in% c("sfc_POINT","POINT")){
+        samplers <- point.coords.as.dataframe(object)
+        write.table(samplers, file = dsn, sep = "\t", row.names = FALSE)
+      }
+    }
+  }else{
+    stop("dsn file extension not currently supported.", call. = FALSE)
   }
   invisible(object)
 }
