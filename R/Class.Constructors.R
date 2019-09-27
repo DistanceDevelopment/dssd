@@ -362,8 +362,11 @@ make.coverage <- function(region = make.region(),
                       spacing = numeric(0),
                       n.grid.points = 1000){
   #if neither, spacing, no.grid.points, or grid is provided make an empty coverage - used when this is called from within this function to generate a design to create the coverage grid.
-  if(length(spacing) == 0 && length(n.grid.points) == 0 && length(grid) == 0){
+  if(length(spacing) == 0 && length(n.grid.points) == 0){
     return(new("Coverage.Grid", list(), numeric(0)))
+  }
+  if(length(spacing) > 0 && length(n.grid.points) > 0){
+    warning("Both spacing and n.grid.points specified, n.grid.point will be disregarded.", call. = FALSE, immediate. = TRUE)
   }
   #find union of region - coverage.grid is over the whole
   region.union <- sf::st_union(region@region)
