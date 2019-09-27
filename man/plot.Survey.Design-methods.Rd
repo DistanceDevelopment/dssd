@@ -15,5 +15,7 @@
 \item{...}{other general plot parameters}
 }
 \description{
-Plots an S4 object of class 'Survey.Design'
+Plots the coverage scores contained within an object of class 'Survey.Design' and
+provides a colour key relating to the coverage scores. This allows the user to
+assess how even the coverage is across the survey region.
 }

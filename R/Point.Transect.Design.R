@@ -11,8 +11,8 @@
 #' @title S4 Class "Point.Transect.Design"
 #' @section Methods:
 #' \describe{
-#'  \item{\code{generate.transects}}{\code{signature=(object = "Point.Transect.Design", ...)}:
-#'  generates a set of transects from a shapefile.}
+#'  \item{\code{generate.transects}}{\code{signature=(object = "Point.Transect.Design", quiet = FALSE,  ...)}:
+#'  generates a set of transects from the design.}
 #' }
 #' @keywords classes
 #' @seealso \code{\link{make.design}}

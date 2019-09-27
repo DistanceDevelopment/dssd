@@ -10,7 +10,9 @@ make.coverage(region = make.region(), spacing = numeric(0),
 \arguments{
 \item{region}{the region name}
 
-\item{spacing}{spacing to be used to create the coverage grid}
+\item{spacing}{spacing to be used to create the coverage grid. If
+spacing is specified then any value supplied for n.grid.points will
+be ignored.}
 
 \item{n.grid.points}{the desired number of grid points (note that
 the exact number generated may differ slightly depending on the

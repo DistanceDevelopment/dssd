@@ -104,7 +104,21 @@ make.region <- function(region.name = "region",
 #' types of either point or line transect designs across strata but cannot mix
 #' point and line transect design types within a single design object.
 #'
-#' @details For point transect designs the user may either specify "random" or
+#' @details
+#'
+#' \strong{Plus versus Minus Sampling}
+#' If you choose for your design to use a minus sampling strategy then transects will
+#' only be generated within the survey region and will give lower coverage around the
+#' edge of the survey region. Plus sampling generates transects within an area
+#' greater than the study region. To do this \pkg{dssd} first puts a buffer around the
+#' study region before generating the transects within the buffered region. The width
+#' of the buffer is the truncation distance supplies by the user. Plus sampling
+#' helps to ensure more even coverage around the edge of the study area. See
+#' \emph{Buckland et. al, 2001} "Introduction to Distance Sampling" for information
+#' on when to use plus versus minus sampling.
+#'
+#' \strong{Point Transect Designs}
+#' For point transect designs the user may either specify "random" or
 #' "systematic" for the design argument. If the user specifies "random", they
 #' should also provide a value for effort detailing the number of point transects
 #' they wish their survey to have. For stratified designs they may specify a vector
@@ -118,6 +132,7 @@ make.region <- function(region.name = "region",
 #' point transect designs the user may select either a minus or plus sampling edge
 #' protocol.
 #'
+#' \strong{Line Transect Designs:}
 #' For line transect designs the user may either specify "random" (randomly
 #' placed full width lines), "systematic" (systematically placed full width lines),
 #' "eszigzag" (equally spaced zigzag lines) or "eszigzagcom" (two sets of complementary
@@ -163,7 +178,7 @@ make.region <- function(region.name = "region",
 #' @param spacing used by systematic designs, numeric value to define spacing
 #' between transects. Can be a vector of values with one value per strata.
 #' @param edge.protocol character value indicating whether a "plus" sampling or
-#' "minus" sampling protocol is used.
+#' "minus" sampling protocol is used. See details.
 #' @param bounding.shape only applicable to zigzag designs. A character value saying
 #' whether the zigzag transects should be generated using a minimum bounding
 #' "rectangle" or a "convex hull".
@@ -171,7 +186,8 @@ make.region <- function(region.name = "region",
 #' an object may be observed. Truncation distance is constant across strata.
 #' @param coverage.grid An object of class Coverage.Grid for use when
 #' running the coverage simulation.
-#' @return object of a class which inherits from class Survey.Design
+#' @return object of a class which inherits from class Survey.Design either
+#' Line.Transect.Design or Point.Transect.Design
 #' @export
 #' @author Laura Marshall
 #' @examples
@@ -316,10 +332,12 @@ make.design <- function(region = make.region(), transect.type = "line", design =
 #' @title Creates a Coverage.Grid object
 #' @description This creates an instance of the Coverage.Grid class.
 #' @param region the region name
-#' @param spacing spacing to be used to create the coverage grid
+#' @param spacing spacing to be used to create the coverage grid. If
+#' spacing is specified then any value supplied for n.grid.points will
+#' be ignored.
 #' @param n.grid.points the desired number of grid points (note that
-#'   the exact number generated may differ slightly depending on the
-#'   shape of the study region).
+#' the exact number generated may differ slightly depending on the
+#' shape of the study region).
 #' @return object of class Coverage.Grid
 #' @export
 #' @author Laura Marshall

@@ -32,6 +32,20 @@
 #' @slot coverage.reps The number of times the coverage simulation was repeated.
 #' @slot design.statistics A list of values obtained when investigating
 #' coverage. This includes the minimum, maximum, mean and median
+#' @section Methods:
+#' \describe{
+#'  \item{\code{generate.transects}}{\code{signature 'Survey.Design'}:
+#'  Generates a set of transects from the design.}
+#'  \item{\code{plot}}{\code{signature 'Survey.Design,ANY'}:
+#'  Plots the coverage scores contained within an object of class 'Survey.Design' and
+#'  provides a colour key relating to the coverage scores. This allows the user to
+#'  assess how even the coverage is across the survey region.}
+#'  \item{\code{show}}{\code{signature 'Survey.Design'}:
+#'  Gives a summary of the design description, stratum areas and coverage scores
+#'  if the coverage simulation has been run on the design. The coverage score summary
+#'  details the minimum, maximum, mean and medium coverage scores across the study
+#'  region.}
+#' }
 #' @keywords classes
 #' @export
 #' @importFrom methods validObject
@@ -57,7 +71,9 @@ setClass(Class = "Survey.Design",
 
 #' Plot
 #'
-#' Plots an S4 object of class 'Survey.Design'
+#' Plots the coverage scores contained within an object of class 'Survey.Design' and
+#' provides a colour key relating to the coverage scores. This allows the user to
+#' assess how even the coverage is across the survey region.
 #'
 #' @param x object of class Survey.Design
 #' @param y not used

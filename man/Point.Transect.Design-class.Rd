@@ -11,8 +11,8 @@ the type of point transect design.
 \section{Methods}{
 
 \describe{
- \item{\code{generate.transects}}{\code{signature=(object = "Point.Transect.Design", ...)}:
- generates a set of transects from a shapefile.}
+ \item{\code{generate.transects}}{\code{signature=(object = "Point.Transect.Design", quiet = FALSE,  ...)}:
+ generates a set of transects from the design.}
 }
 }
 

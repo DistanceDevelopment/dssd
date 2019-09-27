@@ -21,8 +21,8 @@ or a "convex hull".}
 \section{Methods}{
 
 \describe{
- \item{\code{generate.transects}}{\code{signature=(object = "Line.Transect.Design", ...)}:
- generates a set of transects from a shapefile.}
+ \item{\code{generate.transects}}{\code{signature=(object = "Line.Transect.Design", quiet = FALSE, ...)}:
+ generates a set of transects from the design.}
 }
 }
 
