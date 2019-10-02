@@ -3,7 +3,7 @@ dssd 0.2.0
 
 New Features
 
- * Now writes transects to gpx file
+ * Now writes transects to gpx, csv and txt file
 
 dssd 0.1.0
 ----------
