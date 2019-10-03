@@ -2,6 +2,7 @@ Package: dssd
 Imports:
     sf,
     plot3D,
+    rgdal,
     methods
 Suggests: knitr,
           rmarkdown,

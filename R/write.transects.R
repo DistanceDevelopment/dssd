@@ -24,7 +24,7 @@
 #' @export
 #' @importFrom utils write.table write.csv
 #' @importFrom sf as_Spatial
-#' @importFrom rgdal writeOGR
+#' @importFrom methods as
 #' @author Laura Marshall
 #' @details To write the transects to shapefile only the dsn is needed with
 #' a 'shp', 'csv' or 'txt' file extension. To write a gpx file you need to
