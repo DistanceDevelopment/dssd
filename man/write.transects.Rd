@@ -62,14 +62,14 @@ write.transects(transects, dsn = paste0(tempdir(), "/", "transects.txt"))
 # Writing gpx file example - must project transect coords into lat/lon
 #Load the unprojected shapefile
 shapefile.name <- system.file("extdata", "TentsmuirUnproj.shp", package = "dssd")
-sf.shape <- read_sf(shapefile.name)
+sf.shape <- sf::read_sf(shapefile.name)
 # Check current coordinate reference system
-orig.crs <- st_crs(sf.shape)
+orig.crs <- sf::st_crs(sf.shape)
 # Define a European Albers Equal Area projection
 proj4string <- "+proj=aea +lat_1=56 +lat_2=62 +lat_0=50 +lon_0=-3 +x_0=0
                 +y_0=0 +ellps=intl +units=m"
 # Project the study area on to a flat plane
-projected.shape <- st_transform(sf.shape, crs = proj4string)
+projected.shape <- sf::st_transform(sf.shape, crs = proj4string)
 # Create the survey region in dssd
 region.tm <- make.region(region.name = "Tentsmuir",
                          strata.name = c("Main Area", "Morton Lochs"),
