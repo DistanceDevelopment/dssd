@@ -49,7 +49,7 @@ setMethod(
       if(!is.na(tmp)){
         if(is.null(tmp$units)){
           units <- units
-          warning("Coordinate reference system detected but no units can be found. Has this shape been projected - shapefiles should be projected on to a flat plane before surveys are designed. ", call. = FALSE, immediate. = TRUE)
+          warning("Coordinate reference system detected but no units can be found. Has this shape been projected - shapefiles must be projected on to a flat plane before surveys are designed. dssd is unstable and may generate errors when working with unprojected regions.", call. = FALSE, immediate. = TRUE)
         }else
           units <- tmp$units
       }else{
