@@ -3,6 +3,7 @@ Imports:
     sf,
     plot3D,
     rgdal,
+    lwgeom,
     methods
 Suggests: knitr,
           rmarkdown,
