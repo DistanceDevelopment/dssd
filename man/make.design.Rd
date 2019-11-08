@@ -6,9 +6,11 @@
 \usage{
 make.design(region = make.region(), transect.type = "line",
   design = "systematic", samplers = numeric(0),
-  line.length = numeric(0), effort.allocation = numeric(0),
-  design.angle = 0, spacing = numeric(0), edge.protocol = "minus",
-  bounding.shape = "rectangle", truncation = 1, coverage.grid = NULL)
+  line.length = numeric(0), seg.length = numeric(0),
+  effort.allocation = numeric(0), design.angle = 0,
+  spacing = numeric(0), edge.protocol = "minus",
+  seg.threshold = numeric(0), bounding.shape = "rectangle",
+  truncation = 1, coverage.grid = NULL)
 }
 \arguments{
 \item{region}{an object of class Region defining the survey region.}
@@ -26,6 +28,9 @@ per strata.}
 \item{line.length}{the total line length you desire or a vector of line lengths
 the same length as the number of strata.}
 
+\item{seg.length}{the length of the line transect segments for a segmented grid
+design.}
+
 \item{effort.allocation}{numeric values used to indicate the proportion of effort
 to be allocated to each strata from number of samplers or line length. If length is
 0 (the default) and only a total line length or total number of samplers is supplied,
@@ -41,6 +46,13 @@ between transects. Can be a vector of values with one value per strata.}
 
 \item{edge.protocol}{character value indicating whether a "plus" sampling or
 "minus" sampling protocol is used. See details.}
+
+\item{seg.threshold}{this is a percentage threshold value applicable to segmented
+grid designs controlling which partial segments are discarded around the survey
+region boundary. By default, the value of 50, means that only segments that are
+more than half inside the survey region will be retained. To retain all segments,
+no matter how small they are when clipped to the survey region boundary set this
+value to 0.}
 
 \item{bounding.shape}{only applicable to zigzag designs. A character value saying
 whether the zigzag transects should be generated using a minimum bounding

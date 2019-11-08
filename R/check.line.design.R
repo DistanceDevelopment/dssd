@@ -27,10 +27,20 @@ check.line.design <- function(object){
     warning("Edge protocol argument has a different number of values than there are strata, only using the 1st value.", call. = FALSE, immediate. = TRUE)
     object@edge.protocol <- rep(object@edge.protocol[1], strata.count)
   }
-  if(!all(object@edge.protocol %in% c("minus", "plus"))){
-    warning("Some edge protocol option(s) not recognised using minus sampling for these strata.", call. = FALSE, immediate. = TRUE)
-    index <- which(!(object@edge.protocol %in% c("minus", "plus")))
-    object@edge.protocol[index] <- "minus"
+  #Check segment length
+  if(any(object@design == "segmentedgrid")){
+    if(length(object@seg.length) == 1){
+      object@seg.length <- rep(object@seg.length, strata.count)
+    }else if(length(object@seg.length) > 1 && length(object@seg.length) != strata.count){
+      warning("Segment length argument has a different number of values than there are strata, only using the 1st value. (Only applicable for segmented grid design.)", call. = FALSE, immediate. = TRUE)
+      object@seg.length <- rep(object@seg.length[1], strata.count)
+    }
+    index <- which(object@design == "segmentedgrid")
+    if(any(!is.numeric(object@seg.length[index]))){
+      warning("Numeric values for segment length have not been suplied for all strata where a segmented grid design has been selected. Values of 1 will be inserted.", call. = FALSE, immediate. = TRUE)
+      index2 <- which(!is.numeric(object@seg.length[index]))
+      object@seg.length[index][index2] <- 1
+    }
   }
   #Check bounding shape
   if(any(object@design %in% c("eszigzag", "eszigzagcom"))){
@@ -51,7 +61,11 @@ check.line.design <- function(object){
     object@design.angle <- rep(object@design.angle[1], strata.count)
   }
   if(any(object@design.angle < 0) || any(object@design.angle >= 180)){
-    return("The design angle should be >= 0 and < 180 degrees.")
+    for(i in seq(along = object@design.angle)){
+      if(((object@design.angle[i] < 0) || any(object@design.angle[i] >= 180)) && object@design[i] != "segmented grid" && object@design.angle[i] != -1){
+        return("The design angle should be >= 0 and < 180 degrees or -1 for random design angle (currently random angle only applicable to segmented grid design).")
+      }
+    }
   }
   #Check design
   if(length(object@design) == 1){
@@ -60,7 +74,7 @@ check.line.design <- function(object){
     warning("Design argument has a different number of values than there are strata, only using the 1st value.", call. = FALSE, immediate. = TRUE)
     object@design <- rep(object@design[1], strata.count)
   }
-  if(any(!(object@design %in% c("random", "systematic", "eszigzag", "eszigzagcom")))){
+  if(any(!(object@design %in% c("random", "systematic", "eszigzag", "eszigzagcom", "segmentedgrid")))){
     return(paste("Unrecognised designs: ", object@design, sep = ""))
   }
   if(all(object@design == "random") && length(object@spacing > 0)){
@@ -136,7 +150,7 @@ check.line.design <- function(object){
       if(is.na(object@samplers[i]) && is.na(object@line.length[i]) && (length(object@samplers) > 1 || length(object@line.length) > 1)){
         return(paste("Strata ", i, " has a random design but a non numeric argument has been supplied for both the number of samplers and the line length.", sep = "" ))
       }
-    }else if(object@design[i] %in% c("systematic", "eszigzag", "eszigzagcom")){
+    }else if(object@design[i] %in% c("systematic", "eszigzag", "eszigzagcom", "segmentedgrid")){
       if(is.na(object@samplers[i]) && is.na(object@spacing[i]) && is.na(object@line.length[i]) && (length(object@samplers) > 1 || length(object@line.length) > 1)){
         return(paste("Strata ", i, " has a systematic design but a non numeric argument has been supplied for the number of samplers, the spacing and the line length.", sep = "" ))
       }

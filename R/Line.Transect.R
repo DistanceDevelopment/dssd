@@ -18,6 +18,7 @@
 #' @export
 setClass(Class = "Line.Transect",
          representation = representation(line.length = "numeric",
+                                         seg.length = "numeric",
                                          trackline = "numeric",
                                          cyclictrackline = "numeric"),
          contains = "Transect")
@@ -25,7 +26,7 @@ setClass(Class = "Line.Transect",
 setMethod(
   f="initialize",
   signature="Line.Transect",
-  definition=function(.Object, design, lines, samp.count, line.length, effort.allocation,
+  definition=function(.Object, design, lines, samp.count, line.length, seg.length, effort.allocation,
                       spacing, design.angle, edge.protocol, cov.area = numeric(0),
                       cov.area.polys = list(), strata.area, strata.names, trackline,
                       cyclictrackline){
@@ -37,6 +38,7 @@ setMethod(
     .Object@cov.area      <- cov.area
     .Object@cov.area.polys <- cov.area.polys
     .Object@line.length   <- line.length
+    .Object@seg.length    <- seg.length
     .Object@trackline     <- trackline
     .Object@cyclictrackline <- cyclictrackline
     .Object@samp.count    <- samp.count
@@ -114,12 +116,16 @@ setMethod(
                        "random" = "randomly located transects",
                        "systematic" = "systematically spaced parallel transects",
                        "eszigzag" = "equal spaced zigzag",
-                       "eszigzagcom" = "complementaty equal spaced zigzags")
+                       "eszigzagcom" = "complementaty equal spaced zigzags",
+                       "segmentedgrid" = "segmented grid")
       cat("Design: ", design, fill = T)
-      if(object@design[strat] %in% c("systematic", "eszigzag", "eszigzagcom")){
+      if(object@design[strat] %in% c("systematic", "eszigzag", "eszigzagcom", "segmentedgrid")){
         cat("Spacing: ", object@spacing[strat], fill = T)
       }
       cat("Line length:", object@line.length[strat], fill = T)
+      if(object@design[strat] == "segmentedgrid"){
+        cat("Segment Length: ", object@seg.length[strat], fill = T)
+      }
       cat("Trackline length:", object@trackline[strat], fill = T)
       cat("Cyclic trackline length:", object@cyclictrackline[strat], fill = T)
       cat("Number of samplers: ", object@samp.count[strat], fill = T)

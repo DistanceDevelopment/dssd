@@ -23,6 +23,8 @@
 #' @export
 setClass(Class = "Line.Transect.Design",
          representation = representation(line.length = "numeric",
+                                         seg.length = "numeric",
+                                         seg.threshold = "numeric",
                                          bounding.shape = "character"),
          contains = "Survey.Design"
 )
@@ -31,22 +33,24 @@ setClass(Class = "Line.Transect.Design",
 setMethod(
   f="initialize",
   signature="Line.Transect.Design",
-  definition=function(.Object, region, truncation, design, line.length, effort.allocation, spacing, samplers, design.angle, edge.protocol, bounding.shape, coverage.grid){
+  definition=function(.Object, region, truncation, design, line.length, seg.length, effort.allocation, spacing, samplers, design.angle, edge.protocol, seg.threshold, bounding.shape, coverage.grid){
     #Set slots
     .Object@region        <- region
     .Object@truncation    <- truncation
     .Object@design        <- design
     .Object@line.length   <- line.length
+    .Object@seg.length    <- seg.length
     .Object@effort.allocation <- effort.allocation
     .Object@spacing       <- spacing
     .Object@samplers      <- samplers
     .Object@design.angle  <- design.angle
     .Object@edge.protocol <- edge.protocol
+    .Object@seg.threshold <- seg.threshold
     .Object@bounding.shape <- bounding.shape
     .Object@coverage.grid <- coverage.grid
     .Object@coverage.scores <- numeric(0)
     .Object@design.statistics <- data.frame()
-    #Check object is valid
+    #Check object is valid (testing now done in Class constructor)
     valid <- try(validObject(.Object), silent = TRUE)
     if(class(valid) == "try-error"){
       stop(attr(valid, "condition")$message, call. = FALSE)
@@ -75,7 +79,12 @@ setMethod(
       strata.names <- region@region.name
       strata.no <- 1
     }
-    #Get a vector of designs (should be redundant now due to checks)
+    #Store original angles
+    orig.angles <- object@design.angle
+    #Make sure these are restored incase of a crash
+    on.exit(object@design.angle <- orig.angles)
+    #Now generate random design angles
+    object@design.angle <- ifelse(object@design.angle == -1, runif(1,0,179.9999), object@design.angle)
     if(length(object@design) == 1){
       design <- rep(object@design, strata.no)
     }else{
@@ -94,6 +103,7 @@ setMethod(
     spacing <- object@spacing
     samplers <- object@samplers
     line.length <- object@line.length
+    seg.length <- object@seg.length
     #Check if only has one has been
     if(length(spacing) == 1){
       spacing <- rep(spacing, strata.no)
@@ -106,12 +116,15 @@ setMethod(
     #If spacing has not been provided for any
     if(all(!by.spacing)){
       #If only a total number of samplers has been provided (and there is only one design)
-      if(length(samplers) == 1){
-        if(!"random" %in% object@design && length(object@effort.allocation) == 0){
+      if(length(samplers) == 1 && length(unique(design) == 1)){
+        if(all(design %in% c("systematic", "eszigzag", "eszigzagcom")) && length(object@effort.allocation) == 0){
           #Calculate spacing across entire study region for more equal effort (it will only be truly equal if the same design is used across strata)
           width <- calc.region.width(object)
           spacing <- width/samplers
           spacing <- ifelse(design == "eszigzagcom", spacing*2, spacing)
+          by.spacing <- rep(TRUE, strata.no)
+        }else if(all(design == "segmentedgrid") && length(object@effort.allocation) == 0 && length(unique(object@seg.length)) == 1){
+          spacing <- rep(((sum(object@region@area)/samplers)+(seg.length[1]/2)^2)^0.5 - seg.length[1]/2, strata.no)
           by.spacing <- rep(TRUE, strata.no)
         }else{
           #Have to allocate number of samplers per strata
@@ -134,6 +147,10 @@ setMethod(
           }else if(all(design == "eszigzagcom")){
             spacing = (width * ave.line.height) / sqrt((line.length/2)^2 - width^2)
             spacing <- rep(spacing, strata.no)
+            by.spacing <- rep(TRUE, strata.no)
+          }else if(all(design == "segmentedgrid" && length(unique(object@seg.length)) == 1 && length(unique(object@seg.length)) == 1)){
+            tot.samplers <- line.length/seg.length[1]
+            spacing <- rep(((sum(object@region@area)/tot.samplers)+(seg.length[1]/2)^2)^0.5 - seg.length[1]/2, strata.no)
             by.spacing <- rep(TRUE, strata.no)
           }else{
             #there is a mix of designs or they are random
@@ -184,6 +201,17 @@ setMethod(
           trackline[strat] <- temp$trackline
           cyclictrackline[strat] <- temp$cyclictrackline
         }
+      }else if(design[strat] == "segmentedgrid"){
+        cat("Samplers: ", samplers, ", Line Length: ", line.length, ", Spacing: ", spacing, ", Seg Length:", seg.length, fill = T)
+        temp <-  generate.segmented.grid(object, strat, samplers[strat], line.length[strat], spacing[strat], by.spacing[strat], seg.length[strat], quiet = quiet)
+        transects[[strat]] <- temp$transects
+        polys[[strat]] <- temp$cover.polys
+        if(!is.null(temp)){
+          spacing[strat] <- temp$spacing
+          track.temp <- calculate.trackline.segl(transects[[strat]])
+          trackline[strat] <- track.temp$trackline
+          cyclictrackline[strat] <- track.temp$cyclictrackline
+        }
       }else{
         message("This design is not supported at present")
         transects[[strat]] = NULL
@@ -226,7 +254,7 @@ setMethod(
     sf::st_crs(all.transects) <- region.crs
     sf::st_crs(all.polys) <- region.crs
     #Make a survey object
-    transect <- new(Class="Line.Transect", design = object@design, lines = all.transects, samp.count = sampler.count, line.length = line.length, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = cov.areas, cov.area.polys = all.polys, strata.area = region@area, strata.names = strata.names, trackline = trackline, cyclictrackline = cyclictrackline)
+    transect <- new(Class="Line.Transect", design = object@design, lines = all.transects, samp.count = sampler.count, line.length = line.length, seg.length = seg.length, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = cov.areas, cov.area.polys = all.polys, strata.area = region@area, strata.names = strata.names, trackline = trackline, cyclictrackline = cyclictrackline)
     return(transect)
   }
 )

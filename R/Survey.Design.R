@@ -148,9 +148,10 @@ setMethod(
                        "random" = "randomly located transects",
                        "systematic" = "systematically spaced transects",
                        "eszigzag" = "equal spaced zigzag",
-                       "eszigzagcom" = "complementaty equal spaced zigzags")
+                       "eszigzagcom" = "complementaty equal spaced zigzags",
+                       "segmentedgrid" = "segmented grid")
       cat("Design: ", design, fill = T)
-      if(object@design[strat] %in% c("systematic", "eszigzag", "eszigzagcom")){
+      if(object@design[strat] %in% c("systematic", "eszigzag", "eszigzagcom", "segmentedgrid")){
         cat("Spacing: ", object@spacing[strat], fill = T)
       }
       if(length(object@samplers) == 1){

@@ -167,6 +167,8 @@ make.region <- function(region.name = "region",
 #' per strata.
 #' @param line.length the total line length you desire or a vector of line lengths
 #' the same length as the number of strata.
+#' @param seg.length the length of the line transect segments for a segmented grid
+#' design.
 #' @param effort.allocation numeric values used to indicate the proportion of effort
 #' to be allocated to each strata from number of samplers or line length. If length is
 #' 0 (the default) and only a total line length or total number of samplers is supplied,
@@ -179,6 +181,12 @@ make.region <- function(region.name = "region",
 #' between transects. Can be a vector of values with one value per strata.
 #' @param edge.protocol character value indicating whether a "plus" sampling or
 #' "minus" sampling protocol is used. See details.
+#' @param seg.threshold this is a percentage threshold value applicable to segmented
+#' grid designs controlling which partial segments are discarded around the survey
+#' region boundary. By default, the value of 50, means that only segments that are
+#' more than half inside the survey region will be retained. To retain all segments,
+#' no matter how small they are when clipped to the survey region boundary set this
+#' value to 0.
 #' @param bounding.shape only applicable to zigzag designs. A character value saying
 #' whether the zigzag transects should be generated using a minimum bounding
 #' "rectangle" or a "convex hull".
@@ -274,7 +282,7 @@ make.region <- function(region.name = "region",
 #' plot(design)
 #' design
 #'
-make.design <- function(region = make.region(), transect.type = "line", design = "systematic", samplers = numeric(0), line.length = numeric(0), effort.allocation = numeric(0), design.angle =  0, spacing = numeric(0), edge.protocol = "minus", bounding.shape = "rectangle", truncation = 1, coverage.grid = NULL){
+make.design <- function(region = make.region(), transect.type = "line", design = "systematic", samplers = numeric(0), line.length = numeric(0), seg.length = numeric(0), effort.allocation = numeric(0), design.angle =  0, spacing = numeric(0), edge.protocol = "minus", seg.threshold = numeric(0), bounding.shape = "rectangle", truncation = 1, coverage.grid = NULL){
   #Check if a coverage grid has been passed in - if not create one
   if(class(coverage.grid) != "Coverage.Grid"){
     if(!is.null(coverage.grid)){
@@ -289,7 +297,7 @@ make.design <- function(region = make.region(), transect.type = "line", design =
       samplers = 20
     }
     #Create line transect object
-    design <- new(Class="Line.Transect.Design", region, truncation, design, line.length, effort.allocation, spacing, samplers, design.angle, edge.protocol, bounding.shape, coverage.grid)
+    design <- new(Class="Line.Transect.Design", region, truncation, design, line.length, seg.length, effort.allocation, spacing, samplers, design.angle, edge.protocol, seg.threshold, bounding.shape, coverage.grid)
   }else if(transect.type %in% c("Point", "point", "Point Transect", "point transect")){
     if(all(design == "random")){
       if(length(samplers) == 0){
@@ -311,7 +319,7 @@ make.design <- function(region = make.region(), transect.type = "line", design =
     if(any(any(na.omit(samplers) < 0) || any(na.omit(spacing) < 0))){
       stop("Negative values were used to specify effort.", call. = FALSE)
     }
-    #Create line transect object
+    #Create point transect object
     design <- new(Class="Point.Transect.Design", region, truncation, design, spacing, samplers, effort.allocation, design.angle, edge.protocol, coverage.grid)
   }
   #Check design object - make sure correct number of elements per slot etc
