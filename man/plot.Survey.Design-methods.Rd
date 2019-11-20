@@ -12,7 +12,9 @@
 
 \item{y}{not used}
 
-\item{...}{other general plot parameters}
+\item{...}{other general plot parameters, strata.id for specifying the numeric index
+of a single strata to plot, subtitle for adding a subtitle to the plot and col.breaks
+for specifying the number of colour break points in the colour scale.}
 }
 \description{
 Plots the coverage scores contained within an object of class 'Survey.Design' and

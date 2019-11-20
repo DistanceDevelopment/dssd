@@ -6,12 +6,14 @@
 \alias{get.coverage,Survey.Design-method}
 \title{S4 generic method to extract coverage scores}
 \usage{
-get.coverage(object)
+get.coverage(object, strata.id = "all")
 
-\S4method{get.coverage}{Survey.Design}(object)
+\S4method{get.coverage}{Survey.Design}(object, strata.id = "all")
 }
 \arguments{
 \item{object}{an object which inherits from class Survey.Design}
+
+\item{strata.id}{either "all" or a numeric value indicating the strata index.}
 }
 \value{
 a vector of coverage scores

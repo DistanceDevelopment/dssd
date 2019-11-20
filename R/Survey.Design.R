@@ -77,7 +77,9 @@ setClass(Class = "Survey.Design",
 #'
 #' @param x object of class Survey.Design
 #' @param y not used
-#' @param ... other general plot parameters
+#' @param ... other general plot parameters, strata.id for specifying the numeric index
+#' of a single strata to plot, subtitle for adding a subtitle to the plot and col.breaks
+#' for specifying the number of colour break points in the colour scale.
 #' @rdname plot.Survey.Design-methods
 #' @exportMethod plot
 #' @importFrom plot3D colkey
@@ -106,6 +108,7 @@ setMethod(
     # If not plotting all extract values for specific strata
     if(strata.id != "all"){
       region.coords <- region.coords[[strata.id]]
+      region.coords <- sf::st_sfc(region.coords, crs = sf::st_crs(x@region@region))
       coverage.grid <- x@coverage.grid@grid
       coverage.grid$coverage.scores <- coverage.scores
       coverage.grid <- suppressWarnings(sf::st_intersection(coverage.grid, region.coords))
@@ -222,11 +225,27 @@ setMethod(
 setMethod(
   f="get.coverage",
   signature="Survey.Design",
-  definition=function(object){
+  definition=function(object, strata.id = "all"){
     #Check coverage has been run
     if(all(is.na(object@coverage.scores))){
       stop("Design has not been run yet, all coverage scores are NA.", call. = FALSE)
     }else{
+      if(strata.id != "all"){
+        # Get shape column names
+        sf.column.region <- attr(object@region@region, "sf_column")
+        sf.column.grid <- attr(object@coverage.grid@grid, "sf_column")
+        # Extract coverage scores and region coords
+        coverage.scores <- object@coverage.scores
+        region.coords <- object@region@region[[sf.column.region]]
+        coverage.grid <- object@coverage.grid@grid
+        region.coords <- region.coords[[strata.id]]
+        region.coords <- sf::st_sfc(region.coords, crs = sf::st_crs(object@region@region))
+        coverage.grid <- object@coverage.grid@grid
+        coverage.grid$coverage.scores <- coverage.scores
+        coverage.grid <- suppressWarnings(sf::st_intersection(coverage.grid, region.coords))
+        coverage.scores <- coverage.grid$coverage.scores
+        return(coverage.scores)
+      }
       return(object@coverage.scores)
     }
   }
