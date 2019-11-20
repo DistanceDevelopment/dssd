@@ -143,7 +143,7 @@ setMethod(
     }else{
       strata.names <- x@region.name
     }
-    if(cols == "default"){
+    if(any(cols == "default")){
       if(length(x@strata.name) <= 15){
         cols <-  c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1")[1:(length(x@strata.name))]
       }else{
