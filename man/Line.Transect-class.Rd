@@ -5,7 +5,7 @@
 \alias{Line.Transect-class}
 \title{Class "Line.Transect" extends Class "Transect"}
 \description{
-Virtual Class \code{"Line.Transect"} is an S4 class
+Class \code{"Line.Transect"} is an S4 class
 detailing a set of transects from a point transect design.
 }
 \section{Slots}{

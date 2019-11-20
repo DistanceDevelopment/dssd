@@ -18,7 +18,8 @@ make.design(region = make.region(), transect.type = "line",
 \item{transect.type}{character variable specifying either "line" or "point"}
 
 \item{design}{a character variable describing the type of design. Either "random",
-"systematic", "eszigzag" (equal-spaced zigzag) or "eszigzagcom" (equal spaced zigzag with complementary lines). See details for more information.}
+"systematic", "eszigzag" (equal-spaced zigzag), "eszigzagcom" (equal spaced zigzag
+with complementary lines) or "segmentedgrid". See details for more information.}
 
 \item{samplers}{the number of samplers you wish the design to generate
 (note that the number actually generated may differ slightly due to the

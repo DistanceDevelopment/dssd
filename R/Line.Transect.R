@@ -3,7 +3,7 @@
 
 #' @title Class "Line.Transect" extends Class "Transect"
 #'
-#' @description Virtual Class \code{"Line.Transect"} is an S4 class
+#' @description Class \code{"Line.Transect"} is an S4 class
 #' detailing a set of transects from a point transect design.
 #' @name Line.Transect-class
 #' @title S4 Class "Line.Transect"
@@ -18,7 +18,6 @@
 #' @export
 setClass(Class = "Line.Transect",
          representation = representation(line.length = "numeric",
-                                         seg.length = "numeric",
                                          trackline = "numeric",
                                          cyclictrackline = "numeric"),
          contains = "Transect")
@@ -38,7 +37,6 @@ setMethod(
     .Object@cov.area      <- cov.area
     .Object@cov.area.polys <- cov.area.polys
     .Object@line.length   <- line.length
-    .Object@seg.length    <- seg.length
     .Object@trackline     <- trackline
     .Object@cyclictrackline <- cyclictrackline
     .Object@samp.count    <- samp.count

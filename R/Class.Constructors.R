@@ -160,7 +160,8 @@ make.region <- function(region.name = "region",
 #' @param region an object of class Region defining the survey region.
 #' @param transect.type character variable specifying either "line" or "point"
 #' @param design a character variable describing the type of design. Either "random",
-#' "systematic", "eszigzag" (equal-spaced zigzag) or "eszigzagcom" (equal spaced zigzag with complementary lines). See details for more information.
+#' "systematic", "eszigzag" (equal-spaced zigzag), "eszigzagcom" (equal spaced zigzag
+#' with complementary lines) or "segmentedgrid". See details for more information.
 #' @param samplers the number of samplers you wish the design to generate
 #' (note that the number actually generated may differ slightly due to the
 #' shape of the study region for some designs). This may be one value of a value
@@ -297,7 +298,14 @@ make.design <- function(region = make.region(), transect.type = "line", design =
       samplers = 20
     }
     #Create line transect object
-    design <- new(Class="Line.Transect.Design", region, truncation, design, line.length, seg.length, effort.allocation, spacing, samplers, design.angle, edge.protocol, seg.threshold, bounding.shape, coverage.grid)
+    if(any(design == "segmentedgrid")){
+      if(length(seg.threshold) == 0){
+        seg.threshold <- 50
+      }
+      design <- new(Class="Segment.Transect.Design", region, truncation, design, line.length, seg.length, effort.allocation, spacing, samplers, design.angle, edge.protocol, seg.threshold, bounding.shape, coverage.grid)
+    }else{
+      design <- new(Class="Line.Transect.Design", region, truncation, design, line.length, effort.allocation, spacing, samplers, design.angle, edge.protocol, bounding.shape, coverage.grid)
+    }
   }else if(transect.type %in% c("Point", "point", "Point Transect", "point transect")){
     if(all(design == "random")){
       if(length(samplers) == 0){

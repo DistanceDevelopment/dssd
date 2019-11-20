@@ -40,6 +40,8 @@ Collate:
     'Line.Transect.R'
     'Point.Transect.Design.R'
     'Point.Transect.R'
+    'Segment.Transect.Design.R'
+    'Segment.Transect.R'
     'calc.region.width.R'
     'calculate.trackline.pl.R'
     'calculate.trackline.segl.R'

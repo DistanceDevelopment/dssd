@@ -1,6 +1,6 @@
 #' @importFrom stats runif
 #' @importFrom methods new
-generate.segmented.grid <- function(design, strata.id, samplers, line.length, spacing, by.spacing, seg.length, quiet = FALSE, calc.cov.area = TRUE, clip.to.strata = TRUE){
+generate.segmented.grid <- function(design, strata.id, samplers, line.length, spacing, by.spacing, seg.length, seg.threshold, quiet = FALSE, calc.cov.area = TRUE, clip.to.strata = TRUE){
   #Generates a grid of line segments
   #NOTE if you change how segments are generated this may invalidate the calculate.trackline.segl function!!!
   region <- design@region
@@ -86,6 +86,10 @@ generate.segmented.grid <- function(design, strata.id, samplers, line.length, sp
   test.line <- function(x){ifelse(any(class(x) %in% c("LINESTRING", "MULTILINESTRING")), TRUE, FALSE)}
   is.line <- which(unlist(lapply(to.keep, FUN = test.line)))
   to.keep <- to.keep[is.line]
+  #Check which lengths are over the threshold
+  min.seg.length <- seg.threshold/100*seg.length
+  is.over.threshold <- which(unlist(lapply(to.keep, sf::st_length)) > min.seg.length)
+  to.keep <- to.keep[is.over.threshold]
   #Calculate covered region - do it here as easier before unrotating!
   cover.polys <- list()
   if(calc.cov.area){

@@ -3,9 +3,9 @@
 #' @include Region.R
 #' @importFrom methods validObject
 
-#' @title Virtual Class "Line.Transect.Design" extends Class "Survey.Design"
+#' @title Class "Line.Transect.Design" extends Class "Survey.Design"
 #'
-#' @description Virtual Class \code{"Line.Transect.Design"} is an S4 class detailing
+#' @description Class \code{"Line.Transect.Design"} is an S4 class detailing
 #' the type of line transect design.
 #' @name Line.Transect.Design-class
 #' @title S4 Class "Line.Transect.Design"
@@ -23,29 +23,23 @@
 #' @export
 setClass(Class = "Line.Transect.Design",
          representation = representation(line.length = "numeric",
-                                         seg.length = "numeric",
-                                         seg.threshold = "numeric",
                                          bounding.shape = "character"),
          contains = "Survey.Design"
 )
-
-
 setMethod(
   f="initialize",
   signature="Line.Transect.Design",
-  definition=function(.Object, region, truncation, design, line.length, seg.length, effort.allocation, spacing, samplers, design.angle, edge.protocol, seg.threshold, bounding.shape, coverage.grid){
+  definition=function(.Object, region, truncation, design, line.length, effort.allocation, spacing, samplers, design.angle, edge.protocol, bounding.shape, coverage.grid){
     #Set slots
     .Object@region        <- region
     .Object@truncation    <- truncation
     .Object@design        <- design
     .Object@line.length   <- line.length
-    .Object@seg.length    <- seg.length
     .Object@effort.allocation <- effort.allocation
     .Object@spacing       <- spacing
     .Object@samplers      <- samplers
     .Object@design.angle  <- design.angle
     .Object@edge.protocol <- edge.protocol
-    .Object@seg.threshold <- seg.threshold
     .Object@bounding.shape <- bounding.shape
     .Object@coverage.grid <- coverage.grid
     .Object@coverage.scores <- numeric(0)
@@ -103,7 +97,10 @@ setMethod(
     spacing <- object@spacing
     samplers <- object@samplers
     line.length <- object@line.length
-    seg.length <- object@seg.length
+    if(class(object) == "Segment.Transect.Design"){
+      seg.length <- object@seg.length
+      seg.threshold <- object@seg.threshold
+    }
     #Check if only has one has been
     if(length(spacing) == 1){
       spacing <- rep(spacing, strata.no)
@@ -202,8 +199,7 @@ setMethod(
           cyclictrackline[strat] <- temp$cyclictrackline
         }
       }else if(design[strat] == "segmentedgrid"){
-        cat("Samplers: ", samplers, ", Line Length: ", line.length, ", Spacing: ", spacing, ", Seg Length:", seg.length, fill = T)
-        temp <-  generate.segmented.grid(object, strat, samplers[strat], line.length[strat], spacing[strat], by.spacing[strat], seg.length[strat], quiet = quiet)
+        temp <-  generate.segmented.grid(object, strat, samplers[strat], line.length[strat], spacing[strat], by.spacing[strat], seg.length[strat], seg.threshold[strat], quiet = quiet)
         transects[[strat]] <- temp$transects
         polys[[strat]] <- temp$cover.polys
         if(!is.null(temp)){
@@ -254,7 +250,11 @@ setMethod(
     sf::st_crs(all.transects) <- region.crs
     sf::st_crs(all.polys) <- region.crs
     #Make a survey object
-    transect <- new(Class="Line.Transect", design = object@design, lines = all.transects, samp.count = sampler.count, line.length = line.length, seg.length = seg.length, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = cov.areas, cov.area.polys = all.polys, strata.area = region@area, strata.names = strata.names, trackline = trackline, cyclictrackline = cyclictrackline)
+    if(class(object) == "Segmented.Transect.Design"){
+      transect <- new(Class="Line.Transect", design = object@design, lines = all.transects, samp.count = sampler.count, line.length = line.length, seg.length = seg.length, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = cov.areas, cov.area.polys = all.polys, strata.area = region@area, strata.names = strata.names, trackline = trackline, cyclictrackline = cyclictrackline, seg.threshold = seg.threshold)
+    }else{
+      transect <- new(Class="Line.Transect", design = object@design, lines = all.transects, samp.count = sampler.count, line.length = line.length, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = cov.areas, cov.area.polys = all.polys, strata.area = region@area, strata.names = strata.names, trackline = trackline, cyclictrackline = cyclictrackline)
+    }
     return(transect)
   }
 )
