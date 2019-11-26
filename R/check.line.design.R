@@ -36,10 +36,10 @@ check.line.design <- function(object){
       object@seg.length <- rep(object@seg.length[1], strata.count)
     }
     if(length(object@seg.threshold) == 1){
-      object@seg.length <- rep(object@seg.threshold, strata.count)
-    }else if(length(object@seg.length) > 1 && length(object@seg.length) != strata.count){
-      warning("Segment length argument has a different number of values than there are strata, only using the 1st value. (Only applicable for segmented grid design.)", call. = FALSE, immediate. = TRUE)
-      object@seg.length <- rep(object@seg.length[1], strata.count)
+      object@seg.threshold <- rep(object@seg.threshold, strata.count)
+    }else if(length(object@seg.threshold) > 1 && length(object@seg.threshold) != strata.count){
+      warning("Segment threshold argument has a different number of values than there are strata, only using the 1st value. (Only applicable for segmented grid design.)", call. = FALSE, immediate. = TRUE)
+      object@seg.threshold <- rep(object@seg.threshold[1], strata.count)
     }
     index <- which(object@design == "segmentedgrid")
     if(any(!is.numeric(object@seg.length[index]))){
@@ -47,8 +47,8 @@ check.line.design <- function(object){
       index2 <- which(!is.numeric(object@seg.length[index]))
       object@seg.length[index][index2] <- 1
     }
-    if(any(object@seg.threshold[index] < 0) || any(object@seg.threshold[index] > 100)){
-      return("Values for segment threshold for segmented grid design must be between 0 and 100.", call. = FALSE, immediate. = TRUE)
+    if(any(object@seg.threshold[index] < 0) || any(object@seg.threshold[index] > 100) || any(!is.numeric(object@seg.threshold))){
+      return("Values for segment threshold for segmented grid design must be numeric values between 0 and 100.", call. = FALSE, immediate. = TRUE)
     }
   }
   #Check bounding shape
