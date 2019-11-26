@@ -21,9 +21,10 @@
 #' @param save.transects a directory where the shapefiles for the
 #' transects can be saved. The shapefile names will be S1, S2, ...
 #' existing files in the directory will not be overwritten.
+#' @param quiet when TRUE no progress counter is displayed.
 #' @export
 #' @importFrom stats median sd
-run.coverage <- function(design, reps = 10, save.transects = ""){
+run.coverage <- function(design, reps = 10, save.transects = "", quiet = FALSE){
 #Calculates the coverage scores for the design supplied
 #Also stores summary statistics
 #All values are returned within the design object
@@ -58,7 +59,7 @@ run.coverage <- function(design, reps = 10, save.transects = ""){
     transects <- generate.transects(design, quiet = TRUE)
     #if the user wants the transects saved write them to file
     if(save.transects != ""){
-     write.transects(transects, paste(save.transects, "/S", rep, ".shp", sep = ""))
+      suppressMessages(write.transects(transects, paste(save.transects, "/S", rep, ".shp", sep = "")))
     }
     if(is.null(transects)){
       warning("No transects generated, coverage run cancelled. Please check your design.", immediate. = T, call. = FALSE)
@@ -85,9 +86,10 @@ run.coverage <- function(design, reps = 10, save.transects = ""){
       trackline[rep,] <- transects@trackline
       cyclictrackline[rep,] <- transects@cyclictrackline
     }
-    percent.complete <- round((rep/reps)*100, 1)
-    #cat("\r", percent.complete, "% complete \r")
-    message("\r  ", percent.complete, "% complete      \r", appendLF = FALSE)
+    if(!quiet){
+      percent.complete <- round((rep/reps)*100, 1)
+      message("\r  ", percent.complete, "% complete      \r", appendLF = FALSE)
+    }
   }
   #Calculate summary statistics
   sampler.summary <- matrix(rep(NA, 5*(strata.count+1)), ncol = (strata.count+1), dimnames = list(c("Minimum", "Mean", "Median", "Maximum", "sd"), c(strata.names, "Total")))
