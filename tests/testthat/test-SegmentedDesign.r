@@ -28,8 +28,9 @@ test_that("Can deal with various forms of user input", {
                            seg.length = 200,
                            truncation = 25)
   survey.tm1 <- generate.transects(design.tm)
-
   expect_equal(round(survey.tm1@spacing,4), rep(453.6047,2))
+  expect_equal(design.tm@seg.length, rep(200,2))
+  expect_equal(survey.tm1@seg.length, rep(200,2))
 
   #Test single value for line length
   design.tm <- make.design(region.tm,
@@ -95,9 +96,49 @@ test_that("Can deal with various forms of user input", {
                            seg.length = c(200,50),
                            truncation = 25)
   survey.tm <- generate.transects(design.tm)
-  expect_equal(round(survey.tm@spacing,4), c(372.9161, 165.7570))
+  expect_equal(round(survey.tm@spacing,4), c(355.6886, 420.2832))
+  expect_equal(survey.tm@seg.threshold, rep(50,2))
 
-  survey.tm
-  plot(region.tm, survey.tm)
+  #Test when no transects
+  set.seed(551)
+  design.tm <- make.design(region.tm,
+                           transect.type = "line",
+                           design = "segmentedgrid",
+                           design.angle = 90,
+                           spacing = 750,
+                           seg.length = 200,
+                           seg.threshold = 100,
+                           truncation = 25)
+  suppressWarnings(survey.tm <- generate.transects(design.tm))
+  expect_equal(design.tm@seg.threshold, rep(100,2))
+  expect_equal(survey.tm@samp.count, 17)
+
+  #Test when no transects
+  set.seed(321)
+  design.tm <- make.design(region.tm,
+                           transect.type = "line",
+                           design = "segmentedgrid",
+                           design.angle = 90,
+                           spacing = c(2500,100),
+                           seg.length = c(2000,100),
+                           seg.threshold = c(100,0),
+                           truncation = 25)
+  suppressWarnings(survey.tm <- generate.transects(design.tm))
+  expect_equal(survey.tm@samp.count, c(NA,42))
+
+  #test basic shape to check trackline lengths
+  region <- make.region()
+  design <- make.design(region,
+                        transect.type = "line",
+                        design = "segmentedgrid",
+                        design.angle = 0,
+                        spacing = 250,
+                        seg.length = 100,
+                        seg.threshold = 100,
+                        truncation = 25)
+  set.seed(223)
+  survey <- generate.transects(design)
+  expect_equal(survey@trackline, 5350)
+  expect_equal(survey@cyclictrackline, 7100)
 
 })
