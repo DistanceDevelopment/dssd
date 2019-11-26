@@ -86,6 +86,10 @@ This section will demonstrate a number of example designs to show how design, de
 
 Similar to single stratum regions, the default design for multi-strata regions is 20 systematic parallel lines with a design angle of 0 (i.e. the lines run perpendicular to the x-axis) and using a minus sampling esge protocol. The spacing is selected at the global level to achieve a total of approximately 20 lines across all strata. In this first example, we will leave the default effort but specify design angles which will mean that our parallel lines run roughly perpendicular to the coastline. Our survey should therefore have around 20 lines which have the same spacing in both the North and South strata. The default design has a truncation distance of 1 which will rarely be applicable so we have specified it here as 2000 m. A single survey generated from this design is plotted in Figure 4.
 
+```{r setseed3, echo=FALSE}
+set.seed(937)
+```
+
 ```{r defaultdesign, fig.asp = 1, fig.width=6, fig.align='center', fig.cap="Figure 4: Survey generated from on a multi-strata default design with stratum specific design angles. "}
 default.design <- make.design(region = region,
                               design.angle = c(155, 90),
@@ -122,16 +126,17 @@ plot(region, transects, lwd = 1.5, col = 4)
 Let us now run a coverage check on this design to see if the coverage is rougly the same across the two strata. Looking at figure 6 the coverage probabilities look to be roughly the same on average for the two strata. We do however see the sharp corners of the northern stratum displaying a higher coverage due to the zigzag design being generated in a convex hull.
 
 ```{r zz_sp_covnoeval, eval=FALSE}
-design <- run.coverage(design, reps = 1000, quiet = TRUE)
+design <- run.coverage(design, reps = 1000)
 plot(design)
 ```
 
 ```{r zz_sp_cov, echo = FALSE, fig.asp = 1, fig.width=5, fig.align='center', fig.cap="Figure 6: A plot of the coverage scores for the mixed type design, based on the generation of 500 surveys from this design."}
-design <- run.coverage(design, reps = 1000, quiet = TRUE)
+obj.name <- system.file("extdata/vigresults", "design_zz_sp.robj", package = "dssd")
+load(obj.name)
 plot(design)
 ```
 
-We can also look at the design statistics from the 500 surveys generated, these are displayed below. We can see that in this multiple strata example we are now given stratum specific statistics as well as values for the study region as a whole in the Total columns. We can see from the strata areas information that the southern strata is slightly bigger than the northern strata and also looking at the covered area table we see that the covered area is larger in the southern strata. If we look at the % of region covered statistics we see that the coverage is approximately the same in both strata, having a percentage covered of 22.08% in the northern stratum and 22.66% in the southern stratum.
+We can also look at the design statistics from the 500 surveys generated, these are displayed below. We can see that in this multiple strata example we are now given stratum specific statistics as well as values for the study region as a whole in the Total columns. We can see from the strata areas information that the southern strata is slightly bigger than the northern strata and also looking at the covered area table we see that the covered area is larger in the southern strata. If we look at the % of region covered statistics we see that the coverage is approximately the same in both strata, having a percentage covered of 22.09% in the northern stratum and 22.67% in the southern stratum.
 
 ```{r zz_sp_cov3}
 design
@@ -164,7 +169,8 @@ plot(design)
 ```
 
 ```{r seg_design3, fig.asp = 1, echo = FALSE, fig.width=5, fig.align='center', fig.cap="Figure 8: Coverage scores plotted for the segmented grid design"}
-design <- run.coverage(design, reps = 1000, quiet = TRUE)
+obj.name <- system.file("extdata/vigresults", "design_seg.robj", package = "dssd")
+load(obj.name)
 plot(design)
 ```
 
@@ -201,7 +207,7 @@ region.tm <- make.region(region.name = "Tentsmuir",
                          strata.name = c("Main Area", "Morton Lochs"),
                          shape = projected.shape)
 # Plot the survey region
-plot(region.tm)
+plot(region.tm, legend.params = list(inset = c(-0.3,0)))
 #Create a coverage grid
 cover.tm <- make.coverage(region.tm, n.grid.points = 500)
 ```
