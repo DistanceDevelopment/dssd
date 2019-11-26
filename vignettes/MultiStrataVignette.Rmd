@@ -259,7 +259,7 @@ plot(region)
 
 If instead you wanted to create the 3 separate polygons as 3 distinct strata you could use the following code:
 
-```{r makeown2, fig.asp = 1, fig.width=6, fig.height = 4, fig.align='center', fig.cap="Figure 14: A single study region with multiple polygon parts."}
+```{r makeown2, fig.asp = 1, fig.width=6, fig.height = 4, fig.align='center', fig.cap="Figure 14: A single study region with multiple polygon parts.  Each are separate strata."}
 outer <- matrix(c(0,0,15,0,15,10,0,10,0,0),ncol=2, byrow=TRUE)
 hole1 <- matrix(c(2,2,2,3,3,3,3,2,2,2),ncol=2, byrow=TRUE)
 hole2 <- matrix(c(5,5,5,6,7,6,8,5.5,7,5,5,5),ncol=2, byrow=TRUE)
