@@ -14,7 +14,7 @@ vignette: >
 
 Distance Sampling techniques provide design based estimates of density and abundance for populations, the accuracy of these estimates therefore relies on valid survey design. The process of designing a survey involves deciding on the required survey effort in order to achieve a desired precision followed by deciding where exactly the effort (the lines or points) will be located within the survey region. 
 
-Before proceeding to the design stage there are a number of considerations which first need to be addressed. The first steps in conducting a survey are to clearly define the study population and the objectives of the study. In addition, the use of spatial stratification to improve precision should also be considered. We recommend consulting @Buckland:2001vm chapter 7 and @Strin2004 before using dssd to design your distance sampling survey.
+Before proceeding to the design stage there are a number of considerations which first need to be addressed. The first steps in conducting a survey are to clearly define the study population and the objectives of the study. In addition, the use of spatial stratification to improve precision should also be considered, the 'Multiple Strata in dssd' vignette details how to work with multi-strata study regions. We recommend consulting @Buckland:2001vm chapter 7 and @Strin2004 before using dssd to design your distance sampling survey.
 
 Once you have defined your population and study objectives, and estimated the required effort, dssd [@dssd-pkg] can help ensure you meet the survey design assumptions associated with distance sampling. Distance sampling assumes that the survey transects are a representative sample of the study region and are laid out at random with respect to the population. dssd achieves both these objectives by randomising the locations of the transects. Designs may be fully random with each transect being randomly located independently of other transects or a systematic design with a random start point should also meet this assumption. 
 
@@ -93,7 +93,6 @@ design <- run.coverage(design, reps = 999)
 ```{r coverage2, echo=FALSE}
 filename <- system.file("extdata/vigresults", "GSdesign.robj", package = "dssd")
 load(filename)
-
 ```
 
 We can now view the coverage scores by plotting our design object.
@@ -106,9 +105,17 @@ The plot above indicates that coverage is fairly uniform over the majority of th
 
 We can also look at the design statistics, these are shown below. 
 
-```{r designstats, fig.align='center', fig.cap="Figure 5: The coverage grid", fig.width=6, fig.height=4}
+```{r designstats2, eval = FALSE}
 design
 ```
+
+
+```{r designstats, echo = FALSE}
+ops <- options(warn = -1)
+design
+options <- ops
+```
+
 
 First you are given a summary of the design, systematically spaced transects where the spacing was to be selected to achieve around 1300 km of effort. The lines were to be placed on a design angle of 0 and a minus sampling protocol was to be used. 
 
@@ -116,22 +123,22 @@ We are then told the area of the study region, the units of the region coordinat
 
 We now move on to the summary statistics from the 999 sets of transects generated during the simulation. We are told that each survey has between 20 and 21 samplers and that the minimum and maximum covered areas are 5051 and 5311 km^2 which equate to 42.0% and 44.1% of the study area, respectively. The minimum on-effort line length is 1268 km and the maximum on-effort line length is 1348 km, with a mean value of very close to the 1300km requested. We are then given the minimum, mean, median, maximum and standard deviation values for the trackline and cyclic trackline lengths. The maximum values for these statistics should be used to ensure that any set of transects randomly generated from the design is achievable in the total effort available given any time and financial constraints of the survey. 
 
-Finally, we are given a summary of the coverage score values. If we have even coverage then we should see little variation in the coverage scores. The minimum coverage score is 0.20 and the maximum is 0.46 indicating that some small areas around the edge of the study region (as shown in Figure 4) are half as likely to be sampled as those within the main part of the study region. We are given an indication of the variability of the coverage scores in the standard deviation provided but it may also be useful to plot a histogram of the coverage scores as shown below. Again this looks fairly reassuring that the parts of the study with lower coverage do not represent a significant proportion of the study area. However, if we wanted to be really thorough we could run a simulation study using DSsim and test a worse case scenario, where density in these areas of lower coverage varied from the rest of the study region. If we were worried that this non-uniform coverage could cause significant bias we could switch to a plus sampling strategy.
+Finally, we are given a summary of the coverage score values. If we have even coverage then we should see little variation in the coverage scores. The minimum coverage score is 0.20 and the maximum is 0.46 indicating that some small areas around the edge of the study region (as shown in Figure 4) are half as likely to be sampled as those within the main part of the study region. We are given an indication of the variability of the coverage scores in the standard deviation provided but it may also be useful to plot a histogram of the coverage scores, Figure 5. Again this looks fairly reassuring that the parts of the study with lower coverage do not represent a significant proportion of the study area. However, if we wanted to be really thorough we could run a simulation study using DSsim and test a worse case scenario, where density in these areas of lower coverage varied from the rest of the study region. If we were worried that this non-uniform coverage could cause significant bias we could switch to a plus sampling strategy.
 
-```{r coverage4, fig.align='center', fig.cap="Figure 6: Histogram of coverage scores", fig.width=6, fig.height=4}
+```{r coverage4, fig.align='center', fig.cap="Figure 5: Histogram of coverage scores", fig.width=6, fig.height=4}
 hist(get.coverage(design), xlab = "Coverage Scores", main = "Histogram of Coverage Scores")
 ```
 
 ## Appendix: Trackline and Cyclic Trackline Lengths
 
-The following four figures demonstrate how the trackline lengths and cyclic trackline lengths are calculated. The red arrows indicate the trackline path, moving from the start of the first transect along its length then across off effort to the next transect and so on until the end of the last transect is reached. The cyclic trackline length is then the trackline length represented by the red arrows plus the off effort transit time required to travel from the end of the last transect back to the beginning of the first as indicated by the light blue arrow. These values are provided to help you assess the efficiency of the design by comparing on-effort line length to total trackline length and also to help you ensure that the entire survey can be completed within time and budget constraints.
+The following four figures (6 - 10) demonstrate how the trackline lengths and cyclic trackline lengths are calculated. The red arrows indicate the trackline path, moving from the start of the first transect along its length then across off effort to the next transect and so on until the end of the last transect is reached. The cyclic trackline length is then the trackline length represented by the red arrows plus the off effort transit time required to travel from the end of the last transect back to the beginning of the first as indicated by the light blue arrow. These values are provided to help you assess the efficiency of the design by comparing on-effort line length to total trackline length and also to help you ensure that the entire survey can be completed within time and budget constraints. Note that the trackline and cyclic trackline lengths for segmented designs are calculated in a very similar way to parallel line transect designs. The observer will start at the beginning of one segment and move up the line of segments before crossing to the next line of segments and so on.  
 
-![Figure 7: Illustrates the trackline and cyclic trackline lengths for random parallel line designs. The sum of the lengths of the red arrows represent the trackline length. The sum of the lengths of the red arrows and the light blue arrow represent the cyclic trackline length.](images/RandomLines.jpeg)
+![Figure 6: Illustrates the trackline and cyclic trackline lengths for random parallel line designs. The sum of the lengths of the red arrows represent the trackline length. The sum of the lengths of the red arrows and the light blue arrow represent the cyclic trackline length.](images/RandomLines.jpeg)
 
-![Figure 8: Illustrates the trackline and cyclic trackline lengths for systematic parallel line designs. The sum of the lengths of the red arrows represent the trackline length. The sum of the lengths of the red arrows and the light blue arrow represent the cyclic trackline length.](images/SystematicLines.jpeg)
+![Figure 7: Illustrates the trackline and cyclic trackline lengths for systematic parallel line designs. The sum of the lengths of the red arrows represent the trackline length. The sum of the lengths of the red arrows and the light blue arrow represent the cyclic trackline length.](images/SystematicLines.jpeg)
 
-![Figure 9: Illustrates the trackline and cyclic trackline lengths for zigzag designs. The sum of the lengths of the red arrows represent the trackline length. The sum of the lengths of the red arrows and the light blue arrow represent the cyclic trackline length.](images/ZigzagDesign.jpeg)
+![Figure 8: Illustrates the trackline and cyclic trackline lengths for zigzag designs. The sum of the lengths of the red arrows represent the trackline length. The sum of the lengths of the red arrows and the light blue arrow represent the cyclic trackline length.](images/ZigzagDesign.jpeg)
 
-![Figure 10: Illustrates the trackline and cyclic trackline lengths for complementary zigzag designs. The sum of the lengths of the red arrows represent the trackline length. The sum of the lengths of the red arrows and the light blue arrow represent the cyclic trackline length.](images/ComZigzag.jpeg)
+![Figure 9: Illustrates the trackline and cyclic trackline lengths for complementary zigzag designs. The sum of the lengths of the red arrows represent the trackline length. The sum of the lengths of the red arrows and the light blue arrow represent the cyclic trackline length.](images/ComZigzag.jpeg)
 
 ## Bibliography
