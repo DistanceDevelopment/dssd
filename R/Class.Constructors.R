@@ -9,7 +9,7 @@
 #'   number of areas in the shapefile / sf object). If not supplied "A", "B",
 #'   "C", ... will be assigned.
 #' @param units measurement units; either \code{"m"} for metres or \code{"km"} for
-#'   kilometres. If the shapefile has a projection file associated with it the unit
+#'   kilometres. If the shapefile has a projection file associated with it the units
 #'   will be taken from there.
 #' @param shape shapefile path to .shp file or an sf object of class sf, sfc or sfg.
 #' @return object of class Region
@@ -135,27 +135,32 @@ make.region <- function(region.name = "region",
 #' \strong{Line Transect Designs:}
 #' For line transect designs the user may either specify "random" (randomly
 #' placed full width lines), "systematic" (systematically placed full width lines),
-#' "eszigzag" (equally spaced zigzag lines) or "eszigzagcom" (two sets of complementary
-#' equally spaced zigzag lines). If the user specifies "random", they
-#' should provide the either the number of samplers they wish the design to generate
-#' or the line length they wish to achieve, either by strata or as a total. If the
-#' user specifies "systematic" they should specify either the number of samplers,
-#' the desired line length or the spacing between lines. The design angle for these
-#' parallel line designs refers to the angle of the lines where 0 is a vertical line
-#' and moving round in a clockwise direction. If the user specifies a zigzag design they
-#' should specify the systematic spacing value, number of samplers or line length
-#' to be used and should choose between generating the design in a minimum bounding
+#' "eszigzag" (equally spaced zigzag lines), "eszigzagcom" (two sets of complementary
+#' equally spaced zigzag lines) or "segmentedgrid" (a grid of short line transect
+#' segments). If the user specifies "random", they should provide the either the
+#' number of samplers they wish the design to generate or the line length they wish
+#' to achieve, either by strata or as a total. If the user specifies "systematic"
+#' they should specify either the number of samplers, the desired line length or
+#' the spacing between lines. The design angle for these parallel line designs
+#' refers to the angle of the lines where 0 is a vertical line and moving round
+#' in a clockwise direction. If the user specifies a zigzag design they should
+#' specify the systematic spacing value, number of samplers or line length to be
+#' used and should choose between generating the design in a minimum bounding
 #' rectangle or a convex hull. The default is minimum bounding rectangle which gives
-#' more even coverage but the convex hull is generally more efficient. The designs
-#' may be generated using plus or minus sampling protocols. Similar to the point
-#' transect designs different values may be specified for each strata for all of
-#' the above options. The design angle for the zigzag designs refers to the angle
-#' of a line which would run through the middle of each zigzag transect if the
-#' zigzags were to be generated within a rectangle. The design angle for zigzags
-#' should usually run along the longest dimension of the study region.
+#' more even coverage but the convex hull is generally more efficient. A segmented
+#' grid design may be generated using the either the number of samplers or total
+#' line length, combined with a value for segment length. Alternatively the user
+#' may specify a values for spacing and segment length. The segmented grid design
+#' also uses the segment threshold argument. All the designs may be generated
+#' using plus or minus sampling protocols. Similar to the point transect designs
+#' different values may be specified for each strata for all of the above options.
+#' The design angle for the zigzag designs refers to the angle of a line which
+#' would run through the middle of each zigzag transect if the zigzags were to
+#' be generated within a rectangle. The design angle for zigzags should usually
+#' run along the longest dimension of the study region.
 #'
-#' See the Multi Strata Vignette for more complex examples of defining designs
-#' across multiple strata.
+#' See the Getting Started Vignette and the Multiple Strata in dssd Vignette for
+#' example designs.
 #'
 #' @param region an object of class Region defining the survey region.
 #' @param transect.type character variable specifying either "line" or "point"
@@ -164,8 +169,8 @@ make.region <- function(region.name = "region",
 #' with complementary lines) or "segmentedgrid". See details for more information.
 #' @param samplers the number of samplers you wish the design to generate
 #' (note that the number actually generated may differ slightly due to the
-#' shape of the study region for some designs). This may be one value of a value
-#' per strata.
+#' shape of the study region for some designs). This may be one value or a value
+#' for each stratum.
 #' @param line.length the total line length you desire or a vector of line lengths
 #' the same length as the number of strata.
 #' @param seg.length the length of the line transect segments for a segmented grid
@@ -173,13 +178,13 @@ make.region <- function(region.name = "region",
 #' @param effort.allocation numeric values used to indicate the proportion of effort
 #' to be allocated to each strata from number of samplers or line length. If length is
 #' 0 (the default) and only a total line length or total number of samplers is supplied,
-#' effort allocated based on stratum area.
+#' effort is allocated based on stratum area.
 #' @param design.angle numeric value detailing the angle of the design. Can provide
 #' multiple values relating to strata. The use of the angle varies with design, it
 #' can be either the angle of the grid of points, the angle of lines or the design
 #' axis for the zigzag design. See details.
-#' @param spacing used by systematic designs, numeric value to define spacing
-#' between transects. Can be a vector of values with one value per strata.
+#' @param spacing used by systematic designs, numeric value(s) to define spacing
+#' between transects. Can be a vector of values with one value per stratum.
 #' @param edge.protocol character value indicating whether a "plus" sampling or
 #' "minus" sampling protocol is used. See details.
 #' @param seg.threshold this is a percentage threshold value applicable to segmented
@@ -190,7 +195,7 @@ make.region <- function(region.name = "region",
 #' value to 0.
 #' @param bounding.shape only applicable to zigzag designs. A character value saying
 #' whether the zigzag transects should be generated using a minimum bounding
-#' "rectangle" or a "convex hull".
+#' "rectangle" or a "convex hull". The default is a minimum bounding rectangle.
 #' @param truncation A single numeric value describing the longest distance at which
 #' an object may be observed. Truncation distance is constant across strata.
 #' @param coverage.grid An object of class Coverage.Grid for use when

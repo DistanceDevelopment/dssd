@@ -15,7 +15,7 @@ number of areas in the shapefile / sf object). If not supplied "A", "B",
 "C", ... will be assigned.}
 
 \item{units}{measurement units; either \code{"m"} for metres or \code{"km"} for
-kilometres. If the shapefile has a projection file associated with it the unit
+kilometres. If the shapefile has a projection file associated with it the units
 will be taken from there.}
 
 \item{shape}{shapefile path to .shp file or an sf object of class sf, sfc or sfg.}
