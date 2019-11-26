@@ -382,10 +382,10 @@ make.coverage <- function(region = make.region(),
     return(new("Coverage.Grid", list(), numeric(0)))
   }
   if(length(spacing) > 0 && length(n.grid.points) > 0){
-    if(n.grid.point != 1000){
+    if(n.grid.points != 1000){
       warning("Both spacing and n.grid.points specified, n.grid.point will be disregarded.", call. = FALSE, immediate. = TRUE)
     }
-    n.grid.point <- numeric(0)
+    n.grid.points <- numeric(0)
   }
   #find union of region - coverage.grid is over the whole
   region.union <- sf::st_union(region@region)

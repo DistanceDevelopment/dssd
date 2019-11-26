@@ -143,6 +143,16 @@ setMethod(
     }else{
       strata.names <- x@region.name
     }
+    if(!"inset" %in% names(legend.params)){
+      legend.params$inset <- c(-0.2,0)
+    }
+    if(!"cex" %in% names(legend.params)){
+      legend.params$cex <- 0.75
+    }
+    if(!"wrap" %in% names(legend.params)){
+      legend.params$wrap <- 15
+    }
+
     if(any(cols == "default")){
       if(length(x@strata.name) <= 15){
         cols <-  c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1")[1:(length(x@strata.name))]

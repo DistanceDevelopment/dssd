@@ -145,7 +145,7 @@ setMethod(
             spacing = (width * ave.line.height) / sqrt((line.length/2)^2 - width^2)
             spacing <- rep(spacing, strata.no)
             by.spacing <- rep(TRUE, strata.no)
-          }else if(all(design == "segmentedgrid" && length(unique(object@seg.length)) == 1 && length(unique(object@seg.length)) == 1)){
+          }else if(all(design == "segmentedgrid") && length(unique(object@seg.length)) == 1){
             tot.samplers <- line.length/seg.length[1]
             spacing <- rep(((sum(object@region@area)/tot.samplers)+(seg.length[1]/2)^2)^0.5 - seg.length[1]/2, strata.no)
             by.spacing <- rep(TRUE, strata.no)
