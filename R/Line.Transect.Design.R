@@ -250,8 +250,8 @@ setMethod(
     sf::st_crs(all.transects) <- region.crs
     sf::st_crs(all.polys) <- region.crs
     #Make a survey object
-    if(class(object) == "Segmented.Transect.Design"){
-      transect <- new(Class="Line.Transect", design = object@design, lines = all.transects, samp.count = sampler.count, line.length = line.length, seg.length = seg.length, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = cov.areas, cov.area.polys = all.polys, strata.area = region@area, strata.names = strata.names, trackline = trackline, cyclictrackline = cyclictrackline, seg.threshold = seg.threshold)
+    if(class(object) == "Segment.Transect.Design"){
+      transect <- new(Class="Segment.Transect", design = object@design, lines = all.transects, samp.count = sampler.count, line.length = line.length, seg.length = seg.length, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = cov.areas, cov.area.polys = all.polys, strata.area = region@area, strata.names = strata.names, trackline = trackline, cyclictrackline = cyclictrackline, seg.threshold = seg.threshold)
     }else{
       transect <- new(Class="Line.Transect", design = object@design, lines = all.transects, samp.count = sampler.count, line.length = line.length, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = cov.areas, cov.area.polys = all.polys, strata.area = region@area, strata.names = strata.names, trackline = trackline, cyclictrackline = cyclictrackline)
     }

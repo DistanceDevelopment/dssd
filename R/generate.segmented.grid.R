@@ -88,8 +88,13 @@ generate.segmented.grid <- function(design, strata.id, samplers, line.length, sp
   to.keep <- to.keep[is.line]
   #Check which lengths are over the threshold
   min.seg.length <- seg.threshold/100*seg.length
-  is.over.threshold <- which(unlist(lapply(to.keep, sf::st_length)) > min.seg.length)
+  is.over.threshold <- which(unlist(lapply(to.keep, sf::st_length)) >= min.seg.length)
   to.keep <- to.keep[is.over.threshold]
+  #Check there are some transects
+  if(length(to.keep) == 0){
+    warning(paste("No transects generated in stratum ", strata.id, sep = ""), immediate. = TRUE, call. = FALSE)
+    return(NULL)
+  }
   #Calculate covered region - do it here as easier before unrotating!
   cover.polys <- list()
   if(calc.cov.area){

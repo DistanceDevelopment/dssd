@@ -169,8 +169,12 @@ setMethod(
         }else if(length(line.length) == length(strata.names)){
           cat("Line length: ", line.length[strat], fill = T)
         }else{
-          cat("Line Length: NA", fill = T)
+          cat("Line length: NA", fill = T)
         }
+      }
+      if(object@design[strat] %in% c("segmentedgrid")){
+        cat("Segment length: ", object@seg.length[strat], fill = T)
+        cat("Segment threshold: ", object@seg.threshold[strat], fill = T)
       }
       cat("Design angle: ", object@design.angle[strat], fill = T)
       cat("Edge protocol: ", object@edge.protocol[strat], fill = T)

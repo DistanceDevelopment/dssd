@@ -122,7 +122,8 @@ setMethod(
       }
       cat("Line length:", object@line.length[strat], fill = T)
       if(object@design[strat] == "segmentedgrid"){
-        cat("Segment Length: ", object@seg.length[strat], fill = T)
+        cat("Segment length: ", object@seg.length[strat], fill = T)
+        cat("Segment threshold: ", object@seg.threshold[strat], fill = T)
       }
       cat("Trackline length:", object@trackline[strat], fill = T)
       cat("Cyclic trackline length:", object@cyclictrackline[strat], fill = T)
