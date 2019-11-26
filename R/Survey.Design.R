@@ -210,15 +210,27 @@ setMethod(
      cat("   ", underline, fill = T)
      print(design.stats[[i]])
     }
-    if(length(object@coverage.scores) > 0){
+    if(!all(is.na(object@coverage.scores))){
       title <- "Coverage Score Summary:"
       cat("\n   ", title, fill = T)
       underline <- paste(rep("", (nchar(title)-3)), collapse = "")
       cat("   ", underline, fill = T)
-      cat("Minimum coverage score: ", min(object@coverage.scores, na.rm = T), fill = T)
-      cat("Maximum coverage score: ", max(object@coverage.scores, na.rm = T), fill = T)
-      cat("Mean coverage score: ", mean(object@coverage.scores, na.rm = T), fill = T)
-      cat("Coverage score sd: ", sd(object@coverage.scores, na.rm = T), fill = T)
+      cov.scores <- array(NA, dim = c(5, (length(strata.names)+1)), dimnames = list(c("Minimum", "Mean", "Median", "Maximum", "sd"), c(strata.names, "Total")))
+      for(i in seq(along = strata.names)){
+        cov.strat <- get.coverage(object, i)
+        cov.scores["Minimum",i] <- min(cov.strat, na.rm = T)
+        cov.scores["Mean",i] <- mean(cov.strat, na.rm = T)
+        cov.scores["Median",i] <- median(cov.strat, na.rm = T)
+        cov.scores["Maximum",i] <- max(cov.strat, na.rm = T)
+        cov.scores["sd",i] <- sd(cov.strat, na.rm = T)
+      }
+      #Add in total column
+      cov.scores["Minimum","Total"] <- min(object@coverage.scores, na.rm = T)
+      cov.scores["Mean","Total"] <- mean(object@coverage.scores, na.rm = T)
+      cov.scores["Median","Total"] <- median(object@coverage.scores, na.rm = T)
+      cov.scores["Maximum","Total"] <- max(object@coverage.scores, na.rm = T)
+      cov.scores["sd","Total"] <- sd(object@coverage.scores, na.rm = T)
+      print(cov.scores)
     }
   }
 )
@@ -246,6 +258,15 @@ setMethod(
         region.coords <- sf::st_sfc(region.coords, crs = sf::st_crs(object@region@region))
         coverage.grid <- object@coverage.grid@grid
         coverage.grid$coverage.scores <- coverage.scores
+        #For backwards compatibility as the crs didn't use to be stored for the coverage grid
+        if(sf::st_crs(coverage.grid) != sf::st_crs(region.coords)){
+          if(is.na(sf::st_crs(coverage.grid))){
+            warning("Coverage grid has no coordinate reference system (crs), it may have been made in a previous verson of dssd. dssd will assume crs is the same as the region crs.", call. = FALSE)
+            sf::st_crs(coverage.grid) <- sf::st_crs(object@region@region)
+          }else{
+            stop("Coverage grid and region have different coordinate reference systems.")
+          }
+        }
         coverage.grid <- suppressWarnings(sf::st_intersection(coverage.grid, region.coords))
         coverage.scores <- coverage.grid$coverage.scores
         return(coverage.scores)
