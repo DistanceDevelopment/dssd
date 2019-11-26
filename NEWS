@@ -3,7 +3,17 @@ dssd 0.2.0
 
 New Features
 
- * Now writes transects to gpx, csv and txt file
+ * Segmented grid design
+ * Writes transects to gpx, csv and txt file
+ * Multi-strata vignette
+ * Coverage score statistics by stratum
+ * Option to run coverage simulation without progress counter output
+ * Plot and access coverage scores by stratum
+
+Bug Fixes
+
+ * Coordinate reference systems now stored in coverage and transect objects
+ * Documentation updates
 
 dssd 0.1.0
 ----------
