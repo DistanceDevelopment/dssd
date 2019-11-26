@@ -4,7 +4,7 @@
 \alias{run.coverage}
 \title{run.coverage}
 \usage{
-run.coverage(design, reps = 10, save.transects = "")
+run.coverage(design, reps = 10, save.transects = "", quiet = FALSE)
 }
 \arguments{
 \item{design}{an object which inherits from the Survey.Design
@@ -16,6 +16,8 @@ to be carried out.}
 \item{save.transects}{a directory where the shapefiles for the
 transects can be saved. The shapefile names will be S1, S2, ...
 existing files in the directory will not be overwritten.}
+
+\item{quiet}{when TRUE no progress counter is displayed.}
 }
 \description{
 This function can be used to assess the coverage of
