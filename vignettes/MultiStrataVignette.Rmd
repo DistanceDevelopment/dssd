@@ -53,7 +53,7 @@ First we need to load the dssd library.
 library(dssd)
 ```
 
-The study area can be defined in the same way as for a single stratum study region by providing a shapefile. This shapefile however will contain multiple polygon features. The first example study region used in this vignette is one of the Danish coastal strata from the SCANS II survey, Figure 2. The coastline is the study region border to the east of the region. This area had been divided into two sub strata for the purposes of maximising samplers and keeping the samplers roughly perpendicular to the coastline. For the design examples in this vignette we will treat this strata as the entire study region and the parts as separate strata. Note that the units for this shapefile are in metres so all design arguments relating to distances must also be provided in metres.
+The study area can be defined in the same way as for a single stratum study region by providing a shapefile. This shapefile however will contain multiple polygon features. The first example study region used in this vignette is one of the Danish coastal strata from the SCANS II survey, Figure 2. The coastline is the study region border along the east of the study area. The study area had been divided into two strata for the purposes of maximising samplers and keeping the samplers roughly perpendicular to the coastline. For the design examples in this vignette we will treat this strata as the entire study region and the parts as separate strata. Note that the units for this shapefile are in metres so all design arguments relating to distances must also be provided in metres.
 
 ```{r scansIIarea, fig.width=6, fig.height = 5, fig.align='center', fig.cap="Figure 2: Plot of an example study area comprising of 2 strata, a northern stratum and a southern stratum"}
 shapefile.name <- system.file("extdata", "Strata.shp", package = "dssd")
@@ -84,7 +84,7 @@ This section will demonstrate a number of example designs to show how design, de
 
 ### Default Design (with specified design angles)
 
-Similar to single stratum regions, the default design for multi-strata regions is 20 systematic parallel lines with a design angle of 0 (i.e. the lines run perpendicular to the x-axis) and using a minus sampling esge protocol. The spacing is selected at the global level to achieve a total of approximately 20 lines across all strata. In this first example, we will leave the default effort but specify design angles which will mean that our parallel lines run roughly perpendicular to the coastline. Our survey should therefore have around 20 lines which have the same spacing in both the North and South strata. The default design has a truncation distance of 1 which will rarely be applicable so we have specified it here as 2000 m. A single survey generated from this design is plotted in Figure 4.
+Similar to single stratum regions, the default design for multi-strata regions is 20 systematic parallel lines with a design angle of 0 (i.e. the lines run perpendicular to the x-axis) and using a minus sampling edge protocol. The spacing is selected at the global level to achieve a total of approximately 20 lines across all strata. In this first example, we will leave the default effort but specify design angles which will mean that our parallel lines run roughly perpendicular to the coastline. Our survey should therefore have around 20 lines which have the same spacing in both the North and South strata. The default design has a truncation distance of 1 which will rarely be applicable so we have specified it here as 2000 m. A single survey generated from this design is plotted in Figure 4.
 
 ```{r setseed3, echo=FALSE}
 set.seed(937)
@@ -123,7 +123,7 @@ transects <- generate.transects(design)
 plot(region, transects, lwd = 1.5, col = 4)
 ```
 
-Let us now run a coverage check on this design to see if the coverage is rougly the same across the two strata. Looking at figure 6 the coverage probabilities look to be roughly the same on average for the two strata. We do however see the sharp corners of the northern stratum displaying a higher coverage due to the zigzag design being generated in a convex hull.
+Let us now run a coverage check on this design to see if the coverage is roughly the same in both strata. Looking at Figure 6 the coverage probabilities look to be roughly the same on average for the two strata. We do however see the sharp corners of the northern stratum displaying a higher coverage due to the zigzag design being generated in a convex hull.
 
 ```{r zz_sp_covnoeval, eval=FALSE}
 design <- run.coverage(design, reps = 1000)
@@ -136,7 +136,7 @@ load(obj.name)
 plot(design)
 ```
 
-We can also look at the design statistics from the 500 surveys generated, these are displayed below. We can see that in this multiple strata example we are now given stratum specific statistics as well as values for the study region as a whole in the Total columns. We can see from the strata areas information that the southern strata is slightly bigger than the northern strata and also looking at the covered area table we see that the covered area is larger in the southern strata. If we look at the % of region covered statistics we see that the coverage is approximately the same in both strata, having a percentage covered of 22.09% in the northern stratum and 22.67% in the southern stratum.
+We can also look at the design statistics from the 1000 surveys generated, displayed below. We can see in this multiple strata example we are now given stratum-specific statistics as well as values for the study region as a whole in the Total columns. We can see from the strata areas information that the southern strata is slightly bigger than the northern strata and also looking at the covered area table we see that the covered area is larger in the southern strata. If we look at the % of region covered statistics we see that the coverage is approximately the same in both strata, having a percentage covered of 22.09% in the northern stratum and 22.67% in the southern stratum.
 
 ```{r zz_sp_cov3}
 design
@@ -144,7 +144,7 @@ design
 
 ### Segmented Line Design
 
-This example uses a segmented grid design to further demonstrate how design parameters can be varied across strata. In this example the spacing, segment length and segment threshold values have been specified explicitly for each strata. In the northern stratum we have segments of 5km in length separated by 10km. The segment threshold of 50 means that any segments less than 50% of the segment length (i.e. 2.5km) will be discarded. In the southern stratum we have segments of 20km separated by 12km and where we retain all segments no matter how short they are (segment threshold of 0). An example survey from this design is shown in Figure 7.
+This example uses a segmented grid design to further demonstrate how design parameters can be varied across strata. In this example the spacing, segment length and segment threshold values have been specified explicitly for each strata. In the northern stratum we have segments of 5km in length separated by 10km. The segment threshold of 50 means that any segments less than 50% of the segment length (i.e. 2.5km) will be discarded. In the southern stratum we have segments of 12km separated by 20km and where we retain all segments no matter how short they are (segment threshold of 0). An example survey from this design is shown in Figure 7.
 
 ```{r seg_design, fig.asp = 1, fig.width=6, fig.align='center', fig.cap="Figure 7: A single survey generated from a segmented grid design with different design parameters in each stratum."}
 design <- make.design(region = region,
@@ -161,7 +161,7 @@ transects <- generate.transects(design)
 plot(region, transects, lwd = 1.5, col = 4)
 ```
 
-We can then have a look at the coverage scores to see what our coverage is for the two strata. we can see that on average the coverage is higher in the northern stratum than the southern stratum, Figure 8.
+We can then have a look at the coverage scores to examine coverage in the two strata. We observe on average the coverage is higher in the northern stratum than the southern stratum because spacing was half as large in the northern stratum, Figure 8.
 
 ```{r seg_design2, eval = FALSE}
 design <- run.coverage(design, reps = 1000)
@@ -212,7 +212,7 @@ plot(region.tm, legend.params = list(inset = c(-0.3,0)))
 cover.tm <- make.coverage(region.tm, n.grid.points = 500)
 ```
 
-Point transect designs and point transect design parameters can be vaired across strata in the same way as line transect designs. Here we use a systematic grid of point in both the main and Morton Lochs strata. We specify that there should be approximately 80 samplers across both strata and that we would like 25% of the effort allocated to the Morton Lochs strata and 75% to the main strata. As the Morton Lochs strata is such a small area it could be prone to edge effects so we will use a plus sampling strategy. Figure 12 shows one possible realisation of this design.  
+Point transect designs and point transect design parameters can be varied across strata in the same way as line transect designs. Here we use a systematic grid of point in both the main and Morton Lochs strata. We specify that there should be approximately 80 samplers across both strata and that we would like 25% of the effort allocated to the Morton Lochs strata and 75% to the main strata. As the Morton Lochs strata is such a small area it could be prone to edge effects so we will use a plus sampling strategy. Figure 12 shows one possible realisation of this design.  
 
 ```{r point_eg, fig.asp = 1, fig.width=6, fig.align='center', fig.cap="Figure 12: An example multi strata point transect survey."}
 design.tm <- make.design(region = region.tm,
@@ -227,17 +227,21 @@ transects.tm <- generate.transects(design.tm)
 plot(region.tm, transects.tm, lwd = 1.5, col = 4)
 ```
 
-We can also have a look at the statistics for this particular survey. The output below shows that although we set the effort to be 80 samplers in total we have 92. Wile we see the expected number in the main stratum 75% of 80 is 60 samplers, we see more than expected in the Morton Lochs stratum, 32 rather than 20. This is down to the fact that we are using a plus sampling edge protocol in this stratum and if we check in Figure 9 above we will see that approximately 20 points actually fall inside the Morton Lochs stratum. This additional effort that is required for the plus sampling strategy is something to be aware of when costing for your survey.
+We can also have a look at the statistics for this particular survey. The output below shows that although we set the effort to be 80 samplers in total we have 92. While we see the expected number in the main stratum 75% of 80 is 60 samplers, we see more than expected in the Morton Lochs stratum, 32 rather than 20. This is down to the fact that we are using a plus sampling edge protocol in this stratum and if we check in Figure 12 above we will see that approximately 20 points actually fall inside the Morton Lochs stratum. This additional effort that is required for the plus sampling strategy is something to be aware of when costing for your survey.
+
+### something to the effect that analysis of such a design would need to take into account the intentional unequal coverage between strata
 
 ```{r point_eg2}
 transects.tm
 ```
 
+
+
 ## Appendices
 
 ### A. Manual creation of multiple strata study areas
 
-Example of creating a study region manually. This example code is taken from the help file for 'sf::st_multipolygon'. To create an sf polygon or multipolygon you first need to create 1 or more matrices of coordinates representing the outer polygons and any holes. For multipolygons the outer polygons and holes are defined by their placement within their list element, only the first matrix in a list element is an outer polygon then all the following matrices are holes. In the following example all polygons would be considered to be in the same strata.
+Example of creating a study region manually. This example code is taken from the help file for 'sf::st_multipolygon'. To create an sf polygon or multipolygon, create one or more matrices of coordinates representing the outer polygons and any holes. For multipolygons the outer polygons and holes are defined by their placement within their list element, only the first matrix in a list element is an outer polygon then all the following matrices are holes. In the following example all polygons would be considered to be in the same strata.
 
 ```{r makeown, fig.asp = 1, fig.width=6, fig.align='center', fig.cap="Figure 13: A single study region with multiple polygon parts."}
 outer <- matrix(c(0,0,15,0,15,10,0,10,0,0),ncol=2, byrow=TRUE)
