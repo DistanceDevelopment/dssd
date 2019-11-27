@@ -2,7 +2,7 @@ library(dssd)
 library(testthat)
 library(sf)
 
-context("User Input Checks")
+context("Segmented Grid Checks")
 
 test_that("Can deal with various forms of user input", {
   #Load the unprojected shapefile
