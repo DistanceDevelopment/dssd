@@ -32,7 +32,7 @@ region <- make.region()
 cover <- make.coverage(region, spacing = 50)
 plot(region, cover)
 # Create coverage grid by approx number of grid points
-cover <- make.coverage(region, n.grid.points = 100)
+cover <- make.coverage(region, n.grid.points = 1000)
 plot(region, cover)
 }
 
