@@ -229,8 +229,6 @@ plot(region.tm, transects.tm, lwd = 1.5, col = 4)
 
 We can also have a look at the statistics for this particular survey. The output below shows that although we set the effort to be 80 samplers in total we have 92. While we see the expected number in the main stratum 75% of 80 is 60 samplers, we see more than expected in the Morton Lochs stratum, 32 rather than 20. This is down to the fact that we are using a plus sampling edge protocol in this stratum and if we check in Figure 12 above we will see that approximately 20 points actually fall inside the Morton Lochs stratum. This additional effort that is required for the plus sampling strategy is something to be aware of when costing for your survey.
 
-### something to the effect that analysis of such a design would need to take into account the intentional unequal coverage between strata
-
 ```{r point_eg2}
 transects.tm
 ```
