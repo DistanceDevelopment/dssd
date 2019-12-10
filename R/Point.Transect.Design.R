@@ -70,6 +70,13 @@ setMethod(
       strata.names <- region@region.name
       strata.no <- 1
     }
+    #Store original angles
+    orig.angles <- object@design.angle
+    #Make sure these are restored incase of a crash
+    on.exit(object@design.angle <- orig.angles)
+    #Now generate random design angles
+    n <- length(which(object@design.angle == -1))
+    object@design.angle <- ifelse(object@design.angle == -1, runif(n,0,179.9999), object@design.angle)
     #Get a vector of designs
     if(length(object@design) == 1){
       object@design <- rep(object@design, strata.no)

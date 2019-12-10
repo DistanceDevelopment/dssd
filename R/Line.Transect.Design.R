@@ -78,7 +78,8 @@ setMethod(
     #Make sure these are restored incase of a crash
     on.exit(object@design.angle <- orig.angles)
     #Now generate random design angles
-    object@design.angle <- ifelse(object@design.angle == -1, runif(1,0,179.9999), object@design.angle)
+    n <- length(which(object@design.angle == -1))
+    object@design.angle <- ifelse(object@design.angle == -1, runif(n,0,179.9999), object@design.angle)
     if(length(object@design) == 1){
       design <- rep(object@design, strata.no)
     }else{
