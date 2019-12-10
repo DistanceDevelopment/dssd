@@ -48,7 +48,7 @@ check.line.design <- function(object){
       object@seg.length[index][index2] <- 1
     }
     if(any(object@seg.threshold[index] < 0) || any(object@seg.threshold[index] > 100) || any(!is.numeric(object@seg.threshold))){
-      return("Values for segment threshold for segmented grid design must be numeric values between 0 and 100.", call. = FALSE, immediate. = TRUE)
+      return("Values for segment threshold for segmented grid design must be numeric values between 0 and 100.")
     }
   }
   #Check bounding shape
