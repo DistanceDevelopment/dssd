@@ -141,4 +141,36 @@ test_that("Can deal with various forms of user input", {
   expect_equal(survey@trackline, 5350)
   expect_equal(survey@cyclictrackline, 7100)
 
+  shapefile.name <- system.file("extdata", "TrackExample.shp", package = "dssd")
+  region <- make.region(region.name = "study area",
+                        shape = shapefile.name)
+  design <- make.design(region = region,
+                        transect.type = "line",
+                        design = "segmentedgrid",
+                        spacing = 10,
+                        seg.length = 50,
+                        design.angle = 90,
+                        seg.threshold = 5,
+                        edge.protocol = "minus",
+                        truncation = .15)
+  set.seed(112)
+  transects <- generate.transects(design)
+
+  #Check cyclic trackline length
+  region <- make.region()
+  design <- make.design(region = region,
+                        transect.type = "line",
+                        design = "segmentedgrid",
+                        spacing = 200,
+                        seg.length = 250,
+                        design.angle = 90,
+                        seg.threshold = 50,
+                        edge.protocol = "minus",
+                        truncation = .15)
+  set.seed(111)
+  transects <- generate.transects(design)
+  #trackline length = 2000 + 2000 + 200 = 4200
+  expect_equal(transects@trackline, 4200)
+  expect_equal(transects@cyclictrackline, 4400)
+
 })

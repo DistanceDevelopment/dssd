@@ -13,31 +13,37 @@ calculate.trackline.segl <- function(transects){
   for(i in seq(along = samplerID)){
     index <- which(IDdf$samplerID == i)
     index <- index[c(1,length(index))]
+    global.problem.seg1 <<- transects[[index[[1]]]]
+    global.problem.seg1 <<- transects[[index[[2]]]]
+    global.index <<- index
+    global.i <<- i
     #If line x odd
     if((i %% 2) != 0){
+      #Get the first coordinates of the first segment on line x
       if(any(class(transects[[index[1]]]) == "LINESTRING")){
-        #Get the first coordinates of the first segment on line x
         coords <- c(coords, transects[[index[1]]][1,])
-        #Get the last coordinate of the last segment on line x
-        coords <- c(coords, transects[[index[2]]][nrow(transects[[index[2]]]),])
       }else if(any(class(transects[[index[1]]]) == "MULTILINESTRING")){
-        #Get the first coordinates of the first segment on line x
         coords <- c(coords, transects[[index[1]]][[1]][1,])
-        #Get the last coordinate of the last segment on line x
+      }
+      #Get the last coordinate of the last segment on line x
+      if(any(class(transects[[index[2]]]) == "LINESTRING")){
+        coords <- c(coords, transects[[index[2]]][nrow(transects[[index[2]]]),])
+      }else if(any(class(transects[[index[2]]]) == "MULTILINESTRING")){
         last.seg.part <- length(transects[[index[2]]])
         coords <- c(coords, transects[[index[2]]][[last.seg.part]][nrow(transects[[index[2]]][[last.seg.part]]),])
       }
     }else{ #If line x even
-      if(any(class(transects[[index[1]]]) == "LINESTRING")){
-        #Get the last coordinate of the last segment
+      #Get the last coordinate of the last segment
+      if(any(class(transects[[index[2]]]) == "LINESTRING")){
         coords <- c(coords, transects[[index[2]]][nrow(transects[[index[2]]]),])
-        #Get the first coordinate of the first segment
-        coords <- c(coords, transects[[index[1]]][1,])
-      }else if(any(class(transects[[index[1]]]) == "MULTILINESTRING")){
-        #Get the last coordinate of the last segment
+      }else if(any(class(transects[[index[2]]]) == "MULTILINESTRING")){
         last.seg.part <- length(transects[[index[2]]])
         coords <- c(coords, transects[[index[2]]][[last.seg.part]][nrow(transects[[index[2]]][[last.seg.part]]),])
-        #Get the first coordinate of the first segment
+      }
+      #Get the first coordinate of the first segment
+      if(any(class(transects[[index[1]]]) == "LINESTRING")){
+        coords <- c(coords, transects[[index[1]]][1,])
+      }else if(any(class(transects[[index[1]]]) == "MULTILINESTRING")){
         coords <- c(coords, transects[[index[1]]][[1]][1,])
       }
     }
