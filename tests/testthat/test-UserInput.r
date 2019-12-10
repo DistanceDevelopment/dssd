@@ -120,6 +120,28 @@ test_that("Can deal with various forms of user input", {
                                        truncation = 1),
                  "Design angle argument has a different number of values than there are strata, only using the 1st value.")
 
+  #Check point transect works when design is systematic and only spacing provided
+  design <- make.design(region, transect.type = "point",
+                        design = c("systematic"),
+                        #samplers = 30,
+                        spacing = 2.5,
+                        effort.allocation = c(0.25,0.25,0.5),
+                        edge.protocol = c("minus"),
+                        design.angle = -1,
+                        truncation = 1)
+  temp <- generate.transects(design)
+
+  #Check point transect works when design is mix of random and systematic and design angle is -1
+  design <- make.design(region, transect.type = "point",
+                        design = c("systematic", "random", "systematic"),
+                        samplers = c(NA,20,NA),
+                        spacing = 2.5,
+                        effort.allocation = c(0.25,0.25,0.5),
+                        edge.protocol = c("minus"),
+                        design.angle = c(-1,NA,-1),
+                        truncation = 1)
+  temp <- generate.transects(design)
+
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   #LINE TRANSECT DESIGNS
@@ -177,6 +199,25 @@ test_that("Can deal with various forms of user input", {
                         design.angle = 45,
                         truncation = 1)
   expect_equal(design@effort.allocation, c(0.25,0.25,0.5))
+
+  expect_error(design <- make.design(region, transect.type = "line",
+                        design = c("systematic", "random", "segmentedgrid"),
+                        spacing = c(1,NA,1),
+                        samplers = c(NA,30,NA),
+                        edge.protocol = c("minus"),
+                        design.angle = c(-1,-1,45),
+                        truncation = 1), "Segment lengths must be provided for all segmented line transect designs.")
+
+
+  design <- make.design(region, transect.type = "line",
+                        design = c("systematic", "random", "segmentedgrid"),
+                        spacing = c(2,NA,2),
+                        samplers = c(NA,10,NA),
+                        seg.length = c(NA,NA,1),
+                        edge.protocol = c("minus"),
+                        design.angle = -1,
+                        truncation = 1)
+  temp <- generate.transects(design)
 
   expect_error(design <- make.design(region, transect.type = "line",
                                      design = "systematic",
