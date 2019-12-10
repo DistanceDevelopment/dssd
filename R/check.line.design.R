@@ -71,8 +71,10 @@ check.line.design <- function(object){
   }
   if(any(object@design.angle < 0) || any(object@design.angle >= 180)){
     for(i in seq(along = object@design.angle)){
-      if(((object@design.angle[i] < 0) || any(object@design.angle[i] >= 180)) && object@design[i] != "segmented grid" && object@design.angle[i] != -1){
-        return("The design angle should be >= 0 and < 180 degrees or -1 for random design angle (currently random angle only applicable to segmented grid design).")
+      if(!is.na(object@design.angle[i])){
+        if(((object@design.angle[i] < 0) || any(object@design.angle[i] >= 180)) && object@design.angle[i] != -1){
+          return("The design angle should be >= 0 and < 180 degrees or -1 for random design angle.")
+        }
       }
     }
   }

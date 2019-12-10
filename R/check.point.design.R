@@ -41,7 +41,13 @@ check.point.design <- function(object){
     object@design.angle <- rep(object@design.angle[1], strata.count)
   }
   if(any(object@design.angle < 0) || any(object@design.angle >= 180)){
-    return("The design angle should be >= 0 and < 180 degrees.")
+    for(i in seq(along = object@design.angle)){
+      if(!is.na(object@design.angle[i])){
+        if(((object@design.angle[i] < 0) || any(object@design.angle[i] >= 180)) && object@design.angle[i] != -1){
+          return("The design angle should be >= 0 and < 180 degrees or -1 for random design angle.")
+        }
+      }
+    }
   }
   #DESIGN
   if(length(object@design) == 1){
