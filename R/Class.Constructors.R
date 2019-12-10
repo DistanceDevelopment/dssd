@@ -182,7 +182,8 @@ make.region <- function(region.name = "region",
 #' @param design.angle numeric value detailing the angle of the design. Can provide
 #' multiple values relating to strata. The use of the angle varies with design, it
 #' can be either the angle of the grid of points, the angle of lines or the design
-#' axis for the zigzag design. See details.
+#' axis for the zigzag design. See details. In addition, a value of -1 will cause a
+#' random design angle to be generated.
 #' @param spacing used by systematic designs, numeric value(s) to define spacing
 #' between transects. Can be a vector of values with one value per stratum.
 #' @param edge.protocol character value indicating whether a "plus" sampling or
