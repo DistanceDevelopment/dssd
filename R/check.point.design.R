@@ -66,9 +66,13 @@ check.point.design <- function(object){
   spacing.for.all = FALSE
   if(length(object@spacing) == 1){
     object@spacing <- rep(object@spacing, strata.count)
-    spacing.for.all = TRUE
-    if(length(object@samplers) > 0){
-      object@samplers <- numeric(0)
+    if(all(object@design == "systematic")){
+      spacing.for.all = TRUE
+      if(length(object@samplers) > 0){
+        object@samplers <- numeric(0)
+      }
+    }else{
+      spacing.for.all = FALSE
     }
   }else if(length(object@spacing) > 1 && length(object@spacing) != strata.count){
     spacing.for.all = FALSE
@@ -111,11 +115,11 @@ check.point.design <- function(object){
     warning("Samplers argument being ignored as spacings were provided for all strata.", call. = FALSE, immediate. = TRUE)
     object@samplers <- numeric(0)
   }
-  if(any(object@design == "random") && length(samplers) > 1){
+  if(any(object@design == "random") && length(object@samplers) > 1){
     index <- which(object@design == "random")
     samplers <- object@samplers[index]
     if(any(is.na(samplers))){
-      return("The legnth of the samplers argument is > 1 but a value has not been provided for every random design.")
+      return("The length of the samplers argument is > 1 but a value has not been provided for every random design.")
     }
   }
   #if there is a mixture of designs / design options

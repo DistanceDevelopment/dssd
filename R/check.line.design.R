@@ -167,5 +167,12 @@ check.line.design <- function(object){
       }
     }
   }
+  #Check if segment length has been omitted for any segmented designs
+  if(any(object@design == "segmentedgrid")){
+    index <- which(object@design == "segmentedgrid")
+    if(any(is.na(object@seg.length[index]))){
+      return("Segment lengths must be provided for all segmented line transect designs.")
+    }
+  }
   return(object)
 }
