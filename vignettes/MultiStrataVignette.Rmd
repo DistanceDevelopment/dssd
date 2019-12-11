@@ -44,7 +44,7 @@ This survey design package assists with equal effort allocation across strata by
 
 ### Unequal Effort Designs
 
-If you wish to implement an unequal effort design, then this can be achieved in a number of ways inside dssd. The user can chose to explicitly specify the number of samplers, line length or other design parameter values for each stratum individually. Alternatively, the user can specify a single value for number of samplers or line length and allocate the effort to each stratum based on proportions. If the effort allocation argument is not supplied then the default is that effort is allocated based on stratum area giving approximately equal effort. Alternatively, the user can instead specify the effort allocation argument as a vector of proportions with one value per stratum which sum to 1. Effort will then be allocated to strata based on these proportions.  
+If you wish to implement an unequal effort design, then this can be achieved in a number of ways inside dssd. The user can chose to explicitly specify the number of samplers, line length or other design parameter values for each stratum individually. Alternatively, the user can specify a single value for number of samplers or line length and allocate the effort to each stratum based on proportions. If the effort allocation argument is not supplied then the default is that effort is allocated based on stratum area giving approximately equal coverage between strata. Alternatively, the user can instead specify the effort allocation argument as a vector of proportions with one value per stratum which sum to 1. Effort will then be allocated to strata based on these proportions.  
 
 ## Defining the Study Area
 
