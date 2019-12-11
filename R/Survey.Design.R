@@ -77,9 +77,11 @@ setClass(Class = "Survey.Design",
 #'
 #' @param x object of class Survey.Design
 #' @param y not used
-#' @param ... other general plot parameters, strata.id for specifying the numeric index
-#' of a single strata to plot, subtitle for adding a subtitle to the plot and col.breaks
-#' for specifying the number of colour break points in the colour scale.
+#' @param strata.id a numeric value indicating the index of the strata you wish to plot.
+#' @param col.breaks the number of break point in the colour scale representing the
+#' coverage scores.
+#' @param subtitle a subtitle for the plot.
+#' @param ... not implemented for this class.
 #' @rdname plot.Survey.Design-methods
 #' @exportMethod plot
 #' @importFrom plot3D colkey
@@ -88,16 +90,14 @@ setClass(Class = "Survey.Design",
 setMethod(
   f="plot",
   signature="Survey.Design",
-  definition=function(x, y, ...){
+  definition=function(x, y, strata.id = numeric(0), col.breaks = 10, subtitle = "", ...){
     #Check coverage has been run
     if(all(is.na(x@coverage.scores))){
       stop("Design has not been run yet, all coverage scores are NA.", call. = FALSE)
     }
     # If main is not supplied then take it from the object
     additional.args <- list(...)
-    col.breaks <- ifelse("col.breaks" %in% names(additional.args), additional.args$col.breaks, 10)
-    subtitle <- ifelse("subtitle" %in% names(additional.args), additional.args$subtitle, "")
-    strata.id <- ifelse("strata.id" %in% names(additional.args), additional.args$strata.id, "all")
+    strata.id <- ifelse(length(strata.id) == 0, "all", strata.id)
     # Get shape column names
     sf.column.region <- attr(x@region@region, "sf_column")
     sf.column.grid <- attr(x@coverage.grid@grid, "sf_column")

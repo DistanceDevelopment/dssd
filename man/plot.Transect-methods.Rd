@@ -11,14 +11,14 @@
 \S4method{plot}{Point.Transect,ANY}(x, y, ...)
 }
 \arguments{
-\item{x}{object of class Transect}
+\item{x}{object of class transect}
 
 \item{y}{not used}
 
-\item{...}{other general plot parameters}
+\item{...}{Additional arguments: add (TRUE/FALSE) whether to add to existing
+plot, col colour, lwd line width (for line transects) and pch point symbols
+(for point transects).}
 }
 \description{
-Plots an S4 object of class 'Transect'
-
 Plots an S4 object of class 'Transect'
 }

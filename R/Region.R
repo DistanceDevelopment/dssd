@@ -119,19 +119,18 @@ setMethod(
 #' @param x object of class Region or inheriting from Survey
 #' @param y optionally a Survey object to plot with the Region
 #' @param main the main title for the plot
-#' @param cols colours for the strata
+#' @param region.col colours for the strata
 #' @param legend.params a list of parameters which affect the location and appearance
 #' of the legend. 'inset' affects the location of the legend, 'cex' affects the text
 #' size and 'wrap' is the number of character in a line before the text is wrapped on
 #' to the next line.
-#' @param ... other general plot parameters
 #' @rdname plot.Region-methods
 #' @importFrom graphics legend mtext
 #' @exportMethod plot
 setMethod(
   f="plot",
   signature="Region",
-  definition=function(x, y, main = "", cols = "default", legend.params = list(inset = c(-0.2,0), cex = 0.75, wrap = 15), ...){
+  definition=function(x, y, main = "", region.col = "default", legend.params = list(inset = c(-0.2,0), cex = 0.75, wrap = 15), ...){
     # If main is not supplied then take it from the object
     if(main == ""){
       main <- x@region.name
@@ -152,7 +151,8 @@ setMethod(
     if(!"wrap" %in% names(legend.params)){
       legend.params$wrap <- 15
     }
-
+    additional.args <- list(...)
+    cols <- ifelse("cols" %in% names(additional.args), additional.args$cols, region.col)
     if(any(cols == "default")){
       if(length(x@strata.name) <= 15){
         cols <-  c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1")[1:(length(x@strata.name))]
@@ -205,20 +205,21 @@ setMethod(
 #' Plot
 #'
 #' Plots an S4 object of class 'Region'
-#' @param region.col fill colours for strata
+#' @param subtitle a subtitle for the plot
+#' @param covered.area boolean value saying whether the covered area should be plotted.
+#' @param ... Additional plot arguments passed to the plot method for the y argument.
 #' @rdname plot.Region-methods
 #' @exportMethod plot
 #' @importFrom graphics mtext
 setMethod(
   f="plot",
   signature=c("Region", "Transect"),
-  definition=function(x, y, main = "", region.col = "default", ...){
+  definition=function(x, y, main = "", region.col = "default", subtitle = "", covered.area = FALSE, ...){
     # If main is not supplied then take it from the object
     if(main == ""){
       main <- x@region.name
     }
     additional.args <- list(...)
-    subtitle <- ifelse("subtitle" %in% names(additional.args), additional.args$subtitle, "")
     if(region.col == "default"){
       if(length(x@strata.name) <= 15){
         region.col <-  c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1")[1:(length(x@strata.name))]
@@ -226,9 +227,7 @@ setMethod(
         region.col <-  rep(c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1"),3)[1:(length(x@strata.name))]
       }
     }
-    #Check additional attributes
-    add.attrs <- list(...)
-    cov.area <- ifelse("covered.area" %in% names(add.attrs), add.attrs$covered.area, FALSE)
+    cov.area <- covered.area
     region <- x@region
     sf.column <- attr(region, "sf_column")
     #Set up bounding box for samplers (necessary when plus sampling used and extent of samplers is greater than the region)
@@ -264,13 +263,11 @@ setMethod(
 setMethod(
   f="plot",
   signature=c("Region", "Coverage.Grid"),
-  definition=function(x, y, main = "", region.col = "default", ...){
+  definition=function(x, y, main = "", region.col = "default", subtitle = "", ...){
     # If main is not supplied then take it from the object
     if(main == ""){
       main <- x@region.name
     }
-    additional.args <- list(...)
-    subtitle <- ifelse("subtitle" %in% names(additional.args), additional.args$subtitle, "")
     if(region.col == "default"){
       if(length(x@strata.name) <= 15){
         region.col <-  c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1")[1:(length(x@strata.name))]
@@ -278,9 +275,6 @@ setMethod(
         region.col <-  rep(c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1"),3)[1:(length(x@strata.name))]
       }
     }
-    #Check additional attributes
-    add.attrs <- list(...)
-    cov.area <- ifelse("covered.area" %in% names(add.attrs), add.attrs$covered.area, FALSE)
     region <- x@region
     sf.column <- attr(region, "sf_column")
     #Set up bounding box for samplers (necessary when plus sampling used and extent of samplers is greater than the region)

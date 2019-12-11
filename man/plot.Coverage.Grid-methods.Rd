@@ -12,7 +12,8 @@
 
 \item{y}{not used}
 
-\item{...}{other general plot parameters}
+\item{...}{other general plot parameters including: add as TRUE / FALSE, col as
+a colour for grid points and pch as grid point symbols.}
 }
 \description{
 Plots an S4 object of class 'Coverage.Grid'

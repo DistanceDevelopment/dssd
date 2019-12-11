@@ -51,13 +51,6 @@ setValidity("Point.Transect",
 
 # GENERIC METHODS DEFINITIONS --------------------------------------------
 
-#' Plot
-#'
-#' Plots an S4 object of class 'Transect'
-#'
-#' @param x object of class Transect
-#' @param y not used
-#' @param ... other general plot parameters
 #' @rdname plot.Transect-methods
 #' @exportMethod plot
 setMethod(

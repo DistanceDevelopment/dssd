@@ -5,16 +5,22 @@
 \alias{plot,Survey.Design,ANY-method}
 \title{Plot}
 \usage{
-\S4method{plot}{Survey.Design,ANY}(x, y, ...)
+\S4method{plot}{Survey.Design,ANY}(x, y, strata.id = numeric(0),
+  col.breaks = 10, subtitle = "", ...)
 }
 \arguments{
 \item{x}{object of class Survey.Design}
 
 \item{y}{not used}
 
-\item{...}{other general plot parameters, strata.id for specifying the numeric index
-of a single strata to plot, subtitle for adding a subtitle to the plot and col.breaks
-for specifying the number of colour break points in the colour scale.}
+\item{strata.id}{a numeric value indicating the index of the strata you wish to plot.}
+
+\item{col.breaks}{the number of break point in the colour scale representing the
+coverage scores.}
+
+\item{subtitle}{a subtitle for the plot.}
+
+\item{...}{not implemented for this class.}
 }
 \description{
 Plots the coverage scores contained within an object of class 'Survey.Design' and

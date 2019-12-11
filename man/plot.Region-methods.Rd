@@ -7,14 +7,14 @@
 \alias{plot,Region,Coverage.Grid-method}
 \title{Plot}
 \usage{
-\S4method{plot}{Region,ANY}(x, y, main = "", cols = "default",
+\S4method{plot}{Region,ANY}(x, y, main = "", region.col = "default",
   legend.params = list(inset = c(-0.2, 0), cex = 0.75, wrap = 15), ...)
 
 \S4method{plot}{Region,Transect}(x, y, main = "",
-  region.col = "default", ...)
+  region.col = "default", subtitle = "", covered.area = FALSE, ...)
 
 \S4method{plot}{Region,Coverage.Grid}(x, y, main = "",
-  region.col = "default", ...)
+  region.col = "default", subtitle = "", ...)
 }
 \arguments{
 \item{x}{object of class Region or inheriting from Survey}
@@ -23,16 +23,18 @@
 
 \item{main}{the main title for the plot}
 
-\item{cols}{colours for the strata}
+\item{region.col}{colours for the strata}
 
 \item{legend.params}{a list of parameters which affect the location and appearance
 of the legend. 'inset' affects the location of the legend, 'cex' affects the text
 size and 'wrap' is the number of character in a line before the text is wrapped on
 to the next line.}
 
-\item{...}{other general plot parameters}
+\item{...}{Additional plot arguments passed to the plot method for the y argument.}
 
-\item{region.col}{fill colours for strata}
+\item{subtitle}{a subtitle for the plot}
+
+\item{covered.area}{boolean value saying whether the covered area should be plotted.}
 }
 \description{
 Plots an S4 object of class 'Region'

@@ -53,7 +53,8 @@ setValidity("Coverage.Grid",
 #'
 #' @param x object of class Coverage.Grid
 #' @param y not used
-#' @param ... other general plot parameters
+#' @param ... other general plot parameters including: add as TRUE / FALSE, col as
+#' a colour for grid points and pch as grid point symbols.
 #' @rdname plot.Coverage.Grid-methods
 #' @exportMethod plot
 setMethod(

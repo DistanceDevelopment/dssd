@@ -66,6 +66,11 @@ setValidity("Line.Transect",
 #'
 #' Plots an S4 object of class 'Transect'
 #'
+#' @param x object of class transect
+#' @param y not used
+#' @param ... Additional arguments: add (TRUE/FALSE) whether to add to existing
+#' plot, col colour, lwd line width (for line transects) and pch point symbols
+#' (for point transects).
 #' @rdname plot.Transect-methods
 #' @exportMethod plot
 setMethod(
