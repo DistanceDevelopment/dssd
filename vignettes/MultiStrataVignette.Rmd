@@ -92,7 +92,11 @@ set.seed(937)
 
 ```{r defaultdesign, fig.asp = 1, fig.width=6, fig.align='center', fig.cap="Figure 4: Survey generated from on a multi-strata default design with stratum specific design angles. "}
 default.design <- make.design(region = region,
+                              transect.type = "line",
+                              design = "systematic",
+                              samplers = 20,
                               design.angle = c(155, 90),
+                              edge.protocol = "minus",
                               truncation = 2000, 
                               coverage.grid = cover)
 transects <- generate.transects(default.design)
