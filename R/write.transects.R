@@ -32,6 +32,12 @@
 #' project the coordinates back into latitude and longitude.
 #'
 #' @examples
+#' # Note that for CRAN testing purposes all files written in example code must
+#' # be written to a temporary directory, to view this location type tempdir().
+#' # It is however advised that you replace the tempdir() commands in the code
+#' # below to a more easily accessible directory to which the files will be
+#' # written.
+#'
 #' # Make the default design in the default study area
 #' design <- make.design()
 #' transects <- generate.transects(design)
