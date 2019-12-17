@@ -19,6 +19,10 @@ existing files in the directory will not be overwritten.}
 
 \item{quiet}{when TRUE no progress counter is displayed.}
 }
+\value{
+this function returns the survey design object passed in
+and it will now include the coverage and design statistics.
+}
 \description{
 This function can be used to assess the coverage of
 a design and also assess design statistics, such as how the number
@@ -35,4 +39,10 @@ time it records the relevant statistics for the design. While 100
 repetitions may be sufficient to get an idea of design statistics
 1000 or even more repetitions may be needed to gain a good
 representation of the coverage scores across the study region.
+}
+\details{
+See ?make.design for example code.
+}
+\seealso{
+\link{make.design}
 }

@@ -162,6 +162,9 @@ design <- run.coverage(design, reps = 500)
 plot(design)
 # Display the design statistics
 design
+#Extract coverage scores
+coverage.scores <- get.coverage(design)
+hist(coverage.scores)
 
 #Multi-strata line transect example
 shapefile.name <- system.file("extdata", "AreaRProjStrata.shp", package = "dssd")
@@ -195,6 +198,9 @@ design <- run.coverage(design, reps = 500)
 plot(design)
 # Display the design statistics
 design
+#Extract coverage scores for the first strata
+coverage.scores <- get.coverage(design, strata.id = 1)
+summary(coverage.scores)
 }
 
 # Fast running example for CRAN testing purposes

@@ -14,6 +14,7 @@
 #' repetitions may be sufficient to get an idea of design statistics
 #' 1000 or even more repetitions may be needed to gain a good
 #' representation of the coverage scores across the study region.
+#' @details See ?make.design for example code.
 #' @param design an object which inherits from the Survey.Design
 #' class.
 #' @param reps the number of times you wish the coverage simulation
@@ -22,6 +23,9 @@
 #' transects can be saved. The shapefile names will be S1, S2, ...
 #' existing files in the directory will not be overwritten.
 #' @param quiet when TRUE no progress counter is displayed.
+#' @return this function returns the survey design object passed in
+#' and it will now include the coverage and design statistics.
+#' @seealso \link{make.design}
 #' @export
 #' @importFrom stats median sd
 run.coverage <- function(design, reps = 10, save.transects = "", quiet = FALSE){

@@ -21,3 +21,9 @@ a vector of coverage scores
 \description{
 Obtains the coverage scores from the survey design object.
 }
+\details{
+See ?make.design for example code
+}
+\seealso{
+\link{make.design}
+}

@@ -55,9 +55,11 @@ setGeneric("generate.transects", function(object, quiet = FALSE, ...){standardGe
 #'
 #' Obtains the coverage scores from the survey design object.
 #'
+#' @details See ?make.design for example code
 #' @param object an object which inherits from class Survey.Design
 #' @param strata.id either "all" or a numeric value indicating the strata index.
 #' @return a vector of coverage scores
+#' @seealso \link{make.design}
 #' @export
 #' @rdname get.coverage-methods
 setGeneric("get.coverage", function(object, strata.id = "all"){standardGeneric ("get.coverage")})
