@@ -13,10 +13,6 @@ calculate.trackline.segl <- function(transects){
   for(i in seq(along = samplerID)){
     index <- which(IDdf$samplerID == i)
     index <- index[c(1,length(index))]
-    global.problem.seg1 <<- transects[[index[[1]]]]
-    global.problem.seg1 <<- transects[[index[[2]]]]
-    global.index <<- index
-    global.i <<- i
     #If line x odd
     if((i %% 2) != 0){
       #Get the first coordinates of the first segment on line x
