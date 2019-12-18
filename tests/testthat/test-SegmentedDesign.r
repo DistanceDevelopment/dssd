@@ -167,8 +167,9 @@ test_that("Can deal with various forms of user input", {
                         seg.threshold = 50,
                         edge.protocol = "minus",
                         truncation = .15)
-  set.seed(111)
+  set.seed(126)
   transects <- generate.transects(design)
+  #plot(region, transects)
   #trackline length = 2000 + 2000 + 200 = 4200
   expect_equal(transects@trackline, 4200)
   expect_equal(transects@cyclictrackline, 4400)
