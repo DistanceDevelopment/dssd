@@ -44,7 +44,9 @@
 #'  Gives a summary of the design description, stratum areas and coverage scores
 #'  if the coverage simulation has been run on the design. The coverage score summary
 #'  details the minimum, maximum, mean and medium coverage scores across the study
-#'  region.}
+#'  region. Also gives summaries of other design measures such as the number of
+#'  samplers, line length, trackline length, cyclic trackline length, covered area
+#'  and % of region covered.}
 #' }
 #' @keywords classes
 #' @export
