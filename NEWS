@@ -9,6 +9,7 @@ New Features
  * Coverage score statistics by stratum
  * Option to run coverage simulation without progress counter output
  * Plot and access coverage scores by stratum
+ * Use -1 to set a randomly generated design angle
  * Updated Documentation
 
 Bug Fixes
