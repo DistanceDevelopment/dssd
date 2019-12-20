@@ -9,12 +9,12 @@ New Features
  * Coverage score statistics by stratum
  * Option to run coverage simulation without progress counter output
  * Plot and access coverage scores by stratum
- * Updated documentation
+ * Updated Documentation
 
 Bug Fixes
 
  * Coordinate reference systems now stored in coverage and transect objects
- * Documentation updates
+ * Fixed invalid shapefiles: AreaRStrata and AreaRProjStrata
 
 dssd 0.1.0
 ----------
