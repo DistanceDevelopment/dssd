@@ -46,7 +46,7 @@
 #'  details the minimum, maximum, mean and medium coverage scores across the study
 #'  region. Also gives summaries of other design measures such as the number of
 #'  samplers, line length, trackline length, cyclic trackline length, covered area
-#'  and % of region covered.}
+#'  and percentage of region covered.}
 #' }
 #' @keywords classes
 #' @export
