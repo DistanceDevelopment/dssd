@@ -19,6 +19,7 @@ NULL
 #' @return an object of class Transect
 #' @author L Marshall
 #' @export
+#' @seealso \link{write.transects}
 #' @rdname generate.transects-methods
 #' @examples
 #' #Point transect example

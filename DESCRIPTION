@@ -50,6 +50,7 @@ Collate:
     'check.line.design.R'
     'check.point.design.R'
     'check.shape.R'
+    'dssd-package.R'
     'generate.eqspace.zigzags.R'
     'generate.parallel.lines.R'
     'generate.random.points.R'

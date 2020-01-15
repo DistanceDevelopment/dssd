@@ -67,6 +67,9 @@ design <- make.design(region = region,
 survey <- generate.transects(design)
 plot(region, survey, covered.area = TRUE)
 }
+\seealso{
+\link{write.transects}
+}
 \author{
 L Marshall
 }
