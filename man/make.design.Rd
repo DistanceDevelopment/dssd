@@ -4,13 +4,22 @@
 \alias{make.design}
 \title{Creates a Survey.Design object}
 \usage{
-make.design(region = make.region(), transect.type = "line",
-  design = "systematic", samplers = numeric(0),
-  line.length = numeric(0), seg.length = numeric(0),
-  effort.allocation = numeric(0), design.angle = 0,
-  spacing = numeric(0), edge.protocol = "minus",
-  seg.threshold = numeric(0), bounding.shape = "rectangle",
-  truncation = 1, coverage.grid = NULL)
+make.design(
+  region = make.region(),
+  transect.type = "line",
+  design = "systematic",
+  samplers = numeric(0),
+  line.length = numeric(0),
+  seg.length = numeric(0),
+  effort.allocation = numeric(0),
+  design.angle = 0,
+  spacing = numeric(0),
+  edge.protocol = "minus",
+  seg.threshold = numeric(0),
+  bounding.shape = "rectangle",
+  truncation = 1,
+  coverage.grid = NULL
+)
 }
 \arguments{
 \item{region}{an object of class Region defining the survey region.}

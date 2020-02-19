@@ -4,9 +4,14 @@
 \alias{write.transects}
 \title{Writes transects to file}
 \usage{
-write.transects(object, dsn, layer = character(0),
-  dataset.options = character(0), overwrite = FALSE,
-  proj4string = character(0))
+write.transects(
+  object,
+  dsn,
+  layer = character(0),
+  dataset.options = character(0),
+  overwrite = FALSE,
+  proj4string = character(0)
+)
 }
 \arguments{
 \item{object}{an object inheriting from class Transect or an sf spatial

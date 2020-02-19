@@ -135,7 +135,6 @@ setMethod(
 #' Summarises and displays an S4 object of class 'Survey.Design'
 #'
 #' @param object an object which inherits from the Survey.Design class
-#' @param ... other general plot parameters
 #' @rdname show.Survey.Design-methods
 #' @exportMethod show
 setMethod(

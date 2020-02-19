@@ -4,8 +4,12 @@
 \alias{make.region}
 \title{Creates a Region object}
 \usage{
-make.region(region.name = "region", strata.name = character(0),
-  units = character(0), shape = NULL)
+make.region(
+  region.name = "region",
+  strata.name = character(0),
+  units = character(0),
+  shape = NULL
+)
 }
 \arguments{
 \item{region.name}{the region name}
