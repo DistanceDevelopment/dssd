@@ -3,7 +3,6 @@ Imports:
     sf,
     plot3D,
     rgdal,
-    lwgeom,
     methods
 Suggests: knitr,
           rmarkdown,
@@ -12,7 +11,7 @@ Suggests: knitr,
 VignetteBuilder: knitr
 Type: Package
 Title: Distance Sampling Survey Design
-Version: 0.2.0
+Version: 0.2.1
 Author: Laura Marshall <lhm@st-andrews.ac.uk>
 Maintainer: Laura Marshall <lhm@st-andrews.ac.uk>
 Description: Creates survey designs for distance sampling surveys. These
@@ -28,7 +27,7 @@ BugReports: https://github.com/DistanceDevelopment/dssd/issues
 License: GPL (>=2)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 Collate: 
     'Class.Constructors.R'
     'Coverage.Grid.R'
