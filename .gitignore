@@ -11,3 +11,4 @@ inst/extdata/.DS_Store
 .httr-oauth
 inst/.DS_Store
 inst/extdata/.DS_Store
+*.Rproj
