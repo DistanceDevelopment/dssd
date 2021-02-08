@@ -30,6 +30,7 @@ NULL
 #' }
 #' @keywords classes
 #' @seealso \code{\link{make.region}}
+#' @export
 setClass(Class = "Region",
          representation(region.name = "character",
                         strata.name = "character",
