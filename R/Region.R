@@ -121,87 +121,69 @@ setMethod(
 #' @param y optionally a Survey object to plot with the Region
 #' @param main the main title for the plot
 #' @param region.col colours for the strata
-#' @param legend.params a list of parameters which affect the location and appearance
-#' of the legend. 'inset' affects the location of the legend, 'cex' affects the text
-#' size and 'wrap' is the number of character in a line before the text is wrapped on
-#' to the next line.
+#' @param strata the strata name or number to be plotted. By default
+#' all strata will be plotted.
+#' @param scale used to scale the x and y values in the plot (warning may give
+#' unstable results when a projection is defined for the study area!)
+#' @param line.col sets the line colour for the shapefile
+#' @param legend.params depricated since implementation of ggplot2
 #' @rdname plot.Region-methods
-#' @importFrom graphics legend mtext
+#' @importFrom ggplot2 ggplot geom_sf ggtitle aes theme_set theme_bw scale_fill_manual
 #' @exportMethod plot
 setMethod(
   f="plot",
   signature="Region",
-  definition=function(x, y, main = "", region.col = "default", legend.params = list(inset = c(-0.2,0), cex = 0.75, wrap = 15), ...){
-    # If main is not supplied then take it from the object
-    if(main == ""){
-      main <- x@region.name
+  definition=function(x, y, main = "", region.col = "default", strata = "all", scale = 1, line.col = gray(.2), legend.params = list()){
+    # Warn of depreications
+    if(length(legend.params) > 0){
+      warning("legend.params argument is deprecated since version 0.2.3", immediate. = TRUE, call. = FALSE)
     }
-    additional.args <- list(...)
-    subtitle <- ifelse("subtitle" %in% names(additional.args), additional.args$subtitle, "")
-    if(length(x@strata.name) > 0){
-      strata.names <- x@strata.name
+    # Tidy up space to keep ggplot happy
+    suppressWarnings(invisible(gc()))
+    # Check strata selection
+    # Extract strata names
+    strata.names <- x@strata.name
+    # Extract plot data
+    if(is.character(strata)){
+      if(!strata %in% c(x@strata.name, "all")){
+        stop("You have provided an unrecognised strata name.", call. = FALSE)
+      }
+    }
+    # Extract region data
+    sf.region <- x@region
+    sf.column <- attr(sf.region, "sf_column")
+    # Scaling plot
+    sf.region[, sf.column] <- sf.region[, sf.column]*scale
+    # Extract strata data and set title
+    if(strata != "all"){
+      sf.region <- sf.region[sf.region$strata == strata,]
+      title <- strata
     }else{
-      strata.names <- x@region.name
+      title <- x@region.name
     }
-    if(!"inset" %in% names(legend.params)){
-      legend.params$inset <- c(-0.2,0)
-    }
-    if(!"cex" %in% names(legend.params)){
-      legend.params$cex <- 0.75
-    }
-    if(!"wrap" %in% names(legend.params)){
-      legend.params$wrap <- 15
-    }
+    # Get plotting colours
     additional.args <- list(...)
     cols <- ifelse("cols" %in% names(additional.args), additional.args$cols, region.col)
     if(any(cols == "default")){
       if(length(x@strata.name) <= 15){
         cols <-  c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1")[1:(length(x@strata.name))]
       }else{
-        cols <-  rep(c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1"),3)[1:(length(x@strata.name))]
+        cols <-  rep(c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1"),ceiling(length(x@strata.name)/15))[1:(length(x@strata.name))]
       }
     }
-    label_wrap <- function(text, width) {
-      lapply(strwrap(as.character(text), width=width, simplify=FALSE),
-             paste, collapse="\n")
-    }
-    strata.names <- unlist(label_wrap(strata.names, legend.params$wrap))
-    region <- x@region
-    sf.column <- attr(region, "sf_column")
-    bbox <- sf::st_bbox(region)
-    if(length(strata.names) > 1 && subtitle == ""){
-      pmar <- par(mar=c(4, 4, 1, 8), xpd=TRUE)
-      on.exit(par(mar = pmar))
-    }else if(length(strata.names) > 1 && subtitle != ""){
-      pmar <- par(mar=c(4, 4, 4, 8), xpd=TRUE)
-      on.exit(par(mar = pmar))
-    }else if(length(strata.names) == 1 && subtitle != ""){
-      pmar <- par(mar=c(4, 4, 4, 1), xpd=TRUE)
-      on.exit(par(mar = pmar))
-    }
-    if(length(x@units) > 0){
-      x.label <- paste("x-coords (", x@units, ")", sep = "")
-      y.label <- paste("y-coords (", x@units, ")", sep = "")
-    }else{
-      x.label <- "x.coordinates"
-      y.label <- "y.coordinates"
-    }
-    plot(c(0,0), col = "white", xlim = c(bbox$xmin, bbox$xmax), ylim = c(bbox$ymin, bbox$ymax), main = main, xlab = x.label, ylab = y.label)
-    for(i in seq(along = region[[sf.column]])){
-      plot(region[[sf.column]][[i]], add = TRUE, col = cols[i])
-    }
-    if(length(strata.names) > 1){
-      legend("topright", inset=legend.params$inset,
-             legend=strata.names,
-             pch = 20, col=cols, horiz=FALSE, bty='n',
-             pt.cex = 3, cex = legend.params$cex)
-    }
-    mtext(subtitle, side = 3, line = 0.5, outer = FALSE)
-    invisible(x)
+    # Add names so can use in gglot
+    names(cols) <- x@strata.name
+    # Check if user has supplied title
+    if(main != "") title <- main
+    # Create the plot object
+    ggplot.obj <- ggplot() + theme_bw() +
+      geom_sf(data = sf.region, aes(fill = strata), lwd = 0.2) +
+      scale_fill_manual(values = cols) +
+      ggtitle(title)
+    # return the plot object incase the user wants to modify
+    return(ggplot.obj)
   }
 )
-
-
 
 #' Plot
 #'

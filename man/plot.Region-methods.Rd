@@ -11,8 +11,10 @@
   y,
   main = "",
   region.col = "default",
-  legend.params = list(inset = c(-0.2, 0), cex = 0.75, wrap = 15),
-  ...
+  strata = "all",
+  scale = 1,
+  line.col = gray(0.2),
+  legend.params = list()
 )
 
 \S4method{plot}{Region,Transect}(
@@ -36,16 +38,21 @@
 
 \item{region.col}{colours for the strata}
 
-\item{legend.params}{a list of parameters which affect the location and appearance
-of the legend. 'inset' affects the location of the legend, 'cex' affects the text
-size and 'wrap' is the number of character in a line before the text is wrapped on
-to the next line.}
+\item{strata}{the strata name or number to be plotted. By default
+all strata will be plotted.}
 
-\item{...}{Additional plot arguments passed to the plot method for the y argument.}
+\item{scale}{used to scale the x and y values in the plot (warning may give
+unstable results when a projection is defined for the study area!)}
+
+\item{line.col}{sets the line colour for the shapefile}
+
+\item{legend.params}{depricated since implementation of ggplot2}
 
 \item{subtitle}{a subtitle for the plot}
 
 \item{covered.area}{boolean value saying whether the covered area should be plotted.}
+
+\item{...}{Additional plot arguments passed to the plot method for the y argument.}
 }
 \description{
 Plots an S4 object of class 'Region'
