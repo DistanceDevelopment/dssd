@@ -159,6 +159,12 @@ make.region <- function(region.name = "region",
 #' be generated within a rectangle. The design angle for zigzags should usually
 #' run along the longest dimension of the study region.
 #'
+#' NOTE: If multiple design effort arguments are supplied (i.e. spacing, samplers,
+#' line.length) then only the first of spacing then line.length then number of
+#' samplers will be used. The other values provided will be discarded as designs
+#' must only be based on one of these parameters. Different design effort arguments
+#' may supplied for different strata, however.
+#'
 #' See the Getting Started Vignette and the Multiple Strata in dssd Vignette for
 #' example designs.
 #'
@@ -212,9 +218,9 @@ make.region <- function(region.name = "region",
 #'                      shape = shapefile.name)
 #'
 #' \donttest{
-#' # Generate coverage grid
+#' # Generate coverage grid (spacing quite sparse for speed)
 #' cover <- make.coverage(region,
-#'                        n.grid.points = 500)
+#'                        n.grid.points = 250)
 #'
 #' # Define design
 #' design <- make.design(region = region,
