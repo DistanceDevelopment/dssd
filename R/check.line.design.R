@@ -91,25 +91,27 @@ check.line.design <- function(object){
   if(all(object@design == "random") && length(object@spacing > 0)){
     object@spacing <- numeric(0)
   }
-  #Check for spacing values
+  #Check spacing values
   spacing.for.all = FALSE
   if(length(object@spacing) == 1){
     object@spacing <- rep(object@spacing, strata.count)
     spacing.for.all = TRUE
     if(length(object@samplers) > 0){
+      warning("Spacing value provided, ignoring samplers argument", immediate. = TRUE, call. = FALSE)
       object@samplers <- numeric(0)
     }
-    if(length(object@line.length) >0){
+    if(length(object@line.length) > 0){
+      warning("Spacing value provided, ignoring line.length argument", immediate. = TRUE, call. = FALSE)
       object@line.length <- numeric(0)
     }
-  }else if(length(object@spacing) > 1 && length(object@spacing) != strata.count){
-    spacing.for.all = FALSE
   }else if(length(object@spacing) == strata.count && all(!is.na(object@spacing))){
     spacing.for.all = TRUE
   }else if(length(object@spacing) == strata.count && any(is.na(object@spacing))){
     spacing.for.all = FALSE
   }else if(length(object@spacing) > 1 && length(object@spacing) < strata.count){
     object@spacing <- c(object@spacing, rep(NA, (strata.count - length(object@spacing))))
+  }else if(length(object@spacing) > 1 && length(object@spacing) > strata.count){{
+    object@spacing <- object@spacing[1:strata.count]
   }
   #Return TRUE if they are all systematic and spacings have been provided for all
   if(all(object@design == "systematic") && spacing.for.all){
@@ -123,11 +125,11 @@ check.line.design <- function(object){
       check.effort.allocation = TRUE
     }else if(length(object@samplers == 1) || length(object@line.length == 1)){
       check.effort.allocation = TRUE
-    }else if(length(object@samplers == strata.count && !any(is.na(object@samplers)))){
-      object@line.length <- numeric(0)
-      return(object)
     }else if(length(object@line.length == strata.count && !any(is.na(object@line.length)))){
       object@samplers <- numeric(0)
+      return(object)
+    }else if(length(object@samplers == strata.count && !any(is.na(object@samplers)))){
+      object@line.length <- numeric(0)
       return(object)
     }else if(length(object@samplers) != strata.count){
       return("Incorrect number of sampler values provided, either provide one total or one value for each strata.")
