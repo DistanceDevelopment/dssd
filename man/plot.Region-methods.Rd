@@ -11,7 +11,6 @@
   main = "",
   region.col = "default",
   strata = "all",
-  scale = 1,
   line.col = gray(0.2),
   legend.params = list()
 )
@@ -22,7 +21,6 @@
   main = "",
   region.col = "default",
   strata = "all",
-  scale = 1,
   line.col = "blue",
   covered.area = FALSE,
   legend.params = list(),
@@ -40,9 +38,6 @@
 
 \item{strata}{the strata name or number to be plotted. By default
 all strata will be plotted.}
-
-\item{scale}{used to scale the x and y values in the plot (warning may give
-unstable results when a projection is defined for the study area!)}
 
 \item{line.col}{sets the line colour for the transects}
 

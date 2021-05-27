@@ -123,8 +123,6 @@ setMethod(
 #' @param region.col colours for the strata
 #' @param strata the strata name or number to be plotted. By default
 #' all strata will be plotted.
-#' @param scale used to scale the x and y values in the plot (warning may give
-#' unstable results when a projection is defined for the study area!)
 #' @param line.col sets the line colour for the shapefile
 #' @param legend.params depricated since implementation of ggplot2
 #' @rdname plot.Region-methods
@@ -134,7 +132,7 @@ setMethod(
 setMethod(
   f="plot",
   signature="Region",
-  definition=function(x, y, main = "", region.col = "default", strata = "all", scale = 1, line.col = gray(.2), legend.params = list()){
+  definition=function(x, y, main = "", region.col = "default", strata = "all", line.col = gray(.2), legend.params = list()){
     # Warn of depreications
     if(length(legend.params) > 0){
       warning("legend.params argument is deprecated since version 0.2.3", immediate. = TRUE, call. = FALSE)
@@ -152,9 +150,6 @@ setMethod(
     }
     # Extract region data
     sf.region <- x@region
-    sf.column <- attr(sf.region, "sf_column")
-    # Scaling plot
-    sf.region[, sf.column] <- sf.region[, sf.column]*scale
     # Extract strata data and set title
     if(strata != "all"){
       sf.region <- sf.region[sf.region$strata == strata,]
@@ -199,8 +194,6 @@ setMethod(
 #' @param region.col colours for the strata
 #' @param strata the strata name or number to be plotted. By default
 #' all strata will be plotted.
-#' @param scale used to scale the x and y values in the plot (warning may give
-#' unstable results when a projection is defined for the study area!)
 #' @param line.col sets the line colour for the transects
 #' @param covered.area boolean value saying whether the covered area should be plotted.
 #' @param legend.params depricated since implementation of ggplot2
@@ -211,7 +204,7 @@ setMethod(
 setMethod(
   f="plot",
   signature=c("Region", "Transect"),
-  definition=function(x, y, main = "", region.col = "default", strata = "all", scale = 1, line.col = "blue", covered.area = FALSE, legend.params = list(), ...){
+  definition=function(x, y, main = "", region.col = "default", strata = "all", line.col = "blue", covered.area = FALSE, legend.params = list(), ...){
     # Warn of depreications
     if(length(legend.params) > 0){
       warning("legend.params argument is deprecated since version 0.2.3", immediate. = TRUE, call. = FALSE)
@@ -229,9 +222,6 @@ setMethod(
     }
     # Extract region data
     sf.region <- x@region
-    sf.column <- attr(sf.region, "sf_column")
-    # Scaling plot
-    sf.region[, sf.column] <- sf.region[, sf.column]*scale
     # Extract strata data and set title
     if(strata != "all"){
       sf.region <- sf.region[sf.region$strata == strata,]
@@ -241,7 +231,7 @@ setMethod(
     }
     # Get plotting colours
     cols <- region.col
-    if(any(cols == "default") || length(x@strata.name) != length(cols)){
+    if(any(cols == "default")){
       if(length(x@strata.name) <= 15){
         cols <-  c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1")[1:(length(x@strata.name))]
       }else{
