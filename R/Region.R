@@ -254,6 +254,7 @@ setMethod(
 #' @param cex affects the size of the point on the coverage grid
 #' @rdname plot.Region-methods
 #' @importFrom graphics legend mtext
+#' @importFrom grDevices gray
 #' @exportMethod plot
 setMethod(
   f="plot",
