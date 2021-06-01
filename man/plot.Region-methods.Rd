@@ -26,8 +26,7 @@
   col = "blue",
   lwd = 1,
   covered.area = FALSE,
-  legend.params = list(),
-  ...
+  legend.params = list()
 )
 
 \S4method{plot}{Region,Coverage.Grid}(
@@ -38,8 +37,7 @@
   strata = "all",
   line.col = gray(0.2),
   col = "black",
-  cex = 1,
-  ...
+  cex = 1
 )
 }
 \arguments{
