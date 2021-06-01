@@ -150,6 +150,10 @@ setMethod(
     }
     # Extract region data
     sf.region <- x@region
+    # For backwards compatibility (this info should be stored inside the sf object)
+    if(!strata %in% names(sf.region)){
+      sf.region <- cbind(strata = strata.names, sf.region)
+    }
     # Extract strata data and set title
     if(strata != "all"){
       sf.region <- sf.region[sf.region$strata == strata,]
