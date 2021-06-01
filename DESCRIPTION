@@ -11,7 +11,7 @@ Suggests: knitr,
 VignetteBuilder: knitr
 Type: Package
 Title: Distance Sampling Survey Design
-Version: 0.2.2-1002
+Version: 0.2.2-9000
 Author: Laura Marshall <lhm@st-andrews.ac.uk>
 Maintainer: Laura Marshall <lhm@st-andrews.ac.uk>
 Description: Creates survey designs for distance sampling surveys. These
