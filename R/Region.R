@@ -117,8 +117,10 @@ setMethod(
 )
 
 #' Plot
-#' @param x object of class Region or inheriting from Survey
-#' @param y optionally a Survey object to plot with the Region
+#'
+#' Plot's an object of class Region with optionally a set of transects or
+#' the points of a coverage grid if supplied as the y argument.
+#' @param x object of class Region
 #' @param main the main title for the plot
 #' @param region.col colours for the strata
 #' @param strata the strata name or number to be plotted. By default
@@ -191,19 +193,17 @@ setMethod(
   }
 )
 
-#' Plot
-#' @param x object of class Region or inheriting from Survey
-#' @param y an object inheriting from class Transect
+#' @param y an object inheriting from class Transect or an object of class
+#' Coverage.Grid
 #' @param main the main title for the plot
 #' @param region.col colours for the strata
 #' @param strata the strata name or number to be plotted. By default
 #' all strata will be plotted.
 #' @param line.col sets the line colour for the lines around the survey region.
-#' @param col sets the colour of the transects
+#' @param col sets the colour of the transects / coverage grid points
 #' @param lwd sets the line width of the transects
 #' @param covered.area boolean value saying whether the covered area should be plotted.
 #' @param legend.params depricated since implementation of ggplot2
-#' @return returns a ggplot object
 #' @rdname plot.Region-methods
 #' @importFrom graphics legend mtext
 #' @exportMethod plot
@@ -245,17 +245,13 @@ setMethod(
 )
 
 
-#' Plot
 #' @param x object of class Region or inheriting from Survey
-#' @param y an object of class Coverage.Grid
 #' @param main the main title for the plot
 #' @param region.col colours for the strata
 #' @param strata the strata name or number to be plotted. By default
 #' all strata will be plotted.
 #' @param line.col sets the line colour for the lines around the survey region.
-#' @param col sets the colour of the grid points
 #' @param cex affects the size of the point on the coverage grid
-#' @return returns a ggplot object
 #' @rdname plot.Region-methods
 #' @importFrom graphics legend mtext
 #' @exportMethod plot

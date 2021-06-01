@@ -45,7 +45,8 @@
 \arguments{
 \item{x}{object of class Region or inheriting from Survey}
 
-\item{y}{an object of class Coverage.Grid}
+\item{y}{an object inheriting from class Transect or an object of class
+Coverage.Grid}
 
 \item{main}{the main title for the plot}
 
@@ -58,7 +59,7 @@ all strata will be plotted.}
 
 \item{legend.params}{depricated since implementation of ggplot2}
 
-\item{col}{sets the colour of the grid points}
+\item{col}{sets the colour of the transects / coverage grid points}
 
 \item{lwd}{sets the line width of the transects}
 
@@ -68,15 +69,8 @@ all strata will be plotted.}
 }
 \value{
 returns a ggplot object
-
-returns a ggplot object
-
-returns a ggplot object
 }
 \description{
-Plot
-
-Plot
-
-Plot
+Plot's an object of class Region with optionally a set of transects or
+the points of a coverage grid if supplied as the y argument.
 }
