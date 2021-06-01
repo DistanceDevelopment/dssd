@@ -21,7 +21,9 @@
   main = "",
   region.col = "default",
   strata = "all",
-  line.col = "blue",
+  line.col = gray(0.2),
+  col = "blue",
+  lwd = 1,
   covered.area = FALSE,
   legend.params = list(),
   ...
@@ -39,9 +41,13 @@
 \item{strata}{the strata name or number to be plotted. By default
 all strata will be plotted.}
 
-\item{line.col}{sets the line colour for the transects}
+\item{line.col}{sets the line colour for the lines around the survey region.}
 
 \item{legend.params}{depricated since implementation of ggplot2}
+
+\item{col}{sets the colour of the transects}
+
+\item{lwd}{sets the line width of the transects}
 
 \item{covered.area}{boolean value saying whether the covered area should be plotted.}
 }
