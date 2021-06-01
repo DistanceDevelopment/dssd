@@ -193,7 +193,7 @@ setMethod(
 
 #' Plot
 #' @param x object of class Region or inheriting from Survey
-#' @param y optionally a Survey object to plot with the Region
+#' @param y an object inheriting from class Transect
 #' @param main the main title for the plot
 #' @param region.col colours for the strata
 #' @param strata the strata name or number to be plotted. By default
@@ -243,6 +243,44 @@ setMethod(
     return(ggplot.obj)
   }
 )
+
+
+#' Plot
+#' @param x object of class Region or inheriting from Survey
+#' @param y an object of class Coverage.Grid
+#' @param main the main title for the plot
+#' @param region.col colours for the strata
+#' @param strata the strata name or number to be plotted. By default
+#' all strata will be plotted.
+#' @param line.col sets the line colour for the lines around the survey region.
+#' @param col sets the colour of the grid points
+#' @param cex affects the size of the point on the coverage grid
+#' @return returns a ggplot object
+#' @rdname plot.Region-methods
+#' @importFrom graphics legend mtext
+#' @exportMethod plot
+setMethod(
+  f="plot",
+  signature=c("Region", "Coverage.Grid"),
+  definition=function(x, y, main = "", region.col = "default", strata = "all", line.col = gray(.2), col = "black", cex = 1, ...){
+    # Tidy up space to keep ggplot happy
+    suppressWarnings(invisible(gc()))
+    # Call plot method for Region object and store ggplot object
+    ggplot.obj <- plot(x, main = main, region.col = region.col, strata = strata,
+                       line.col = line.col)
+    # Get point data
+    sf.cover <- y@grid
+    # Add the transects on to the plot
+    ggplot.obj <- ggplot.obj +
+      geom_sf(data = sf.cover, col = col, cex = cex)
+    # return the plot object incase the user wants to modify
+    return(ggplot.obj)
+  }
+)
+
+
+
+
 
 
 

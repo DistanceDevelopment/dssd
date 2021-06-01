@@ -3,6 +3,7 @@
 \name{plot,Region,ANY-method}
 \alias{plot,Region,ANY-method}
 \alias{plot,Region,Transect-method}
+\alias{plot,Region,Coverage.Grid-method}
 \title{Plot}
 \usage{
 \S4method{plot}{Region,ANY}(
@@ -28,11 +29,23 @@
   legend.params = list(),
   ...
 )
+
+\S4method{plot}{Region,Coverage.Grid}(
+  x,
+  y,
+  main = "",
+  region.col = "default",
+  strata = "all",
+  line.col = gray(0.2),
+  col = "black",
+  cex = 1,
+  ...
+)
 }
 \arguments{
 \item{x}{object of class Region or inheriting from Survey}
 
-\item{y}{optionally a Survey object to plot with the Region}
+\item{y}{an object of class Coverage.Grid}
 
 \item{main}{the main title for the plot}
 
@@ -45,18 +58,24 @@ all strata will be plotted.}
 
 \item{legend.params}{depricated since implementation of ggplot2}
 
-\item{col}{sets the colour of the transects}
+\item{col}{sets the colour of the grid points}
 
 \item{lwd}{sets the line width of the transects}
 
 \item{covered.area}{boolean value saying whether the covered area should be plotted.}
+
+\item{cex}{affects the size of the point on the coverage grid}
 }
 \value{
 returns a ggplot object
 
 returns a ggplot object
+
+returns a ggplot object
 }
 \description{
+Plot
+
 Plot
 
 Plot
