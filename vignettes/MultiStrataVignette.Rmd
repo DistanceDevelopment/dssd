@@ -74,7 +74,7 @@ The coverage grid can be created in the same way as for a single stratum study r
 ```{r covergrid, fig.width=6, fig.align='center', fig.asp=1, fig.cap="Figure 3: Coverage grid with approximately 1000 grid points."}
 cover <- make.coverage(region,
                        n.grid.points = 1000)
-plot(region, cover)
+plot(region, cover, cex = 0.7)
 ```
 
 
