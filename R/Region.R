@@ -210,7 +210,7 @@ setMethod(
 setMethod(
   f="plot",
   signature=c("Region", "Transect"),
-  definition=function(x, y, main = "", region.col = "default", strata = "all", line.col = gray(.2), col = "blue", lwd = 1, covered.area = FALSE, legend.params = list(), ...){
+  definition=function(x, y, main = "", region.col = "default", strata = "all", line.col = gray(.2), col = "blue", lwd = 1, covered.area = FALSE, legend.params = list()){
     # Warn of depreications
     if(length(legend.params) > 0){
       warning("legend.params argument is deprecated since version 0.2.3", immediate. = TRUE, call. = FALSE)
@@ -259,7 +259,7 @@ setMethod(
 setMethod(
   f="plot",
   signature=c("Region", "Coverage.Grid"),
-  definition=function(x, y, main = "", region.col = "default", strata = "all", line.col = gray(.2), col = "black", cex = 1, ...){
+  definition=function(x, y, main = "", region.col = "default", strata = "all", line.col = gray(.2), col = "black", cex = 1){
     # Tidy up space to keep ggplot happy
     suppressWarnings(invisible(gc()))
     # Call plot method for Region object and store ggplot object
