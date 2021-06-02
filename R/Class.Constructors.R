@@ -211,6 +211,7 @@ make.region <- function(region.name = "region",
 #' region <- make.region(region.name = "study area",
 #'                      shape = shapefile.name)
 #'
+#' \donttest{
 #' # Generate coverage grid
 #' cover <- make.coverage(region,
 #'                        n.grid.points = 500)
@@ -229,15 +230,15 @@ make.region <- function(region.name = "region",
 #' survey <- generate.transects(design)
 #' plot(region, survey, covered.area = TRUE)
 #'
-#' ## Warning! this will take some time to run
-#' #design <- run.coverage(design, reps = 500)
-#' ## Plot the coverage
-#' #plot(design)
-#' ## Display the design statistics
-#' #design
-#' ##Extract coverage scores
-#' #coverage.scores <- get.coverage(design)
-#' #hist(coverage.scores)
+#' # Warning! this will take some time to run
+#' design <- run.coverage(design, reps = 500)
+#' # Plot the coverage
+#' plot(design)
+#' # Display the design statistics
+#' design
+#' #Extract coverage scores
+#' coverage.scores <- get.coverage(design)
+#' hist(coverage.scores)
 #'
 #' #Multi-strata line transect example
 #' shapefile.name <- system.file("extdata", "AreaRProjStrata.shp", package = "dssd")
@@ -265,15 +266,16 @@ make.region <- function(region.name = "region",
 #' survey <- generate.transects(design)
 #' plot(region, survey, covered.area = TRUE)
 #'
-#' ## Warning! this will quite a long time to run as it is a complex example.
-#' #design <- run.coverage(design, reps = 500)
-#' ## Plot the coverage
-#' #plot(design)
-#' ## Display the design statistics
-#' #design
-#' ## Extract coverage scores for the first strata
-#' #coverage.scores <- get.coverage(design, strata.id = 1)
-#' #summary(coverage.scores)
+#' # Warning! this will quite a long time to run as it is a complex example.
+#' design <- run.coverage(design, reps = 500)
+#' # Plot the coverage
+#' plot(design)
+#' # Display the design statistics
+#' design
+#' # Extract coverage scores for the first strata
+#' coverage.scores <- get.coverage(design, strata.id = 1)
+#' summary(coverage.scores)
+#' }
 #'
 #' # Fast running example for CRAN testing purposes
 #' # This spacing is too sparse to assess coverage in a real example and
