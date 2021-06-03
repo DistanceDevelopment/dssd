@@ -34,7 +34,7 @@ jobs:
       _R_CHECK_RD_XREFS_: ${{ matrix.config.xref }}
       # This is required to make Linux tests pass. We add it to all workflows
       # as it does not have any impact on Windows and macOS
-      DISPLAY: 99.0
+      DISPLAY: :99.0
 
     steps:
       - uses: actions/checkout@v2
