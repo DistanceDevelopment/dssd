@@ -39,6 +39,9 @@ jobs:
       # Runs vdiffr test only on the latest version of R
       VDIFFR_RUN_TESTS: ${{ matrix.config.vdiffr }}
       VDIFFR_LOG_PATH: "../vdiffr.Rout.fail"
+      # This is required to make Linux tests pass. We add it to all workflows
+      # as it does not have any impact on Windows and macOS
+      DISPLAY: 99.0
 
     steps:
       - uses: actions/checkout@v2
