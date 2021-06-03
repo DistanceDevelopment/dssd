@@ -9,10 +9,6 @@ on:
 
 name: R-CMD-check
 
-# Increment this version when we want to clear cache
-env:
-  cache-version: v1
-
 jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
@@ -23,10 +19,10 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: windows-latest, r: '4.1',   vdiffr: true,  xref: true}
-          - {os: macOS-latest,   r: '4.1',   vdiffr: true,  xref: true}
-          - {os: ubuntu-18.04,   r: 'devel', vdiffr: false, xref: true}
-          - {os: ubuntu-18.04,   r: '4.1',   vdiffr: true,  xref: true, rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
+          - {os: windows-latest, r: '4.1',   xref: true}
+          - {os: macOS-latest,   r: '4.1',   xref: true}
+          - {os: ubuntu-18.04,   r: 'devel', xref: true}
+          - {os: ubuntu-18.04,   r: '4.1',   xref: true, rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
           
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -36,9 +32,6 @@ jobs:
       _R_CHECK_FORCE_SUGGESTS_: false
       # Some packages might unavailable on the older versions, so let's ignore xref warnings
       _R_CHECK_RD_XREFS_: ${{ matrix.config.xref }}
-      # Runs vdiffr test only on the latest version of R
-      VDIFFR_RUN_TESTS: ${{ matrix.config.vdiffr }}
-      VDIFFR_LOG_PATH: "../vdiffr.Rout.fail"
       # This is required to make Linux tests pass. We add it to all workflows
       # as it does not have any impact on Windows and macOS
       DISPLAY: 99.0
@@ -53,19 +46,19 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@master
 
-      - name: Query dependencies        
+      - name: Query dependencies
         run: |
           install.packages('remotes')
-          saveRDS(remotes::dev_package_deps(dependencies = TRUE), "depends.Rds", version = 2)
+          saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
+          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
         shell: Rscript {0}
-          
-      - name: Cache R packages
-        if: runner.os != 'Windows'
-        uses: actions/cache@v1
+
+      - name: Restore R package cache
+        uses: actions/cache@v2
         with:
           path: ${{ env.R_LIBS_USER }}
-          key: ${{ env.cache-version }}-${{ runner.os }}-r-${{ matrix.config.r }}-${{ hashFiles('depends.Rds') }}
-          restore-keys: ${{ env.cache-version }}-${{ runner.os }}-r-${{ matrix.config.r }}-
+          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
       
       - name: Install system dependencies on Linux
         if: runner.os == 'Linux'
