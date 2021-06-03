@@ -117,181 +117,167 @@ setMethod(
 )
 
 #' Plot
-#' @param x object of class Region or inheriting from Survey
-#' @param y optionally a Survey object to plot with the Region
+#'
+#' Plot's an object of class Region with optionally a set of transects or
+#' the points of a coverage grid if supplied as the y argument.
+#' @param x object of class Region
 #' @param main the main title for the plot
 #' @param region.col colours for the strata
-#' @param legend.params a list of parameters which affect the location and appearance
-#' of the legend. 'inset' affects the location of the legend, 'cex' affects the text
-#' size and 'wrap' is the number of character in a line before the text is wrapped on
-#' to the next line.
+#' @param strata the strata name or number to be plotted. By default
+#' all strata will be plotted.
+#' @param line.col sets the line colour for the shapefile
+#' @param legend.params depricated since implementation of ggplot2
+#' @rdname plot.Region-methods
+#' @return returns a ggplot object
+#' @importFrom ggplot2 ggplot geom_sf ggtitle aes theme_set theme_bw scale_fill_manual
+#' @exportMethod plot
+setMethod(
+  f="plot",
+  signature="Region",
+  definition=function(x, y, main = "", region.col = "default", strata = "all", line.col = gray(.2), legend.params = list()){
+    # Warn of depreications
+    if(length(legend.params) > 0){
+      warning("legend.params argument is deprecated since version 0.2.3", immediate. = TRUE, call. = FALSE)
+    }
+    # Tidy up space to keep ggplot happy
+    suppressWarnings(invisible(gc()))
+    # Check strata selection
+    # Extract strata names
+    strata.names <- x@strata.name
+    # Extract plot data
+    if(is.character(strata)){
+      if(!strata %in% c(x@strata.name, "all")){
+        stop("You have provided an unrecognised strata name.", call. = FALSE)
+      }
+    }
+    # Extract region data
+    sf.region <- x@region
+    # For backwards compatibility (this info should be stored inside the sf object)
+    if(!strata %in% names(sf.region)){
+      sf.region <- cbind(strata = strata.names, sf.region)
+    }
+    # Extract strata data and set title
+    if(strata != "all"){
+      sf.region <- sf.region[sf.region$strata == strata,]
+      title <- strata
+    }else{
+      title <- x@region.name
+    }
+    # Get plotting colours
+    cols <- region.col
+    if(any(cols == "default")){
+      if(length(x@strata.name) <= 15){
+        cols <-  c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1")[1:(length(x@strata.name))]
+      }else{
+        cols <-  rep(c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1"),ceiling(length(x@strata.name)/15))[1:(length(x@strata.name))]
+      }
+    }
+    # Add names so can use in gglot
+    if(length(cols) != length(x@strata.name)) cols <- rep(cols[1],length(x@strata.name))
+    names(cols) <- x@strata.name
+    # Check if user has supplied title
+    if(main != "") title <- main
+    # Create the plot object
+    if(length(x@strata.name) == 1){
+      ggplot.obj <- ggplot() + theme_bw() +
+        geom_sf(data = sf.region, fill = cols, lwd = 0.2) +
+        ggtitle(title)
+    }else{
+      ggplot.obj <- ggplot() + theme_bw() +
+        geom_sf(data = sf.region, aes(fill = strata), lwd = 0.2) +
+        scale_fill_manual(values = cols) +
+        ggtitle(title)
+    }
+    # return the plot object incase the user wants to modify
+    return(ggplot.obj)
+  }
+)
+
+#' @param y an object inheriting from class Transect or an object of class
+#' Coverage.Grid
+#' @param main the main title for the plot
+#' @param region.col colours for the strata
+#' @param strata the strata name or number to be plotted. By default
+#' all strata will be plotted.
+#' @param line.col sets the line colour for the lines around the survey region.
+#' @param col sets the colour of the transects / coverage grid points
+#' @param lwd sets the line width of the transects
+#' @param covered.area boolean value saying whether the covered area should be plotted.
+#' @param legend.params depricated since implementation of ggplot2
 #' @rdname plot.Region-methods
 #' @importFrom graphics legend mtext
 #' @exportMethod plot
 setMethod(
   f="plot",
-  signature="Region",
-  definition=function(x, y, main = "", region.col = "default", legend.params = list(inset = c(-0.2,0), cex = 0.75, wrap = 15), ...){
-    # If main is not supplied then take it from the object
-    if(main == ""){
-      main <- x@region.name
-    }
-    additional.args <- list(...)
-    subtitle <- ifelse("subtitle" %in% names(additional.args), additional.args$subtitle, "")
-    if(length(x@strata.name) > 0){
-      strata.names <- x@strata.name
-    }else{
-      strata.names <- x@region.name
-    }
-    if(!"inset" %in% names(legend.params)){
-      legend.params$inset <- c(-0.2,0)
-    }
-    if(!"cex" %in% names(legend.params)){
-      legend.params$cex <- 0.75
-    }
-    if(!"wrap" %in% names(legend.params)){
-      legend.params$wrap <- 15
-    }
-    additional.args <- list(...)
-    cols <- ifelse("cols" %in% names(additional.args), additional.args$cols, region.col)
-    if(any(cols == "default")){
-      if(length(x@strata.name) <= 15){
-        cols <-  c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1")[1:(length(x@strata.name))]
-      }else{
-        cols <-  rep(c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1"),3)[1:(length(x@strata.name))]
-      }
-    }
-    label_wrap <- function(text, width) {
-      lapply(strwrap(as.character(text), width=width, simplify=FALSE),
-             paste, collapse="\n")
-    }
-    strata.names <- unlist(label_wrap(strata.names, legend.params$wrap))
-    region <- x@region
-    sf.column <- attr(region, "sf_column")
-    bbox <- sf::st_bbox(region)
-    if(length(strata.names) > 1 && subtitle == ""){
-      pmar <- par(mar=c(4, 4, 1, 8), xpd=TRUE)
-      on.exit(par(mar = pmar))
-    }else if(length(strata.names) > 1 && subtitle != ""){
-      pmar <- par(mar=c(4, 4, 4, 8), xpd=TRUE)
-      on.exit(par(mar = pmar))
-    }else if(length(strata.names) == 1 && subtitle != ""){
-      pmar <- par(mar=c(4, 4, 4, 1), xpd=TRUE)
-      on.exit(par(mar = pmar))
-    }
-    if(length(x@units) > 0){
-      x.label <- paste("x-coords (", x@units, ")", sep = "")
-      y.label <- paste("y-coords (", x@units, ")", sep = "")
-    }else{
-      x.label <- "x.coordinates"
-      y.label <- "y.coordinates"
-    }
-    plot(c(0,0), col = "white", xlim = c(bbox$xmin, bbox$xmax), ylim = c(bbox$ymin, bbox$ymax), main = main, xlab = x.label, ylab = y.label)
-    for(i in seq(along = region[[sf.column]])){
-      plot(region[[sf.column]][[i]], add = TRUE, col = cols[i])
-    }
-    if(length(strata.names) > 1){
-      legend("topright", inset=legend.params$inset,
-             legend=strata.names,
-             pch = 20, col=cols, horiz=FALSE, bty='n',
-             pt.cex = 3, cex = legend.params$cex)
-    }
-    mtext(subtitle, side = 3, line = 0.5, outer = FALSE)
-    invisible(x)
-  }
-)
-
-
-
-#' Plot
-#'
-#' Plots an S4 object of class 'Region'
-#' @param subtitle a subtitle for the plot
-#' @param covered.area boolean value saying whether the covered area should be plotted.
-#' @param ... Additional plot arguments passed to the plot method for the y argument.
-#' @rdname plot.Region-methods
-#' @exportMethod plot
-#' @importFrom graphics mtext
-setMethod(
-  f="plot",
   signature=c("Region", "Transect"),
-  definition=function(x, y, main = "", region.col = "default", subtitle = "", covered.area = FALSE, ...){
-    # If main is not supplied then take it from the object
-    if(main == ""){
-      main <- x@region.name
+  definition=function(x, y, main = "", region.col = "default", strata = "all", line.col = gray(.2), col = "blue", lwd = 1, covered.area = FALSE, legend.params = list()){
+    # Warn of depreications
+    if(length(legend.params) > 0){
+      warning("legend.params argument is deprecated since version 0.2.3", immediate. = TRUE, call. = FALSE)
     }
-    additional.args <- list(...)
-    if(region.col == "default"){
-      if(length(x@strata.name) <= 15){
-        region.col <-  c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1")[1:(length(x@strata.name))]
-      }else{
-        region.col <-  rep(c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1"),3)[1:(length(x@strata.name))]
+    # Tidy up space to keep ggplot happy
+    suppressWarnings(invisible(gc()))
+    # Call plot method for Region object and store ggplot object
+    ggplot.obj <- plot(x, main = main, region.col = region.col, strata = strata,
+                       line.col = line.col)
+    # Get sampler data
+    sf.samplers <- y@samplers
+    if(strata != "all"){
+      sf.samplers <- sf.samplers[sf.samplers$strata == strata,]
+    }
+    if(covered.area){
+      sf.cov.area <- y@cov.area.polys
+      if(strata != "all"){
+        sf.cov.area <- sf.cov.area[sf.cov.area$strata == strata,]
       }
     }
-    cov.area <- covered.area
-    region <- x@region
-    sf.column <- attr(region, "sf_column")
-    #Set up bounding box for samplers (necessary when plus sampling used and extent of samplers is greater than the region)
-    bbox.samps <- sf::st_bbox(y@samplers)
-    bbox.region <- sf::st_bbox(x@region)
-    if(subtitle != ""){
-      pmar <- par(mar=c(4, 4, 5, 1), xpd=TRUE)
-      on.exit(par(mar = pmar))
+    # Add the transects on to the plot
+    ggplot.obj <- ggplot.obj +
+      geom_sf(data = sf.samplers, col = col, lwd = lwd)
+    # if requested add in covered areas
+    if(covered.area){
+      ggplot.obj <- ggplot.obj +
+        geom_sf(data = sf.cov.area, fill = NA, lwd = 0.2)
     }
-    plot(c(0,0), col = "white", xlim = c(min(bbox.samps$xmin, bbox.region$xmin), max(bbox.samps$xmax, bbox.region$xmax)), ylim = c(min(bbox.samps$ymin, bbox.region$ymin), max(bbox.samps$ymax, bbox.region$ymax)), main = main, xlab = "x-coordinates", ylab = "y-coordinates")
-    for(i in seq(along = region[[sf.column]])){
-      plot(region[[sf.column]][[i]], add = TRUE, col = region.col[i])
-    }
-    if(cov.area){
-      #plot the covered areas
-      cov.area.shape <- y@cov.area.polys
-      sf.col.ca <- attr(cov.area.shape, "sf_column")
-      cov.area.shape <- cov.area.shape[[sf.col.ca]]
-      for(i in seq(along = cov.area.shape)){
-        plot(cov.area.shape[[i]], add = T)
-      }
-    }
-    plot(y, add = TRUE, ...)
-    mtext(subtitle, side = 3, line = 0.5, outer = FALSE)
-    invisible(x)
+    # return the plot object incase the user wants to modify
+    return(ggplot.obj)
   }
 )
 
-#' Plot
+
+#' @param x object of class Region or inheriting from Survey
+#' @param main the main title for the plot
+#' @param region.col colours for the strata
+#' @param strata the strata name or number to be plotted. By default
+#' all strata will be plotted.
+#' @param line.col sets the line colour for the lines around the survey region.
+#' @param cex affects the size of the point on the coverage grid
 #' @rdname plot.Region-methods
+#' @importFrom graphics legend mtext
+#' @importFrom grDevices gray
 #' @exportMethod plot
-#' @importFrom graphics mtext
 setMethod(
   f="plot",
   signature=c("Region", "Coverage.Grid"),
-  definition=function(x, y, main = "", region.col = "default", subtitle = "", ...){
-    # If main is not supplied then take it from the object
-    if(main == ""){
-      main <- x@region.name
-    }
-    if(region.col == "default"){
-      if(length(x@strata.name) <= 15){
-        region.col <-  c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1")[1:(length(x@strata.name))]
-      }else{
-        region.col <-  rep(c("lavender","lemonchiffon", "thistle1", "lightsteelblue1", "paleturquoise1", "palegreen", "wheat1", "salmon1", "ivory1", "olivedrab1", "slategray1", "seashell1", "plum1", "khaki1", "snow1"),3)[1:(length(x@strata.name))]
-      }
-    }
-    region <- x@region
-    sf.column <- attr(region, "sf_column")
-    #Set up bounding box for samplers (necessary when plus sampling used and extent of samplers is greater than the region)
-    #bbox.samps <- sf::st_bbox(y@samplers)
-    bbox.region <- sf::st_bbox(x@region)
-    if(subtitle != ""){
-      pmar <- par(mar=c(4, 4, 5, 1), xpd=TRUE)
-      on.exit(par(mar = pmar))
-    }
-    plot(c(0,0), col = "white", xlim = c(min(bbox.region$xmin), max(bbox.region$xmax)), ylim = c(min( bbox.region$ymin), max(bbox.region$ymax)), main = main, xlab = "x-coordinates", ylab = "y-coordinates")
-    for(i in seq(along = region[[sf.column]])){
-      plot(region[[sf.column]][[i]], add = TRUE, col = region.col[i])
-    }
-    plot(y, add = TRUE, ...)
-    mtext(subtitle, side = 3, line = 0.5, outer = FALSE)
-    invisible(x)
+  definition=function(x, y, main = "", region.col = "default", strata = "all", line.col = gray(.2), col = "black", cex = 1){
+    # Tidy up space to keep ggplot happy
+    suppressWarnings(invisible(gc()))
+    # Call plot method for Region object and store ggplot object
+    ggplot.obj <- plot(x, main = main, region.col = region.col, strata = strata,
+                       line.col = line.col)
+    # Get point data
+    sf.cover <- y@grid
+    # Add the transects on to the plot
+    ggplot.obj <- ggplot.obj +
+      geom_sf(data = sf.cover, col = col, cex = cex)
+    # return the plot object incase the user wants to modify
+    return(ggplot.obj)
   }
 )
+
+
+
+
+
+
 

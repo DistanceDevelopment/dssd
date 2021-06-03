@@ -11,8 +11,9 @@
   y,
   main = "",
   region.col = "default",
-  legend.params = list(inset = c(-0.2, 0), cex = 0.75, wrap = 15),
-  ...
+  strata = "all",
+  line.col = gray(0.2),
+  legend.params = list()
 )
 
 \S4method{plot}{Region,Transect}(
@@ -20,33 +21,54 @@
   y,
   main = "",
   region.col = "default",
-  subtitle = "",
+  strata = "all",
+  line.col = gray(0.2),
+  col = "blue",
+  lwd = 1,
   covered.area = FALSE,
-  ...
+  legend.params = list()
 )
 
-\S4method{plot}{Region,Coverage.Grid}(x, y, main = "", region.col = "default", subtitle = "", ...)
+\S4method{plot}{Region,Coverage.Grid}(
+  x,
+  y,
+  main = "",
+  region.col = "default",
+  strata = "all",
+  line.col = gray(0.2),
+  col = "black",
+  cex = 1
+)
 }
 \arguments{
 \item{x}{object of class Region or inheriting from Survey}
 
-\item{y}{optionally a Survey object to plot with the Region}
+\item{y}{an object inheriting from class Transect or an object of class
+Coverage.Grid}
 
 \item{main}{the main title for the plot}
 
 \item{region.col}{colours for the strata}
 
-\item{legend.params}{a list of parameters which affect the location and appearance
-of the legend. 'inset' affects the location of the legend, 'cex' affects the text
-size and 'wrap' is the number of character in a line before the text is wrapped on
-to the next line.}
+\item{strata}{the strata name or number to be plotted. By default
+all strata will be plotted.}
 
-\item{...}{Additional plot arguments passed to the plot method for the y argument.}
+\item{line.col}{sets the line colour for the lines around the survey region.}
 
-\item{subtitle}{a subtitle for the plot}
+\item{legend.params}{depricated since implementation of ggplot2}
+
+\item{col}{sets the colour of the transects / coverage grid points}
+
+\item{lwd}{sets the line width of the transects}
 
 \item{covered.area}{boolean value saying whether the covered area should be plotted.}
+
+\item{cex}{affects the size of the point on the coverage grid}
+}
+\value{
+returns a ggplot object
 }
 \description{
-Plots an S4 object of class 'Region'
+Plot's an object of class Region with optionally a set of transects or
+the points of a coverage grid if supplied as the y argument.
 }

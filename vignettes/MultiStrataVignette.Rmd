@@ -74,7 +74,7 @@ The coverage grid can be created in the same way as for a single stratum study r
 ```{r covergrid, fig.width=6, fig.align='center', fig.asp=1, fig.cap="Figure 3: Coverage grid with approximately 1000 grid points."}
 cover <- make.coverage(region,
                        n.grid.points = 1000)
-plot(region, cover)
+plot(region, cover, cex = 0.7)
 ```
 
 
@@ -100,7 +100,7 @@ default.design <- make.design(region = region,
                               truncation = 2000, 
                               coverage.grid = cover)
 transects <- generate.transects(default.design)
-plot(region, transects, lwd = 1.5, col = 4)
+plot(region, transects, lwd = 0.8, col = "blue")
 ```
 
 We can also view a summary of the survey shown in Figure 4. The output shown below tells us that dssd selected a spacing of around 17.9 km (17946.09 m) between the systematic parallel lines. As both strata used the same systematic design the spacing values were calculated globally and are identical for both strata. It also tells us that the percentage of the study region covered was around 22% in both strata and that for this particular survey we have achieved exactly 20 transects, 11 in the northern strata and 9 in the southern strata.
@@ -124,7 +124,7 @@ design <- make.design(region = region,
                               truncation = 2000,
                               coverage.grid = cover)
 transects <- generate.transects(design)
-plot(region, transects, lwd = 1.5, col = 4)
+plot(region, transects, lwd = 0.8, col = "blue")
 ```
 
 Let us now run a coverage check on this design to see if the coverage is roughly the same in both strata. Looking at Figure 6 the coverage probabilities look to be roughly the same on average for the two strata. We do however see the sharp corners of the northern stratum displaying a higher coverage due to the zigzag design being generated in a convex hull.
@@ -162,7 +162,7 @@ design <- make.design(region = region,
                       truncation = 3000,
                       coverage.grid = cover)
 transects <- generate.transects(design)
-plot(region, transects, lwd = 1.5, col = 4)
+plot(region, transects, lwd = 0.8, col = "blue")
 ```
 
 We can then have a look at the coverage scores to examine coverage in the two strata. We observe on average the coverage is higher in the northern stratum than the southern stratum because spacing was half as large in the northern stratum, Figure 8.
@@ -228,7 +228,7 @@ design.tm <- make.design(region = region.tm,
                       truncation = 100,
                       coverage.grid = cover.tm)
 transects.tm <- generate.transects(design.tm)
-plot(region.tm, transects.tm, lwd = 1.5, col = 4)
+plot(region.tm, transects.tm, lwd = 0.8, col = "blue")
 ```
 
 We can also have a look at the statistics for this particular survey. The output below shows that although we set the effort to be 80 samplers in total we have 92. While we see the expected number in the main stratum 75% of 80 is 60 samplers, we see more than expected in the Morton Lochs stratum, 32 rather than 20. This is down to the fact that we are using a plus sampling edge protocol in this stratum and if we check in Figure 12 above we will see that approximately 20 points actually fall inside the Morton Lochs stratum. This additional effort that is required for the plus sampling strategy is something to be aware of when costing for your survey.
