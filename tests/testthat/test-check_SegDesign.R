@@ -100,7 +100,7 @@ test_that("Can deal with various forms of user input", {
   expect_equal(survey.tm@seg.threshold, rep(50,2))
 
   #Test when no transects
-  set.seed(551)
+  set.seed(551, kind = "Mersenne-Twister", normal.kind = "Inversion")
   design.tm <- make.design(region.tm,
                            transect.type = "line",
                            design = "segmentedgrid",
