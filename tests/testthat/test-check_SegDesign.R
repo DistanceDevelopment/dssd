@@ -113,8 +113,6 @@ test_that("Can deal with various forms of user input", {
   expect_equal(design.tm@seg.threshold, rep(100,2))
   if(Sys.info()['sysname'] != "Windows"){
     expect_equal(survey.tm@samp.count, 17)
-  }else{
-    expect_equal(survey.tm@samp.count, 15)
   }
 
   #Test when no transects
@@ -143,8 +141,8 @@ test_that("Can deal with various forms of user input", {
                         seg.threshold = 100,
                         truncation = 25)
   xpectr::set_test_seed(223)
-  survey <- generate.transects(design)
   if(Sys.info()['sysname'] != "Windows"){
+    survey <- generate.transects(design)
     expect_equal(survey@trackline, 5350)
     expect_equal(survey@cyclictrackline, 7100)
   }
