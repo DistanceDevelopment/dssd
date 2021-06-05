@@ -9,7 +9,8 @@ Suggests: knitr,
           rmarkdown,
           tibble,
           covr,
-          testthat
+          testthat,
+          xpectr
 VignetteBuilder: knitr
 Type: Package
 Title: Distance Sampling Survey Design

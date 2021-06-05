@@ -11,7 +11,8 @@ calculate.trackline.segl <- function(transects){
   samplerID <- unique(IDdf$samplerID)
   coords <- numeric(0)
   for(i in seq(along = samplerID)){
-    index <- which(IDdf$samplerID == i)
+    # Find the relevant segments
+    index <- which(IDdf$samplerID == samplerID[i])
     index <- index[c(1,length(index))]
     #If line x odd
     if((i %% 2) != 0){
