@@ -26,13 +26,13 @@ test_that("Can correctly calculate required effort", {
 
   # Check calcs
   by.hand <- (10/20)*(3/0.05^2)
-  expect_equal(results$L[1], by.hand)
+  expect_equal(results$Effort[1], by.hand)
   by.hand <- (10/20)*(3/0.25^2)
-  expect_equal(results$L[20], by.hand)
+  expect_equal(results$Effort[20], by.hand)
 
-  expect_equal(calculate.effort(L0 = 10, n0 = 20, line.point = "line", cv.values = 0.2), data.frame(L = 37.5, cv.values = 0.2))
+  expect_equal(calculate.effort(L0 = 10, n0 = 20, line.point = "line", cv.values = 0.2), data.frame(Effort = 37.5, CV = 0.2))
 
-  expect_equal(calculate.effort(L0 = 10, n0 = 20, line.point = "point", cv.values = 0.2), data.frame(L = 37.5, cv.values = 0.2))
+  expect_equal(calculate.effort(L0 = 10, n0 = 20, line.point = "point", cv.values = 0.2), data.frame(Effort = 37.5, CV = 0.2))
 
   # Check sorting
   results2 <- calculate.effort(L0 = 10, n0 = 20, line.point = "line",
@@ -42,6 +42,6 @@ test_that("Can correctly calculate required effort", {
   # Test the calculation
   by.hand <- (20/50)*(3/0.1^2)
 
-  expect_equal(calculate.effort(L0 = 20, n0 = 50, line.point = "point", cv.values = 0.1), data.frame(L = by.hand, cv.values = 0.1))
+  expect_equal(calculate.effort(L0 = 20, n0 = 50, line.point = "point", cv.values = 0.1), data.frame(Effort = by.hand, CV = 0.1))
 
 })
