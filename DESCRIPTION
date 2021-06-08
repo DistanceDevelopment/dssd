@@ -45,6 +45,7 @@ Collate:
     'Segment.Transect.Design.R'
     'Segment.Transect.R'
     'calc.region.width.R'
+    'calculate.effort.R'
     'calculate.trackline.pl.R'
     'calculate.trackline.segl.R'
     'calculate.trackline.zz.R'
