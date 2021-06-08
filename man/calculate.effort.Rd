@@ -50,8 +50,8 @@ calculate.effort(L0 = 5, n0 = 20)
 
 # Point transect pilot with 20 sightings over 5 points
 calculate.effort(L0 = 5, n0 = 20, line.point="point")
-# To find a single value for a CV of 0.15
-CV0.15 <- calculate.effort(L0 = 5, n0 = 20, line.point="point", cv.values = 0.15)
+# To find a single value for a target CV of 0.15
+calculate.effort(L0 = 5, n0 = 20, line.point="point", cv.values = 0.15)
 
 }
 \references{
