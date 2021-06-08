@@ -55,8 +55,8 @@ calculate.effort <- function(L0, n0, q=3, line.point="line",
   cv.values <- sort(cv.values)
   # Effort calculations
   encrate.inv <- L0/n0
-  L <- q/cv.values^2 * encrate.inv
-  result <- data.frame(L, cv.values)
+  E <- q/cv.values^2 * encrate.inv
+  result <- data.frame(Effort = E, CV = cv.values)
   # If there are less than 5 cv.values then no plot just return the data.frame
   if(length(cv.values) < 5){
     return(result)
@@ -65,12 +65,12 @@ calculate.effort <- function(L0, n0, q=3, line.point="line",
        main=paste(which.kind, "to achieve target CV",
                   "\nL0=", L0, "n0=", n0),
        xlab=which.kind, ylab="Target CV", xaxt="none", yaxt="none")
-  axis(1, seq(0, max(result$L), by=10))
+  axis(1, seq(0, max(result$Effort), by=10))
   axis(2, seq(min(cv.values)+.005, max(cv.values), by=0.01), las=2)
 
   drawlines <- function(cv, result) {
-    Lvalue <- result[max(which(result$cv.values <= cv)),1]
-    cvvalue <- result[max(which(result$cv.values <= cv)),2]
+    Lvalue <- result[max(which(result$CV <= cv)),1]
+    cvvalue <- result[max(which(result$CV <= cv)),2]
     segments(-5, cvvalue, Lvalue, cvvalue, col="red")
     segments(Lvalue, cvvalue, Lvalue, 0)
     text(Lvalue, min(cv.values), round(Lvalue,1), cex=0.8, pos=4, offset=0.25)
