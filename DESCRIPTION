@@ -14,9 +14,10 @@ Suggests: knitr,
 VignetteBuilder: knitr
 Type: Package
 Title: Distance Sampling Survey Design
-Version: 0.2.2.9001
-Author: Laura Marshall <lhm@st-andrews.ac.uk>
-Maintainer: Laura Marshall <lhm@st-andrews.ac.uk>
+Version: 0.2.2.9002
+Authors@R: c(
+  person("Laura", "Marshall", email = "lhm@st-andrews.ac.uk", role = c("aut", "cre")),
+  person("Rexstad", "Eric", email = "eric.rexstad@st-andrews.ac.uk", role = "ctb"))
 Description: Creates survey designs for distance sampling surveys. These
     designs can be assessed for various effort and coverage statistics.
     Once the user is satisfied with the design characteristics they can 
