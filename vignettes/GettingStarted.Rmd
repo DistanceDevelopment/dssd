@@ -129,6 +129,27 @@ Finally, we are given a summary of the coverage score values. If we have even co
 hist(get.coverage(design), xlab = "Coverage Scores", main = "Histogram of Coverage Scores")
 ```
 
+## Exporting transects 
+
+When you are confident that your design meets your survey objectives, you are ready to generate a final set of transects to use during your survey. To ensure that uniform coverage probability is maintained you must use the first randomly generated transect set. Regenerating transects due to an inconvenient transect property (e.g. intersection of an island or other feature / too few or too many samplers) will result in non-uniform coverage so must be avoided.   
+
+Once you have your final set of survey transects these can be exported in a number of formats. Below we demonstrate exporting the coordinates to shapefile and to csv file. See the write.transects help file for additional examples of exporting to .txt and .gpx. In the example below these files are written to a temporary directory, you will want to replace this with your own file path and name.
+
+```{r exportshp}
+# File destination - .txt file
+file.path <- paste0(tempdir(), "/", "transects.txt")
+# Write to .txt file
+write.transects(transects, dsn = file.path)
+
+
+# File destination - .shp file
+file.path <- paste0(tempdir(), "/", "transects.shp")
+# Write to shapefile
+write.transects(transects, dsn = file.path)
+```
+
+You can now navigate to your saved files and view their contents. 
+
 ## Appendix: Trackline and Cyclic Trackline Lengths
 
 The following four figures (6 - 10) demonstrate how the trackline lengths and cyclic trackline lengths are calculated. The red arrows indicate the trackline path, moving from the start of the first transect along its length then across off effort to the next transect and so on until the end of the last transect is reached. The cyclic trackline length is then the trackline length represented by the red arrows plus the off effort transit time required to travel from the end of the last transect back to the beginning of the first as indicated by the light blue arrow. These values are provided to help you assess the efficiency of the design by comparing on-effort line length to total trackline length and also to help you ensure that the entire survey can be completed within time and budget constraints. Note that the trackline and cyclic trackline lengths for segmented designs are calculated in a very similar way to parallel line transect designs. The observer will start at the beginning of one segment and move up the line of segments before crossing to the next line of segments and so on.  
