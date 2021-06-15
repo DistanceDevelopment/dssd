@@ -96,7 +96,7 @@ test_that("Can deal with various forms of user input", {
                            seg.length = c(200,50),
                            truncation = 25)
   survey.tm <- generate.transects(design.tm)
-  expect_equal(round(survey.tm@spacing,4), c(355.6886, 420.2832))
+  expect_equal(round(survey.tm@spacing,4), c(356.8515, 398.605))
   expect_equal(survey.tm@seg.threshold, rep(50,2))
 
   #Test when no transects
