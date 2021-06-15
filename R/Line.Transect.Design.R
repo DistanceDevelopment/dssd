@@ -126,7 +126,7 @@ setMethod(
           by.spacing <- rep(TRUE, strata.no)
         }else{
           #Have to allocate number of samplers per strata
-          samplers <- samplers*effort.allocation
+          samplers <- round(samplers*effort.allocation)
         }
       }
       #If only a total line.length has been supplied
