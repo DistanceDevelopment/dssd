@@ -100,7 +100,7 @@ test_that("Can deal with various forms of user input", {
   expect_equal(survey.tm@seg.threshold, rep(50,2))
 
   #Test when no transects
-  xpectr::set_test_seed(551)
+  set.seed(551)
   design.tm <- make.design(region.tm,
                            transect.type = "line",
                            design = "segmentedgrid",
@@ -116,7 +116,7 @@ test_that("Can deal with various forms of user input", {
   }
 
   #Test when no transects
-  xpectr::set_test_seed(321)
+  set.seed(321)
   design.tm <- make.design(region.tm,
                            transect.type = "line",
                            design = "segmentedgrid",
@@ -140,7 +140,7 @@ test_that("Can deal with various forms of user input", {
                         seg.length = 100,
                         seg.threshold = 100,
                         truncation = 25)
-  xpectr::set_test_seed(223)
+  set.seed(223)
   if(Sys.info()['sysname'] != "Windows"){
     survey <- generate.transects(design)
     expect_equal(survey@trackline, 5350)
@@ -159,7 +159,7 @@ test_that("Can deal with various forms of user input", {
                         seg.threshold = 5,
                         edge.protocol = "minus",
                         truncation = .15)
-  xpectr::set_test_seed(112)
+  set.seed(112)
   transects <- generate.transects(design)
 
   #Check cyclic trackline length
@@ -173,7 +173,7 @@ test_that("Can deal with various forms of user input", {
                         seg.threshold = 50,
                         edge.protocol = "minus",
                         truncation = .15)
-  xpectr::set_test_seed(126)
+  set.seed(126)
   transects <- generate.transects(design)
   #plot(region, transects)
   #trackline length = 2000 + 2000 + 200 = 4200
