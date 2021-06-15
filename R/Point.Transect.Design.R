@@ -100,6 +100,9 @@ setMethod(
       }else{
         effort.allocation <- object@effort.allocation
       }
+    }else if(length(unique(object@design)) > 1  && length(object@spacing) == 0){
+      #Use area
+      effort.allocation <- region@area/sum(region@area)
     }
     #Extract design parameters
     spacing <- object@spacing
