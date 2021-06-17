@@ -1,3 +1,18 @@
+dssd 0.2.1
+----------
+
+New Features
+
+ * calculate.effort: calculates the estimated effort required in the main survey to achieve a given CV based on information from a pilot survey.
+ * Improved plotting using ggplot2
+
+Bug Fixes
+
+ * Fixed effort allocation when there is a mix of random and systematic point transect designs and the design parameter supplied is the total number of samplers.
+ * Fixed effort allocation rounding when the total number of samplers is supplied for line transect designs. Previously it wasn't rounded so it automatically used the floor value which results in less transects than requested.
+ * Fixed segmented transect bug which generated an error when segment id's were not sequential (sometimes happens after clipping and not retaining all transects)
+
+
 dssd 0.2.2
 ----------
 
