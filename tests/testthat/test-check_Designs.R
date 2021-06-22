@@ -86,7 +86,7 @@ test_that("Check designs can generate survey transects", {
 
   transects <- generate.transects(design)
   expect_equal(nrow(transects@samplers), 100)
-
+  
   design <- make.design(region, transect.type = "line",
                         design = c("random", "systematic", "systematic"),
                         samplers = 60,
@@ -125,6 +125,5 @@ test_that("Check designs can generate survey transects", {
 
   transects <- generate.transects(design)
   expect_equal(transects@spacing, rep(3,3))
-
 
 })
