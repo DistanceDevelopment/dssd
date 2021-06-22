@@ -87,4 +87,44 @@ test_that("Check designs can generate survey transects", {
   transects <- generate.transects(design)
   expect_equal(nrow(transects@samplers), 100)
 
+  design <- make.design(region, transect.type = "line",
+                        design = c("random", "systematic", "systematic"),
+                        samplers = 60,
+                        edge.protocol = c("minus"),
+                        design.angle = 90,
+                        truncation = 1)
+
+  transects <- generate.transects(design)
+
+  design <- make.design(region, transect.type = "line",
+                        design = c("systematic", "systematic", "systematic"),
+                        samplers = 15,
+                        edge.protocol = c("minus"),
+                        design.angle = 0,
+                        truncation = 1)
+
+  transects <- generate.transects(design)
+  expect_equal(transects@spacing, rep(3,3))
+
+  design <- make.design(region, transect.type = "line",
+                        design = c("eszigzag"),
+                        samplers = 30,
+                        edge.protocol = c("minus"),
+                        design.angle = 90,
+                        truncation = 1)
+
+  transects <- generate.transects(design)
+  expect_equal(transects@spacing, rep(1.5,3))
+
+  design <- make.design(region, transect.type = "line",
+                        design = c("eszigzagcom"),
+                        samplers = 30,
+                        edge.protocol = c("minus"),
+                        design.angle = 90,
+                        truncation = 1)
+
+  transects <- generate.transects(design)
+  expect_equal(transects@spacing, rep(3,3))
+
+
 })
