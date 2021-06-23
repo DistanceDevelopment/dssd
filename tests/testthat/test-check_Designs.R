@@ -126,5 +126,28 @@ test_that("Check designs can generate survey transects", {
   transects <- generate.transects(design)
   expect_equal(transects@spacing, rep(3,3))
 
+  design <- make.design(region, transect.type = "line",
+                        design = c("eszigzagcom"),
+                        line.length = 300,
+                        effort.allocation = c(0.25,0.25,0.5),
+                        edge.protocol = c("minus"),
+                        design.angle = 90,
+                        truncation = 1)
+  transects <- generate.transects(design)
+  save.spacing <- transects@spacing
+  area.effort.ratio <- region@area/transects@spacing
+  expect_equal(area.effort.ratio[1], area.effort.ratio[2])
+  expect_equal(transects@effort.allocation, c(0.25,0.25,0.5))
+
+  design <- make.design(region, transect.type = "line",
+                        design = c("eszigzagcom"),
+                        line.length = 300,
+                        effort.allocation = c(0.25,0.25,0.5),
+                        edge.protocol = c("plus"),
+                        design.angle = 90,
+                        truncation = 1)
+  transects <- generate.transects(design)
+  expect_equal(transects@edge.protocol, rep("plus",3))
+  expect_equal(transects@spacing, save.spacing)
 
 })
