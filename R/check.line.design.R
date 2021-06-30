@@ -110,7 +110,7 @@ check.line.design <- function(object){
     spacing.for.all = FALSE
   }else if(length(object@spacing) > 1 && length(object@spacing) < strata.count){
     object@spacing <- c(object@spacing, rep(NA, (strata.count - length(object@spacing))))
-  }else if(length(object@spacing) > 1 && length(object@spacing) > strata.count){{
+  }else if(length(object@spacing) > 1 && length(object@spacing) > strata.count){
     object@spacing <- object@spacing[1:strata.count]
   }
   #Return TRUE if they are all systematic and spacings have been provided for all
