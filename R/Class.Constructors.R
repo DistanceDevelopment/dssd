@@ -326,10 +326,17 @@ make.design <- function(region = make.region(), transect.type = "line", design =
       design <- new(Class="Line.Transect.Design", region, truncation, design, line.length, effort.allocation, spacing, samplers, design.angle, edge.protocol, bounding.shape, coverage.grid)
     }
   }else if(transect.type %in% c("Point", "point", "Point Transect", "point transect")){
+    # Check line length not supplied
+    if(length(line.length) > 0){
+      warning("Argument line.length not applicable to point transect designs.", immediate. = TRUE, call. = FALSE)
+    }
     if(all(design == "random")){
       if(length(samplers) == 0){
         samplers = 20
         spacing = numeric(0)
+      }else if(length(spacing) > 0){
+        spacing = numeric(0)
+        warning("Spacing argument not applicable for random design, it will be ignored.", immediate. = TRUE, call. = FALSE)
       }
     }else if(all(design == "systematic")){
       if(length(samplers) == 0 && length(spacing) == 0){
@@ -337,7 +344,7 @@ make.design <- function(region = make.region(), transect.type = "line", design =
       }
     }else if(all(design %in% c("random", "systematic"))){
       if(length(samplers) == 0){
-        samplers = 20
+        stop("Sampler number must be supplied for strata where a random design was selected.", call. = FALSE)
       }
     }else{
       stop("Point transect design not recognised, please choose from 'random' or 'systematic", call. = FALSE)
