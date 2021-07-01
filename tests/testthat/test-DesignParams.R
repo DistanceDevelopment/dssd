@@ -24,7 +24,7 @@ test_that("Only the implemented design parameters are stored", {
                               spacing = 220,
                               seg.threshold = 50,
                               design.angle = 45),
-                 "Both spacing and samplers have been supplied for systematic design, samplers argument will be ignored.")
+                 "Both spacing and samplers have been supplied for systematic design, samplers argument will be ignored. Please only supply one of these arguments.")
 
   expect_true(class(point.design) == "Point.Transect.Design")
   expect_true(length(point.design@samplers) == 0)

@@ -69,7 +69,7 @@ check.point.design <- function(object){
     if(all(object@design == "systematic")){
       spacing.for.all = TRUE
       if(length(object@samplers) > 0){
-        warning("Both spacing and samplers have been supplied for systematic design, samplers argument will be ignored.", immediate. = TRUE, call. = FALSE)
+        warning("Both spacing and samplers have been supplied for systematic design, samplers argument will be ignored. Please only supply one of these arguments.", immediate. = TRUE, call. = FALSE)
         object@samplers <- numeric(0)
       }
     }else{
