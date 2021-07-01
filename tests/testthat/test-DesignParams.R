@@ -41,8 +41,8 @@ test_that("Only the implemented design parameters are stored", {
 
   # Generate some transects
   transects <- generate.transects(point.design)
-
-  expect_equal(transects@spacing, 220)
+  expect_equal(length(transects@spacing), 0)
+  expect_equal(transects@samp.count, 20)
 
   # No spacing so use samplers
   point.design <- make.design(region,
@@ -58,7 +58,6 @@ test_that("Only the implemented design parameters are stored", {
 
   # Generate some transects
   transects <- generate.transects(point.design)
-
   expect_equal(transects@spacing, 223.6068)
 
   expect_warning(point.design <- make.design(region,
@@ -87,7 +86,6 @@ test_that("Only the implemented design parameters are stored", {
   expect_true(length(line.design@samplers) == 0)
   expect_true(length(line.design@line.length) == 0)
 
-
   # Generate some transects
   transects <- generate.transects(line.design)
 
@@ -113,5 +111,7 @@ test_that("Only the implemented design parameters are stored", {
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Multi-strata examples
+
+
 
 })
