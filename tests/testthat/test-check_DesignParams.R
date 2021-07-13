@@ -73,14 +73,15 @@ test_that("Only the implemented design parameters are stored", {
   # -------------------------------
 
   # Spacing should take precedent over samplers
-  line.design <- make.design(region,
+  expect_warning(line.design <- make.design(region,
                              transect.type = "line",
                              design = "systematic",
                              samplers = 20,
                              spacing = 100,
                              line.length = 4500,
                              seg.threshold = 50,
-                             design.angle = 45)
+                             design.angle = 45),
+                 "Spacing, samplers and line.length have been supplied, the samplers and line.length arguments will be ignored. Please only supply one of these arguments.")
 
   expect_true(class(line.design) == "Line.Transect.Design")
   expect_true(length(line.design@samplers) == 0)
@@ -92,13 +93,14 @@ test_that("Only the implemented design parameters are stored", {
   expect_equal(transects@spacing, 100)
 
   # No spacing so use line.length (not samplers)
-  line.design <- make.design(region,
+  expect_warning(line.design <- make.design(region,
                              transect.type = "line",
                              design = "systematic",
                              samplers = 20,
                              line.length = 4500,
                              seg.threshold = 50,
-                             design.angle = 45)
+                             design.angle = 45),
+                 "Both sampers and line.length have been supplied for strata 1, samplers argument will be ignored. Please only supply one of these arguments.")
 
   expect_true(class(line.design) == "Line.Transect.Design")
   expect_true(line.design@line.length == 4500)
