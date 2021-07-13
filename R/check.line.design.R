@@ -90,18 +90,22 @@ check.line.design <- function(object){
   }
   if(all(object@design == "random") && length(object@spacing > 0)){
     object@spacing <- numeric(0)
+    warning("Spacing argument not applicable for random designs, it will be ignored.", immediate. = TRUE, call. = FALSE)
   }
   #Check spacing values
   spacing.for.all = FALSE
   if(length(object@spacing) == 1){
     object@spacing <- rep(object@spacing, strata.count)
     spacing.for.all = TRUE
-    if(length(object@samplers) > 0){
-      warning("Spacing value provided, ignoring samplers argument", immediate. = TRUE, call. = FALSE)
+    if(length(object@samplers) > 0 & length(object@line.length) > 0){
+      warning("Spacing, samplers and line.length have been supplied, the samplers and line.length arguments will be ignored. Please only supply one of these arguments.", immediate. = TRUE, call. = FALSE)
       object@samplers <- numeric(0)
-    }
-    if(length(object@line.length) > 0){
-      warning("Spacing value provided, ignoring line.length argument", immediate. = TRUE, call. = FALSE)
+      object@line.length <- numeric(0)
+    }else if(length(object@samplers) > 0){
+      warning("Both spacing and samplers have been supplied for systematic design, samplers argument will be ignored. Please only supply one of these arguments.", immediate. = TRUE, call. = FALSE)
+      object@samplers <- numeric(0)
+    }else if(length(object@line.length) > 0){
+      warning("Both spacing and line.length have been supplied, samplers argument will be ignored. Please only supply one of these arguments.", immediate. = TRUE, call. = FALSE)
       object@line.length <- numeric(0)
     }
   }else if(length(object@spacing) == strata.count && all(!is.na(object@spacing))){
@@ -164,8 +168,21 @@ check.line.design <- function(object){
         return(paste("Strata ", i, " has a random design but a non numeric argument has been supplied for both the number of samplers and the line length.", sep = "" ))
       }
     }else if(object@design[i] %in% c("systematic", "eszigzag", "eszigzagcom", "segmentedgrid")){
-      if(is.na(object@samplers[i]) && is.na(object@spacing[i]) && is.na(object@line.length[i]) && (length(object@samplers) > 1 || length(object@line.length) > 1)){
-        return(paste("Strata ", i, " has a systematic design but a non numeric argument has been supplied for the number of samplers, the spacing and the line length.", sep = "" ))
+      if(is.na(object@samplers[i]) && is.na(object@spacing[i]) && is.na(object@line.length[i])){
+        return(paste("No sampler, spacing or line.length arguments have been specified for strata ",i , ".", sep = "" ))
+      }else if(!is.na(object@samplers[i]) && !is.na(object@spacing[i]) && !is.na(object@line.length[i])){
+        warning("Spacing, samplers and line.length have been supplied for strata ",i,", samplers and line.length arguments will be ignored. Please only supply one of these arguments.", immediate. = TRUE, call. = FALSE)
+        object@samplers[i] <- NA
+        object@line.length[i] <- NA
+      }else if(!is.na(object@samplers[i]) && !is.na(object@spacing[i])){
+        warning("Both spacing and samplers have been supplied for strata ",i,", samplers argument will be ignored. Please only supply one of these arguments.", immediate. = TRUE, call. = FALSE)
+        object@samplers[i] <- NA
+      }else if(!is.na(object@line.length[i]) && !is.na(object@spacing[i])){
+        warning("Both spacing and line.length have been supplied for strata ",i,", line.length argument will be ignored. Please only supply one of these arguments.", immediate. = TRUE, call. = FALSE)
+        object@line.length[i] <- NA
+      }else if(!is.na(object@line.length[i]) && !is.na(object@samplers[i])){
+        warning("Both sampers and line.length have been supplied for strata ",i,", samplers argument will be ignored. Please only supply one of these arguments.", immediate. = TRUE, call. = FALSE)
+        object@samplers[i] <- NA
       }
     }
   }
