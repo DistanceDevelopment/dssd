@@ -13,7 +13,7 @@ Suggests: knitr,
 VignetteBuilder: knitr
 Type: Package
 Title: Distance Sampling Survey Design
-Version: 0.2.2.9002
+Version: 0.2.2.9003
 Authors@R: c(
   person("Laura", "Marshall", email = "lhm@st-andrews.ac.uk", role = c("aut", "cre")),
   person("Rexstad", "Eric", email = "eric.rexstad@st-andrews.ac.uk", role = "ctb"))
@@ -50,6 +50,7 @@ Collate:
     'calculate.trackline.segl.R'
     'calculate.trackline.zz.R'
     'calculate.trackline.zzcom.R'
+    'check.design.R'
     'check.line.design.R'
     'check.point.design.R'
     'check.shape.R'
