@@ -313,9 +313,6 @@ make.design <- function(region = make.region(), transect.type = "line", design =
   }
   #Check design arguments
   if(transect.type %in% c("Line", "line", "Line Transect", "line transect")){
-    if(length(samplers) == 0 && length(line.length) == 0 && length(spacing) == 0){
-      samplers = 20
-    }
     #Create line transect object
     if(any(design == "segmentedgrid")){
       if(length(seg.threshold) == 0){
@@ -329,29 +326,6 @@ make.design <- function(region = make.region(), transect.type = "line", design =
     # Check line length not supplied
     if(length(line.length) > 0){
       warning("Argument line.length not applicable to point transect designs.", immediate. = TRUE, call. = FALSE)
-    }
-    if(all(design == "random")){
-      if(length(samplers) == 0){
-        samplers = 20
-        spacing = numeric(0)
-      }else if(length(spacing) > 0){
-        spacing = numeric(0)
-        warning("Spacing argument not applicable for random design, it will be ignored.", immediate. = TRUE, call. = FALSE)
-      }
-    }else if(all(design == "systematic")){
-      if(length(samplers) == 0 && length(spacing) == 0){
-        samplers = 20
-      }
-    }else if(all(design %in% c("random", "systematic"))){
-      if(length(samplers) == 0){
-        stop("Sampler number must be supplied for strata where a random design was selected.", call. = FALSE)
-      }
-    }else{
-      stop("Point transect design not recognised, please choose from 'random' or 'systematic", call. = FALSE)
-    }
-    #Check values
-    if(any(any(na.omit(samplers) < 0) || any(na.omit(spacing) < 0))){
-      stop("Negative values were used to specify effort.", call. = FALSE)
     }
     #Create point transect object
     design <- new(Class="Point.Transect.Design", region, truncation, design, spacing, samplers, effort.allocation, design.angle, edge.protocol, coverage.grid)
