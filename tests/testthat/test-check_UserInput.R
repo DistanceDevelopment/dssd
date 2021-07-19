@@ -86,7 +86,7 @@ test_that("Can deal with various forms of user input", {
                         edge.protocol = c("minus"),
                         design.angle = 45,
                         truncation = 1),
-               "Strata 3 has a systematic design but a non numeric argument has been supplied for the both the number of samplers and the spacing.")
+               "No sampler or spacing argument has been specified for strata 3.")
 
   expect_error(design <- make.design(region, transect.type = "point",
                         design = "systematic",
@@ -97,28 +97,20 @@ test_that("Can deal with various forms of user input", {
                         truncation = 1),
                "The length of the effort allocation argument should be equal to the number of strata.")
 
-  expect_warning(design <- make.design(region, transect.type = "point",
-                        design = "systematic",
-                        samplers = 30,
-                        edge.protocol = c("minus", "plus"),
-                        design.angle = 45,
-                        truncation = 1),
-                 "Edge protocol argument has a different number of values than there are strata, only using the 1st value.")
-
-  expect_warning(design <- make.design(region, transect.type = "point",
+  expect_error(design <- make.design(region, transect.type = "point",
                                        design = c("systematic","random"),
                                        samplers = 30,
                                        design.angle = 45,
                                        truncation = 1),
-                 "Design argument has a different number of values than there are strata, only using the 1st value.")
+                 "Design description argument has a different number of values than there are strata, please supply a single global value or one value per stratum.")
 
 
-  expect_warning(design <- make.design(region, transect.type = "point",
+  expect_error(design <- make.design(region, transect.type = "point",
                                        design = c("systematic"),
                                        samplers = 30,
                                        design.angle = c(45,0),
                                        truncation = 1),
-                 "Design angle argument has a different number of values than there are strata, only using the 1st value.")
+                 "Design angle argument has a different number of values than there are strata, please supply a single global value or one value per stratum.")
 
   #Check point transect works when design is systematic and only spacing provided
   design <- make.design(region, transect.type = "point",
@@ -132,15 +124,15 @@ test_that("Can deal with various forms of user input", {
   temp <- generate.transects(design)
 
   #Check point transect works when design is mix of random and systematic and design angle is -1
-  design <- make.design(region, transect.type = "point",
+  expect_error(design <- make.design(region, transect.type = "point",
                         design = c("systematic", "random", "systematic"),
                         samplers = c(NA,20,NA),
                         spacing = 2.5,
                         effort.allocation = c(0.25,0.25,0.5),
                         edge.protocol = c("minus"),
                         design.angle = c(-1,NA,-1),
-                        truncation = 1)
-  temp <- generate.transects(design)
+                        truncation = 1),
+               "NA values supplied for design angle. Please supply values >= 0 and < 180 or the value -1 to indicate a random design angle selection.")
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -206,7 +198,7 @@ test_that("Can deal with various forms of user input", {
                         samplers = c(NA,30,NA),
                         edge.protocol = c("minus"),
                         design.angle = c(-1,-1,45),
-                        truncation = 1), "Segment lengths must be provided for all segmented line transect designs.")
+                        truncation = 1), "Segment length argument has a different number of values than there are strata, please supply a single global value or one value per stratum.")
 
 
   design <- make.design(region, transect.type = "line",
@@ -235,7 +227,7 @@ test_that("Can deal with various forms of user input", {
                                      edge.protocol = c("minus"),
                                      design.angle = 45,
                                      truncation = 1),
-               "Strata 3 has a systematic design but a non numeric argument has been supplied for the number of samplers, the spacing and the line length.")
+               "No sampler, spacing or line.length arguments have been specified for stratum 3.")
 
   expect_error(design <- make.design(region, transect.type = "line",
                                      design = "systematic",
@@ -244,7 +236,10 @@ test_that("Can deal with various forms of user input", {
                                      edge.protocol = c("minus"),
                                      design.angle = 45,
                                      truncation = 1),
-               "Strata 3 has a systematic design but a non numeric argument has been supplied for the number of samplers, the spacing and the line length.")
+               "No sampler, spacing or line.length arguments have been specified for stratum 3.")
+
+
+  # CHECK EFFORT ALLOCATION
 
   expect_error(design <- make.design(region, transect.type = "line",
                                      design = "systematic",
@@ -255,27 +250,56 @@ test_that("Can deal with various forms of user input", {
                                      truncation = 1),
                "The length of the effort allocation argument should be equal to the number of strata.")
 
-  expect_warning(design <- make.design(region, transect.type = "line",
+  expect_error(design <- make.design(region, transect.type = "line",
+                                     design = "systematic",
+                                     samplers = 30,
+                                     effort.allocation = c(0.5,0.5, NA),
+                                     edge.protocol = c("minus"),
+                                     design.angle = 45,
+                                     truncation = 1),
+               "Sorry, effort allocation is only applied across all strata at present. NA values are not permitted.")
+
+  expect_error(design <- make.design(region, transect.type = "line",
+                                     design = "systematic",
+                                     samplers = 30,
+                                     effort.allocation = c(0.5,0.5, "c"),
+                                     edge.protocol = c("minus"),
+                                     design.angle = 45,
+                                     truncation = 1),
+               "Effort allocation values must be numeric.")
+
+  expect_error(design <- make.design(region, transect.type = "line",
+                                     design = "systematic",
+                                     samplers = 30,
+                                     effort.allocation = c(0.5,0.5, 0.1),
+                                     edge.protocol = c("minus"),
+                                     design.angle = 45,
+                                     truncation = 1),
+               "Effort allocation should either be omitted or sum to 1.")
+
+  # CHECK EDGE PROTOCOL
+
+  expect_error(design <- make.design(region, transect.type = "line",
                                        design = "systematic",
                                        samplers = 30,
                                        edge.protocol = c("minus", "plus"),
                                        design.angle = 45,
                                        truncation = 1),
-                 "Edge protocol argument has a different number of values than there are strata, only using the 1st value.")
+                 "Edge protocol argument has a different number of values than there are strata, please either supply a single global value or one value per stratum.")
 
-  expect_warning(design <- make.design(region, transect.type = "line",
+  expect_error(design <- make.design(region, transect.type = "line",
                                        design = c("systematic","random"),
                                        samplers = 30,
                                        design.angle = 45,
                                        truncation = 1),
-                 "Design argument has a different number of values than there are strata, only using the 1st value.")
+                 "Design description argument has a different number of values than there are strata, please supply a single global value or one value per stratum.")
 
-  expect_warning(design <- make.design(region, transect.type = "line",
+  expect_error(design <- make.design(region, transect.type = "line",
                                        design = c("systematic"),
                                        samplers = 30,
                                        design.angle = c(45,0),
                                        truncation = 1),
-                 "Design angle argument has a different number of values than there are strata, only using the 1st value.")
+                 "Design angle argument has a different number of values than there are strata, please supply a single global value or one value per stratum.")
 
 
 })
