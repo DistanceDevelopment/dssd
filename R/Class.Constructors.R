@@ -311,7 +311,16 @@ make.design <- function(region = make.region(), transect.type = "line", design =
     #by default makes a grid with approx 1000 points
     coverage.grid <- new("Coverage.Grid", grid = list(), spacing = numeric(0))
   }
-  #Check design arguments
+  # Pre-creation checks - more checks are performed later in check.line.design / check.point.design
+  if(!is.numeric(effort.allocation)){
+    stop("Effort allocation values must be numeric.", call. = FALSE)
+  }
+  if(!is.numeric(truncation)){
+    stop("Truncation value must be numeric.", call. = FALSE)
+  }
+  if(!is.numeric(design.angle)){
+    stop("Design angle value(s) must be numeric.", call. = FALSE)
+  }
   if(transect.type %in% c("Line", "line", "Line Transect", "line transect")){
     #Create line transect object
     if(any(design == "segmentedgrid")){
