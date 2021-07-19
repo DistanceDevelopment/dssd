@@ -1,197 +1,259 @@
 check.line.design <- function(object){
+  # This functions checks the arguments of a line transect design.
+  # Arguments:
+  #    object - object of class Line.Transect.Design
+  # Return:
+  #    either the object which was passed in (potentially with some
+  #    modifications) or a string value which will be displayed as an
+  #    error
+  #
   #Check how many strata there are
   strata.count <- length(object@region@strata.name)
-  #EFFORT ALLOCATION
-  if(length(object@effort.allocation) > 0){
-    if(sum(object@effort.allocation, na.rm = T) != 1){
-      return("Effort allocation should either be omitted or sum to 1")
-    }
-    if(any(is.na(object@effort.allocation))){
-      return("Sorry, effort allocation is only applied across all strata at present. NA values are not permitted.")
-    }
-    if(length(object@effort.allocation) != strata.count){
-      return("The length of the effort allocation argument should be equal to the number of strata.")
-    }
-  }
-  #TRUNCATION
-  if(length(object@truncation) > 1){
-    warning("You have supplied more than one truncation value. Currently the same truncation value must be applied across the entire study region. Using only the first value supplied.", call. = FALSE, immediate. = TRUE)
-    object@truncation <- object@truncation[1]
-  }else if(object@truncation <= 0){
-    return("The truncation distance must be > 0.")
-  }
-  #Check edge protocol
-  if(length(object@edge.protocol) == 1){
-    object@edge.protocol <- rep(object@edge.protocol, strata.count)
-  }else if(length(object@edge.protocol) > 1 && length(object@edge.protocol) != strata.count){
-    warning("Edge protocol argument has a different number of values than there are strata, only using the 1st value.", call. = FALSE, immediate. = TRUE)
-    object@edge.protocol <- rep(object@edge.protocol[1], strata.count)
-  }
-  #Check segment length
-  if(any(object@design == "segmentedgrid")){
-    if(length(object@seg.length) == 1){
-      object@seg.length <- rep(object@seg.length, strata.count)
-    }else if(length(object@seg.length) > 1 && length(object@seg.length) != strata.count){
-      warning("Segment length argument has a different number of values than there are strata, only using the 1st value. (Only applicable for segmented grid design.)", call. = FALSE, immediate. = TRUE)
-      object@seg.length <- rep(object@seg.length[1], strata.count)
-    }
-    if(length(object@seg.threshold) == 1){
-      object@seg.threshold <- rep(object@seg.threshold, strata.count)
-    }else if(length(object@seg.threshold) > 1 && length(object@seg.threshold) != strata.count){
-      warning("Segment threshold argument has a different number of values than there are strata, only using the 1st value. (Only applicable for segmented grid design.)", call. = FALSE, immediate. = TRUE)
-      object@seg.threshold <- rep(object@seg.threshold[1], strata.count)
-    }
-    index <- which(object@design == "segmentedgrid")
-    if(any(!is.numeric(object@seg.length[index]))){
-      warning("Numeric values for segment length have not been suplied for all strata where a segmented grid design has been selected. Values of 1 will be inserted.", call. = FALSE, immediate. = TRUE)
-      index2 <- which(!is.numeric(object@seg.length[index]))
-      object@seg.length[index][index2] <- 1
-    }
-    if(any(object@seg.threshold[index] < 0) || any(object@seg.threshold[index] > 100) || any(!is.numeric(object@seg.threshold))){
-      return("Values for segment threshold for segmented grid design must be numeric values between 0 and 100.")
-    }
-  }
-  #Check bounding shape
-  if(any(object@design %in% c("eszigzag", "eszigzagcom"))){
-    if(length(object@bounding.shape) == 1){
-      object@bounding.shape <- rep(object@bounding.shape, strata.count)
-    }
-    index <- which(object@design %in% c("eszigzag", "eszigzagcom"))
-    if(any(is.na(object@bounding.shape[index]))){
-      return("Bounding shapes need to be provided for all strata where zigzag designs have been selected.")
-    }
-  }
-  #DESIGN ANGLE
-  #Check the design angle
-  if(length(object@design.angle) == 1){
-    object@design.angle <- rep(object@design.angle, strata.count)
-  }else if(length(object@design.angle) > 1 && length(object@design.angle) != strata.count){
-    warning("Design angle argument has a different number of values than there are strata, only using the 1st value.", call. = FALSE, immediate. = TRUE)
-    object@design.angle <- rep(object@design.angle[1], strata.count)
-  }
-  if(any(object@design.angle < 0) || any(object@design.angle >= 180)){
-    for(i in seq(along = object@design.angle)){
-      if(!is.na(object@design.angle[i])){
-        if(((object@design.angle[i] < 0) || any(object@design.angle[i] >= 180)) && object@design.angle[i] != -1){
-          return("The design angle should be >= 0 and < 180 degrees or -1 for random design angle.")
-        }
-      }
-    }
-  }
-  #Check design
-  if(length(object@design) == 1){
-    object@design <- rep(object@design, strata.count)
-  }else if(length(object@design) > 1 && length(object@design) != strata.count){
-    warning("Design argument has a different number of values than there are strata, only using the 1st value.", call. = FALSE, immediate. = TRUE)
-    object@design <- rep(object@design[1], strata.count)
-  }
-  if(any(!(object@design %in% c("random", "systematic", "eszigzag", "eszigzagcom", "segmentedgrid")))){
-    return(paste("Unrecognised designs: ", object@design, sep = ""))
-  }
-  if(all(object@design == "random") && length(object@spacing > 0)){
-    object@spacing <- numeric(0)
-    warning("Spacing argument not applicable for random designs, it will be ignored.", immediate. = TRUE, call. = FALSE)
-  }
-  #Check spacing values
-  spacing.for.all = FALSE
-  if(length(object@spacing) == 1){
-    object@spacing <- rep(object@spacing, strata.count)
-    spacing.for.all = TRUE
-    if(length(object@samplers) > 0 & length(object@line.length) > 0){
-      warning("Spacing, samplers and line.length have been supplied, the samplers and line.length arguments will be ignored. Please only supply one of these arguments.", immediate. = TRUE, call. = FALSE)
-      object@samplers <- numeric(0)
-      object@line.length <- numeric(0)
-    }else if(length(object@samplers) > 0){
-      warning("Both spacing and samplers have been supplied for systematic design, samplers argument will be ignored. Please only supply one of these arguments.", immediate. = TRUE, call. = FALSE)
-      object@samplers <- numeric(0)
-    }else if(length(object@line.length) > 0){
-      warning("Both spacing and line.length have been supplied, samplers argument will be ignored. Please only supply one of these arguments.", immediate. = TRUE, call. = FALSE)
-      object@line.length <- numeric(0)
-    }
-  }else if(length(object@spacing) == strata.count && all(!is.na(object@spacing))){
-    spacing.for.all = TRUE
-  }else if(length(object@spacing) == strata.count && any(is.na(object@spacing))){
-    spacing.for.all = FALSE
-  }else if(length(object@spacing) > 1 && length(object@spacing) < strata.count){
-    object@spacing <- c(object@spacing, rep(NA, (strata.count - length(object@spacing))))
-  }else if(length(object@spacing) > 1 && length(object@spacing) > strata.count){
-    object@spacing <- object@spacing[1:strata.count]
-  }
-  #Return TRUE if they are all systematic and spacings have been provided for all
-  if(all(object@design == "systematic") && spacing.for.all){
+
+  object <- check.design(object)
+  # Check if it's now a character (i.e. error), if so return
+  if(class(object) == "character"){
     return(object)
   }
-  #If random selected then check that samplers or line.length has been supplied
-  check.effort.allocation = FALSE
-  if(all(object@design == "random")){
-    if(length(object@samplers) == 0 && length(object@line.length) == 0){
-      object@samplers <- 20
-      check.effort.allocation = TRUE
-    }else if(length(object@samplers == 1) || length(object@line.length == 1)){
-      check.effort.allocation = TRUE
-    }else if(length(object@line.length == strata.count && !any(is.na(object@line.length)))){
-      object@samplers <- numeric(0)
-      return(object)
-    }else if(length(object@samplers == strata.count && !any(is.na(object@samplers)))){
-      object@line.length <- numeric(0)
-      return(object)
-    }else if(length(object@samplers) != strata.count){
-      return("Incorrect number of sampler values provided, either provide one total or one value for each strata.")
-    }
-  }
-  #Check effort allocation
-  if(check.effort.allocation){
-    if(length(object@effort.allocation > 0) && length(object@effort.allocation) != strata.count){
-      return("Incorrect number of effort.allocation values supplied, should either be omitted or have the same number of values as there are strata.")
-    }else{
-      #All ok so return TRUE - random design with single value
-      return(object)
-    }
-  }
-  #Check if samplers has been supplied
-  if((length(object@samplers) > 0 || length(object@line.length) > 0) && spacing.for.all){
-    warning("Samplers/line.length argument being ignored as spacings were provided for all strata.", call. = FALSE, immediate. = TRUE)
-    object@samplers <- numeric(0)
-    object@line.length <- numeric(0)
-  }
-  if(any(object@design == "random") && length(object@samplers) > 1){
-    index <- which(object@design == "random")
-    samplers <- object@samplers[index]
-    if(any(is.na(samplers))){
-      return("The legnth of the samplers argument is > 1 but a value has not been provided for every random design.")
-    }
-  }
-  #if there is a mixture of designs / design options
-  for(i in 1:strata.count){
-    if(object@design[i] == "random"){
-      if(is.na(object@samplers[i]) && is.na(object@line.length[i]) && (length(object@samplers) > 1 || length(object@line.length) > 1)){
-        return(paste("Strata ", i, " has a random design but a non numeric argument has been supplied for both the number of samplers and the line length.", sep = "" ))
-      }
-    }else if(object@design[i] %in% c("systematic", "eszigzag", "eszigzagcom", "segmentedgrid")){
-      if(is.na(object@samplers[i]) && is.na(object@spacing[i]) && is.na(object@line.length[i])){
-        return(paste("No sampler, spacing or line.length arguments have been specified for strata ",i , ".", sep = "" ))
-      }else if(!is.na(object@samplers[i]) && !is.na(object@spacing[i]) && !is.na(object@line.length[i])){
-        warning("Spacing, samplers and line.length have been supplied for strata ",i,", samplers and line.length arguments will be ignored. Please only supply one of these arguments.", immediate. = TRUE, call. = FALSE)
-        object@samplers[i] <- NA
-        object@line.length[i] <- NA
-      }else if(!is.na(object@samplers[i]) && !is.na(object@spacing[i])){
-        warning("Both spacing and samplers have been supplied for strata ",i,", samplers argument will be ignored. Please only supply one of these arguments.", immediate. = TRUE, call. = FALSE)
-        object@samplers[i] <- NA
-      }else if(!is.na(object@line.length[i]) && !is.na(object@spacing[i])){
-        warning("Both spacing and line.length have been supplied for strata ",i,", line.length argument will be ignored. Please only supply one of these arguments.", immediate. = TRUE, call. = FALSE)
-        object@line.length[i] <- NA
-      }else if(!is.na(object@line.length[i]) && !is.na(object@samplers[i])){
-        warning("Both sampers and line.length have been supplied for strata ",i,", samplers argument will be ignored. Please only supply one of these arguments.", immediate. = TRUE, call. = FALSE)
-        object@samplers[i] <- NA
-      }
-    }
-  }
-  #Check if segment length has been omitted for any segmented designs
-  if(any(object@design == "segmentedgrid")){
+
+  # SEGMENTED GRID DESIGN CHECKS
+  if("Segment.Transect.Design" %in% class(object)){
+
+    # Find which strata have the segmented line design
     index <- which(object@design == "segmentedgrid")
+    index.neg <- which(object@design != "segmentedgrid")
+
+    # SEGMENT LENGTH
+    # Either one global value or one value per strata. All values should be
+    # numeric and greater than 0. Values should only be provided for strata
+    # where the design is of type 'segmentedgrid'.
+    if(length(object@seg.length) == 1){
+      # Repeat global value for each stratum
+      seg.length <- object@seg.length
+      object@seg.length <- rep(seg.length, strata.count)
+      object@seg.length[index.neg] <- NA
+    }
+    if(length(object@seg.length) != strata.count){
+      return("Segment length argument has a different number of values than there are strata, please supply a single global value or one value per stratum.")
+    }
+    if(!is.numeric(object@seg.length)){
+      return("All segment length values must be numeric.")
+    }
+    if(any(na.omit(object@seg.length <= 0))){
+      return("All segment length values must be greater than zero.")
+    }
     if(any(is.na(object@seg.length[index]))){
-      return("Segment lengths must be provided for all segmented line transect designs (use the seg.length argument).")
+      return("NA values have been provided for segment length in strata where a segmented grid design has been selected.")
+    }
+    if(any(!is.na(object@seg.length[index.neg]))){
+      warning("Non NA values have been provided for segment length in strata where a segmented grid design was NOT selected. These vaues will be ignored.", immediate. = TRUE, call. = FALSE)
+      object@seg.length[index.neg] <- NA
+    }
+
+    # SEGMENT THRESHOLD
+    # Either one global value or one value per strata. All values should be
+    # numeric and between 0 and 100. Values should only be provided for strata
+    # where the design is of type 'segmentedgrid'.
+    if(length(object@seg.threshold) == 1){
+      # Repeat global value for each stratum
+      seg.threshold <- object@seg.threshold
+      object@seg.threshold <- rep(seg.threshold, strata.count)
+      object@seg.threshold[index.neg] <- NA
+    }
+    if(length(object@seg.threshold) != strata.count){
+      return("Segment threshold argument has a different number of values than there are strata, please supply a single global value or one value per stratum.)")
+    }
+    if(!is.numeric(object@seg.threshold)){
+      return("All segment threshold values must be numeric.")
+    }
+    if(any(na.omit(object@seg.threshold < 0)) || any(na.omit(object@seg.threshold > 100))){
+      return("Values for segment threshold for segmented grid design must be between 0 and 100.")
+    }
+    if(any(is.na(object@seg.threshold[index]))){
+      return("NA values have been provided for segment threshold in strata where a segmented grid design has been selected.")
+    }
+    if(any(!is.na(object@seg.threshold[index.neg]))){
+      warning("Non NA values have been provided for segment threshold in strata where a segmented grid design was NOT selected. These vaues will be ignored.", immediate. = TRUE, call. = FALSE)
+      object@seg.threshold[index.neg] <- NA
     }
   }
+
+  # CHECK BOUNDING SHAPE
+  # bounding shape must be supplied for strata where zigzag designs are
+  # selected. Values must either be 'convex hull' or 'rectangle'.
+  if(any(object@design %in% c("eszigzag", "eszigzagcom"))){
+
+    # Find which strata have the segmented line design
+    index <- which(object@design %in% c("eszigzag", "eszigzagcom"))
+    index.neg <- which(!object@design %in% c("eszigzag", "eszigzagcom"))
+
+    if(length(object@bounding.shape) == 1){
+      # Repeat global value for each stratum
+      bounding.shape <- object@bounding.shape
+      object@bounding.shape <- rep(bounding.shape, strata.count)
+      object@bounding.shape[index.neg] <- NA
+    }
+    if(length(object@bounding.shape) != strata.count){
+      return("Bounding shape argument has a different number of values than there are strata, please supply a single global value or one value per stratum.")
+    }
+    if(any(!na.omit(object@bounding.shape) %in% c("convex hull", "rectangle"))){
+      return("All bounding shape values must either be 'convex hull' or 'rectangle'.")
+    }
+    if(any(is.na(object@bounding.shape[index]))){
+      return("NA values have been provided for bounding shape in strata where a zigzag design has been selected. Please supply valid values.")
+    }
+    if(any(!is.na(object@bounding.shape[index.neg]))){
+      warning("Non NA values have been provided for bounding shape in strata where a zigzag design was NOT selected. These vaues will be ignored.", immediate. = TRUE, call. = FALSE)
+      object@bounding.shape[index.neg] <- NA
+    }
+  }
+
+  # CHECK DESIGNS
+  # There should be one design value per stratum or a single global value supplied.
+  # Designs must be either: random, systematic, eszigzag, eszigzagcom, segmentedgrid
+  if(length(object@design) == 1){
+    # Repeat global value for each stratum
+    object@design <- rep(object@design, strata.count)
+  }
+  if(length(object@design) != strata.count){
+    return("Design description argument has a different number of values than there are strata, please supply a single global value or one value per stratum.")
+  }
+  if(any(!(object@design %in% c("random", "systematic", "eszigzag", "eszigzagcom", "segmentedgrid")))){
+    index <- which(!object@design %in% c("random", "systematic", "eszigzag", "eszigzagcom", "segmentedgrid"))
+    return(paste("Unrecognised designs: ", paste(object@design[index], collapse = ", "), sep = ""))
+  }
+
+  # CHECK EFFORT PARAMETERS
+  # Effort can be defined by either spacing, line.length or number of samplers.
+  # Only one of these values must be supplied for each stratum or alternatively
+  # a single global value. If multiple values are provided only the first
+  # parameter of (spacing, line.length or number of samplers) will be used.
+  # Spacing is not applicable for a random design.
+  # All values defining effort must be > 0
+
+  # Check if multiple types of effort values have been supplied
+  spacing.len <- length(object@spacing)
+  line.len <- length(object@line.length)
+  samplers.len <- length(object@samplers)
+  # Store these as separate objects to allow NA only values (not allowed in numeric slots)
+  spacing <- object@spacing
+  line.length <- object@line.length
+  samplers <- object@samplers
+  # Turn 0 length into NA for if comparisons
+  if(strata.count == 1){
+    if(spacing.len == 0){
+     spacing <- NA
+    }
+    if(line.len == 0){
+      line.length <- NA
+    }
+    if(samplers.len == 0){
+      samplers <- NA
+    }
+  }
+
+  # At least one type of effort descriptor must be supplied. If multiple types have
+  # been provided the lengths of the values must be equal to the number of strata.
+  if(spacing.len == 0 && line.len == 0 && samplers.len == 0){
+    # If no values supplied use default of 20 samplers
+    samplers <- 20
+    samplers.len <- 1
+  }
+  if(spacing.len > 0 && line.len > 0 ||
+     spacing.len > 0 && samplers.len > 0 ||
+     line.len > 0 && samplers.len > 0){
+    if(spacing.len > 0  && spacing.len != strata.count){
+      return("You have supplied more than one effort descriptor (spacing, line.length, samplers). The number of values for each must be equal to the number of strata.")
+    }
+    if(line.len > 0  && line.len != strata.count){
+      return("You have supplied more than one effort descriptor (spacing, line.length, samplers). The number of values for each must be equal to the number of strata.")
+    }
+    if(samplers.len > 0  && samplers.len != strata.count){
+      return("You have supplied more than one effort descriptor (spacing, line.length, samplers). The number of values for each must be equal to the number of strata.")
+    }
+  }
+
+  # Check if only a single value has been provided for one of the effort descriptors
+  # when there are multiple strata. Use this to set a flag for future checks
+  global.value <- FALSE
+  if(strata.count > 1){
+    if(spacing.len == 1){
+      global.value <- TRUE
+      spacing <- rep(object@spacing, strata.count)
+      if(line.len > 0 || samplers.len > 0){
+        warning("Multiple global effort parameters have been supplied (spacing, line length, samplers). Spacing will be used and the others ignored.", immediate. = TRUE, call. = FALSE)
+        line.length <- numeric(0)
+        samplers <- numeric(0)
+      }
+    }else if(line.len == 1){
+      global.value <- TRUE
+      if(spacing.len > 0){
+        warning("Both line length and samplers have been provided. The global line length will be used and samplers ignored.", immediate. = TRUE, call. = FALSE)
+        samplers <- numeric(0)
+      }
+    }else if(samplers.len == 1){
+      global.value <- TRUE
+    }
+  }
+
+  # If there is only a single value and it is spacing check that none of the designs
+  # are random.
+  if(global.value){
+    if(spacing.len == 1 && any(object@design == "random")){
+      return("Cannot specify a global spacing value when you have also selected a random design.")
+    }
+  # Otherwise iterate through the designs and effort parameters
+  }else{
+    # Iterate through strata and check
+    for(i in 1:strata.count){
+      # check that at least one effort has been provided for this stratum
+      if(is.na(spacing[i]) && is.na(line.length[i]) && is.na(samplers[i])){
+        return(paste("No sampler, spacing or line.length arguments have been specified for stratum ",i , ".", sep = "" ))
+      }
+      # Special checks for random design
+      if(object@design[i] == "random" && !is.na(spacing[i])){
+        if(is.na(line.length[i]) && is.na(samplers[i])){
+          return(paste("Spacing is not a valid effort argument for the random design in stratum ", i, ", please supply line length or samplers", sep = ""))
+        }else{
+          warning(paste("Spacing is not a valid effort argument for the random design in stratum ", i, ", it will be ignored.", sep = ""), immediate. = TRUE, call. = FALSE)
+          spacing[i] <- NA
+        }
+      }
+      # Now check that there is an effort parameter defined and give a warning if
+      # multiple effort measures have been supplied.
+      if(!is.na(samplers[i]) && !is.na(spacing[i]) && !is.na(line.length[i])){
+        warning("Spacing, samplers and line.length have been supplied for stratum ",i,", samplers and line.length arguments will be ignored.", immediate. = TRUE, call. = FALSE)
+        samplers[i] <- NA
+        line.length[i] <- NA
+      }else if(!is.na(samplers[i]) && !is.na(spacing[i])){
+        warning("Both spacing and samplers have been supplied for stratum ",i,", samplers argument will be ignored.", immediate. = TRUE, call. = FALSE)
+        samplers[i] <- NA
+      }else if(!is.na(line.length[i]) && !is.na(spacing[i])){
+        warning("Both spacing and line.length have been supplied for stratum  ",i,", line.length argument will be ignored.", immediate. = TRUE, call. = FALSE)
+        line.length[i] <- NA
+      }else if(!is.na(line.length[i]) && !is.na(samplers[i])){
+        warning("Both sampers and line.length have been supplied for stratum ",i,", samplers argument will be ignored.", immediate. = TRUE, call. = FALSE)
+        samplers[i] <- NA
+      }
+    }
+  }
+  # Remove NA's when there is only one stratum
+  if(strata.count == 1){
+    if(is.na(spacing)){
+     spacing <- numeric(0)
+    }
+    if(is.na(line.length)){
+      line.length <- numeric(0)
+    }
+    if(is.na(samplers)){
+      samplers <- numeric(0)
+    }
+  }
+
+  # Replace values back in object
+  object@spacing <- spacing
+  object@line.length <- line.length
+  object@samplers <- samplers
+
   return(object)
 }
