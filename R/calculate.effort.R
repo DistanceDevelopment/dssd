@@ -23,6 +23,7 @@
 #' Springer International Publishing.
 #' https://doi.org/10.1007/978-3-319-19219-2
 #' @export
+#' @importFrom graphics axis segments text
 #' @return Plots the target cv vs effort (if the length of cv.values is >= 5)
 #' Returns a data.frame (invisibly if the length of cv.values is >= 5) containing two fields
 #' \itemize{
