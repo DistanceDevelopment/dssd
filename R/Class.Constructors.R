@@ -181,7 +181,8 @@ make.region <- function(region.name = "region",
 #' the same length as the number of strata.
 #' @param seg.length the length of the line transect segments for a segmented grid
 #' design.
-#' @param effort.allocation numeric values used to indicate the proportion of effort
+#' @param effort.allocation
+#' numeric values used to indicate the proportion of effort
 #' to be allocated to each strata from number of samplers or line length. If length is
 #' 0 (the default) and only a total line length or total number of samplers is supplied,
 #' effort is allocated based on stratum area.
