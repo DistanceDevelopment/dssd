@@ -428,4 +428,47 @@ test_that("Only the implemented design parameters are stored", {
 
   expect_equal(design@bounding.shape, c("rectangle", NA, "convex hull"))
 
+  # CHECK EFFORT ALLOCATION
+
+  # Should be ignored when effort is explicit
+  expect_warning(design <- make.design(region, transect.type = "point",
+                                       design = "random",
+                                       samplers = c(10,10,10),
+                                       effort.allocation = c(0.1,0.1,0.8),
+                                       edge.protocol = "minus",
+                                       truncation = 1),
+                 "Effort allocation argument redundant as you have supplied stratum specific effort values, it will be ignored.")
+  expect_equal(design@effort.allocation, numeric(0))
+
+  expect_warning(design <- make.design(region, transect.type = "line",
+                                       design = "random",
+                                       samplers = c(10,10,10),
+                                       effort.allocation = c(0.1,0.1,0.8),
+                                       edge.protocol = "minus",
+                                       truncation = 1),
+                 "Effort allocation argument redundant as you have supplied stratum specific effort values, it will be ignored.")
+  expect_equal(design@effort.allocation, numeric(0))
+
+  design1 <- make.design(region, transect.type = "point",
+                        design = "random",
+                        samplers = 30,
+                        # This allocation is manually based on areas
+                        # Strata areas:  145, 144, 134
+                        effort.allocation = c(0.3428,0.3404,0.3168),
+                        edge.protocol = "minus",
+                        truncation = 1)
+
+  design2 <- make.design(region, transect.type = "point",
+                         design = "random",
+                         samplers = 30,
+                         edge.protocol = "minus",
+                         truncation = 1)
+
+  t1 <- generate.transects(design1)
+  t2 <- generate.transects(design2)
+
+  expect_equal(t1@samp.count, t2@samp.count)
+
+
+
 })

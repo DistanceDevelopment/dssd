@@ -255,5 +255,15 @@ check.line.design <- function(object){
   object@line.length <- line.length
   object@samplers <- samplers
 
+  # Check if effort.allocation is redundant
+  if(any(c(samplers.len, line.len, spacing.len) > 1) && length(object@effort.allocation) > 1){
+    warning("Effort allocation argument redundant as you have supplied stratum specific effort values, it will be ignored.", immediate. = TRUE, call. = FALSE)
+    object@effort.allocation <- numeric(0)
+  }
+  if(strata.count ==1  && length(object@effort.allocation) > 1){
+    warning("Effort allocation argument redundant as there is only one stratum, it will be ignored.", immediate. = TRUE, call. = FALSE)
+    object@effort.allocation <- numeric(0)
+  }
+
   return(object)
 }
