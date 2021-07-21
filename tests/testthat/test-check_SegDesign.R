@@ -91,12 +91,12 @@ test_that("Can deal with various forms of user input", {
   design.tm <- make.design(region.tm,
                            transect.type = "line",
                            design = "segmentedgrid",
-                           design.angle = c(45,-1),
-                           samplers = 75,
-                           seg.length = c(200,50),
+                           design.angle = c(45,90),
+                           samplers = 100,
+                           seg.length = c(200,80),
                            truncation = 25)
   survey.tm <- generate.transects(design.tm)
-  expect_equal(round(survey.tm@spacing,2), c(356.85, 398.61))
+  expect_equal(round(survey.tm@spacing,2), c(298.14, 340.33))
   expect_equal(survey.tm@seg.threshold, rep(50,2))
 
   #Test when no transects
