@@ -55,7 +55,7 @@ all strata will be plotted.}
 
 \item{line.col}{sets the line colour for the lines around the survey region.}
 
-\item{legend.params}{depricated since implementation of ggplot2}
+\item{legend.params}{deprecated since implementation of ggplot2}
 
 \item{col}{sets the colour of the transects / coverage grid points}
 
