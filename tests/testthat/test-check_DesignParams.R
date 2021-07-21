@@ -25,9 +25,27 @@ test_that("Only the implemented design parameters are stored", {
                               seg.threshold = 50,
                               design.angle = 45),
                  "Both spacing and samplers have been supplied for stratum 1, samplers argument will be ignored.")
-
   expect_true(class(point.design) == "Point.Transect.Design")
   expect_true(length(point.design@samplers) == 0)
+
+  expect_warning(point.design <- make.design(region,
+                                             transect.type = "point",
+                                             design = "systematic",
+                                             samplers = 20,
+                                             effort.allocation = 1,
+                                             seg.threshold = 50,
+                                             design.angle = 45),
+                 "Effort allocation argument redundant as there is only one stratum, it will be ignored.")
+  expect_equal(design@effort.allocation, numeric(0))
+
+  expect_warning(point.design <- make.design(region,
+                                             transect.type = "line",
+                                             design = "systematic",
+                                             spacing = 220,
+                                             effort.allocation = 1,
+                                             seg.threshold = 50,
+                                             design.angle = 45),
+                 "Effort allocation argument redundant as there is only one stratum, it will be ignored.")
 
   # Expect warning
   expect_warning(point.design <- make.design(region,
@@ -292,12 +310,13 @@ test_that("Only the implemented design parameters are stored", {
   expect_equal(design@design, rep("systematic", 3))
   expect_equal(design@edge.protocol, rep("minus", 3))
 
-  design <- make.design(region, transect.type = "line",
-                        design = c("eszigzagcom"),
-                        samplers = 30,
-                        edge.protocol = "minus",
-                        design.angle = 45,
-                        truncation = 1)
+  expect_warning(design <- make.design(region, transect.type = "line",
+                                       design = c("eszigzagcom"),
+                                       samplers = 30,
+                                       edge.protocol = "minus",
+                                       design.angle = 45,
+                                       truncation = 1),
+                 "The default allocation of samplers to strata \\(i.e. the number of samplers per stratum are in proportion to stratum areas\\) will likely lead to an unequal effort design as average sampler lengths will likely vary between strata.")
   expect_equal(design@design, rep("eszigzagcom", 3))
   expect_equal(design@edge.protocol, rep("minus", 3))
 
@@ -447,6 +466,24 @@ test_that("Only the implemented design parameters are stored", {
                                        edge.protocol = "minus",
                                        truncation = 1),
                  "Effort allocation argument redundant as you have supplied stratum specific effort values, it will be ignored.")
+  expect_equal(design@effort.allocation, numeric(0))
+
+  expect_warning(design <- make.design(region, transect.type = "line",
+                                       design = "systematic",
+                                       spacing = 10,
+                                       effort.allocation = c(0.1,0.1,0.8),
+                                       edge.protocol = "minus",
+                                       truncation = 1),
+                 "Effort allocation not applicable when effort is determined by spacing, it will be ignored.")
+  expect_equal(design@effort.allocation, numeric(0))
+
+  expect_warning(design <- make.design(region, transect.type = "point",
+                                       design = "systematic",
+                                       spacing = 10,
+                                       effort.allocation = c(0.1,0.1,0.8),
+                                       edge.protocol = "minus",
+                                       truncation = 1),
+                 "Effort allocation not applicable when effort is determined by spacing, it will be ignored.")
   expect_equal(design@effort.allocation, numeric(0))
 
   design1 <- make.design(region, transect.type = "point",

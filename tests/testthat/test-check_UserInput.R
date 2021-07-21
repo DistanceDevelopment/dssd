@@ -113,15 +113,17 @@ test_that("Can deal with various forms of user input", {
                  "Design angle argument has a different number of values than there are strata, please supply a single global value or one value per stratum.")
 
   #Check point transect works when design is systematic and only spacing provided
-  design <- make.design(region, transect.type = "point",
-                        design = c("systematic"),
-                        #samplers = 30,
-                        spacing = 2.5,
-                        effort.allocation = c(0.25,0.25,0.5),
-                        edge.protocol = c("minus"),
-                        design.angle = -1,
-                        truncation = 1)
+  expect_warning(design <- make.design(region, transect.type = "point",
+                                       design = c("systematic"),
+                                       #samplers = 30,
+                                       spacing = 2.5,
+                                       effort.allocation = c(0.25,0.25,0.5),
+                                       edge.protocol = c("minus"),
+                                       design.angle = -1,
+                                       truncation = 1),
+                 "Effort allocation not applicable when effort is determined by spacing, it will be ignored.")
   temp <- generate.transects(design)
+  expect_equal(length(object@effort.allocation), 0)
 
   #Check point transect works when design is mix of random and systematic and design angle is -1
   expect_error(design <- make.design(region, transect.type = "point",
@@ -138,20 +140,22 @@ test_that("Can deal with various forms of user input", {
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   #LINE TRANSECT DESIGNS
   #Test make.design for random line
-  design <- make.design(region, transect.type = "line",
-                        design = "random",
-                        samplers = 30,
-                        edge.protocol = c("minus"),
-                        design.angle = 45,
-                        truncation = 1)
+  expect_warning(design <- make.design(region, transect.type = "line",
+                                       design = "random",
+                                       samplers = 30,
+                                       edge.protocol = c("minus"),
+                                       design.angle = 45,
+                                       truncation = 1),
+                 "The default allocation of samplers to strata \\(i.e. the number of samplers per stratum are in proportion to stratum areas\\) will likely lead to an unequal effort design as average sampler lengths will likely vary between strata.")
   expect_equal(design@design, rep("random",3))
   expect_equal(design@edge.protocol, rep("minus",3))
   expect_equal(design@design.angle, rep(45,3))
   expect_equal(design@samplers, 30)
 
-  design <- make.design(region, transect.type = "line",
-                        design = "random",
-                        truncation = 1)
+  expect_warning(design <- make.design(region, transect.type = "line",
+                                       design = "random",
+                                       truncation = 1),
+                 "The default allocation of samplers to strata \\(i.e. the number of samplers per stratum are in proportion to stratum areas\\) will likely lead to an unequal effort design as average sampler lengths will likely vary between strata.")
   expect_equal(design@samplers, 20)
 
   design <- make.design(region, transect.type = "line",
@@ -161,12 +165,13 @@ test_that("Can deal with various forms of user input", {
   expect_equal(design@line.length, 150)
 
   #Test make.design for systematic line
-  design <- make.design(region, transect.type = "line",
-                        design = "systematic",
-                        samplers = 30,
-                        edge.protocol = c("plus"),
-                        design.angle = 45,
-                        truncation = 1)
+  expect_warning(design <- make.design(region, transect.type = "line",
+                                       design = "systematic",
+                                       samplers = 30,
+                                       edge.protocol = c("plus"),
+                                       design.angle = 45,
+                                       truncation = 1),
+                 "The default allocation of samplers to strata \\(i.e. the number of samplers per stratum are in proportion to stratum areas\\) will likely lead to an unequal effort design as average sampler lengths will likely vary between strata.")
   expect_equal(design@design, rep("systematic",3))
   expect_equal(design@edge.protocol, rep("plus",3))
   expect_equal(design@design.angle, rep(45,3))
