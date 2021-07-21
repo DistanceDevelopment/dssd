@@ -34,7 +34,7 @@ Another reason some people consider stratifying their survey region is to improv
 
 A third scenario in which you may want to stratify is that you wish to make inference about a particular sub-region of your study area. In addition, if you plan on fitting a spatial model to your distance sampling data you may have regions of particular interest in which you would like to detect changes in density at smaller scales than in other regions.  
 
-Finally you may wish to stratify as you plan to survey from two different platforms, for example marine surveys when some strata will be surveyed from a ship while others are surveyed from the air. Ship-board surveys often use zigzag designs for efficiency to maximise on-effort survey time. Ships have sufficient space for multiple sets of observers so ship board surveys can achieve continuous observation while travelling along the transects. In contrast, aerial surveys often use systematic parallel line designs. Firstly the tight turns at the end of zigzags can be hard to achieve in an airplane (and unpleasant for the crew) and secondly the time taken to transit between parallel transects can be useful periods of rest for a single set of observers. The Small Cetaceans in the European Atlantic and North Sea II (SCANS II) stata were designed to implement this mixed platform approach.
+Finally you may wish to stratify as you plan to survey from two different platforms, for example marine surveys when some strata will be surveyed from a ship while others are surveyed from the air. Ship-board surveys often use zigzag designs for efficiency to maximise on-effort survey time. Ships have sufficient space for multiple sets of observers so ship board surveys can achieve continuous observation while travelling along the transects. In contrast, aerial surveys often use systematic parallel line designs. Firstly the tight turns at the end of zigzags can be hard to achieve in an airplane (and unpleasant for the crew) and secondly the time taken to transit between parallel transects can be useful periods of rest for a single set of observers. The Small Cetaceans in the European Atlantic and North Sea II (SCANS II) strata were designed to implement this mixed platform approach.
 
 ## Multi-Strata Designs using dssd
 
@@ -194,7 +194,7 @@ plot(design, strata.id = 2, subtitle = "Coverage Southern Strata")
 set.seed(273)
 ```
 
-For this point transect example we will use a different study region. This is an area of forest in Scotland between Dundee and St Andrews made up of two strata, Figure 11. As this region is not projectd we will first need to project the study area onto a flat plane.
+For this point transect example we will use a different study region. This is an area of forest in Scotland between Dundee and St Andrews made up of two strata, Figure 11. As this region is not projected we will first need to project the study area onto a flat plane.
 
 ```{r point_region, fig.align='center', fig.width=6, fig.height = 4.5, fig.cap = "Figure 11: Study region depicting an area of forest between Dundee and St Andrews in Scotland. It comprises of a main stratum and a Morton Loch stratum which forms part of a nature reserve in the area."}
 #Load the unprojected shapefile

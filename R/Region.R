@@ -203,7 +203,7 @@ setMethod(
 #' @param col sets the colour of the transects / coverage grid points
 #' @param lwd sets the line width of the transects
 #' @param covered.area boolean value saying whether the covered area should be plotted.
-#' @param legend.params depricated since implementation of ggplot2
+#' @param legend.params deprecated since implementation of ggplot2
 #' @rdname plot.Region-methods
 #' @importFrom graphics legend mtext
 #' @exportMethod plot
