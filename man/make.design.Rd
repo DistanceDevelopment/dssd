@@ -41,8 +41,9 @@ the same length as the number of strata.}
 \item{seg.length}{the length of the line transect segments for a segmented grid
 design.}
 
-\item{effort.allocation}{numeric values used to indicate the proportion of effort
-to be allocated to each strata from number of samplers or line length. If length is
+\item{effort.allocation}{Used for multi-strata regions where only a total effort
+value is provided. This numeric argument should have one value per stratum indicating
+the proportion of the total effort to allocate to that stratum. If length is
 0 (the default) and only a total line length or total number of samplers is supplied,
 effort is allocated based on stratum area.}
 
@@ -138,11 +139,27 @@ would run through the middle of each zigzag transect if the zigzags were to
 be generated within a rectangle. The design angle for zigzags should usually
 run along the longest dimension of the study region.
 
-NOTE: If multiple design effort arguments are supplied (i.e. spacing, samplers,
-line.length) then only the first of spacing then line.length then number of
-samplers will be used. The other values provided will be discarded as designs
-must only be based on one of these parameters. Different design effort arguments
-may supplied for different strata, however.
+NOTE: If multiple global design effort arguments are supplied (i.e. spacing,
+samplers, line.length) then only the first of spacing then line.length then
+number of samplers will be used. The other values provided will be discarded.
+Different design effort arguments may supplied for different strata. This is
+achieved by supplying vectors of numeric values for each of the desired
+effort measures, there should be 1 value for each stratum. A value indicates
+the effort for that stratum and NA's should be used to ensure that only one
+measure of effort is defined for each stratum.
+
+\strong{Effort Allocation:}
+For multi-strata designs users are able to define a single global effort value,
+for example number of samplers or line length, and allocate proportions of it
+to each stratum using the effort.allocation argument. If a global effort value
+is supplied and effort.allocation is not defined then effort is assigned
+based on stratum area. This should lead to a design which is at least
+approximately equal effort across strata. In the case where all strata use the
+same systematic design then in the absence of effort.allocation the spacing will
+be calculated globally and exactly equal effort will be achieved. In the case
+where different designs are chosen for different strata or a non-systematic
+design is selected then effort and spacing values will be calculated at the
+stratum level and this can lead to some variations in coverage between strata.
 
 See the Getting Started Vignette and the Multiple Strata in dssd Vignette for
 example designs.
