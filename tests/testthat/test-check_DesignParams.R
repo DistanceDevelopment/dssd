@@ -469,6 +469,26 @@ test_that("Only the implemented design parameters are stored", {
 
   expect_equal(t1@samp.count, t2@samp.count)
 
+  design <- make.design(region, transect.type = "point",
+                         design = "systematic",
+                         samplers = 30,
+                         edge.protocol = "minus",
+                         truncation = 1)
 
+  transects <- generate.transects(design)
+  # Spacings should be the same across strata
+  expect_equal(transects@spacing[1], transects@spacing[2])
+  expect_equal(transects@spacing[2], transects@spacing[3])
+
+  design <- make.design(region, transect.type = "point",
+                        design = "systematic",
+                        samplers = 30,
+                        effort.allocation = c(0.3428,0.3404,0.3168),
+                        edge.protocol = "minus",
+                        truncation = 1)
+
+  transects <- generate.transects(design)
+  expect_true(transects@spacing[1] != transects@spacing[2])
+  expect_true(transects@spacing[2] != transects@spacing[3])
 
 })
