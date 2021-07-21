@@ -123,7 +123,7 @@ test_that("Can deal with various forms of user input", {
                                        truncation = 1),
                  "Effort allocation not applicable when effort is determined by spacing, it will be ignored.")
   temp <- generate.transects(design)
-  expect_equal(length(object@effort.allocation), 0)
+  expect_equal(length(design@effort.allocation), 0)
 
   #Check point transect works when design is mix of random and systematic and design angle is -1
   expect_error(design <- make.design(region, transect.type = "point",

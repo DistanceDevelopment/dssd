@@ -36,7 +36,7 @@ test_that("Only the implemented design parameters are stored", {
                                              seg.threshold = 50,
                                              design.angle = 45),
                  "Effort allocation argument redundant as there is only one stratum, it will be ignored.")
-  expect_equal(design@effort.allocation, numeric(0))
+  expect_equal(point.design@effort.allocation, numeric(0))
 
   expect_warning(point.design <- make.design(region,
                                              transect.type = "line",
