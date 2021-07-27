@@ -99,6 +99,9 @@ test_that("Can deal with various forms of user input", {
   expect_equal(round(survey.tm@spacing,2), c(298.14, 340.33))
   expect_equal(survey.tm@seg.threshold, rep(50,2))
 
+  # Test moved from next 3 examples into test-x_seed_tests as they fail on both
+  # windows and debian? due to differing seed handling.
+
   #Test when no transects
   set.seed(551)
   design.tm <- make.design(region.tm,
@@ -111,9 +114,6 @@ test_that("Can deal with various forms of user input", {
                            truncation = 25)
   suppressWarnings(survey.tm <- generate.transects(design.tm))
   expect_equal(design.tm@seg.threshold, rep(100,2))
-  if(Sys.info()['sysname'] != "Windows"){
-    expect_equal(survey.tm@samp.count, 17)
-  }
 
   #Test when no transects
   set.seed(321)
@@ -126,9 +126,6 @@ test_that("Can deal with various forms of user input", {
                            seg.threshold = c(100,0),
                            truncation = 25)
   suppressWarnings(survey.tm <- generate.transects(design.tm))
-  if(Sys.info()['sysname'] != "Windows"){
-    expect_equal(survey.tm@samp.count, c(NA,42))
-  }
 
   #test basic shape to check trackline lengths
   region <- make.region()
@@ -140,12 +137,6 @@ test_that("Can deal with various forms of user input", {
                         seg.length = 100,
                         seg.threshold = 100,
                         truncation = 25)
-  set.seed(223)
-  if(Sys.info()['sysname'] != "Windows"){
-    survey <- generate.transects(design)
-    expect_equal(survey@trackline, 5350)
-    expect_equal(survey@cyclictrackline, 7100)
-  }
 
   shapefile.name <- system.file("extdata", "TrackExample.shp", package = "dssd")
   region <- make.region(region.name = "study area",
