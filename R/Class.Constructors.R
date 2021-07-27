@@ -253,8 +253,10 @@ make.region <- function(region.name = "region",
 #' survey <- generate.transects(design)
 #' plot(region, survey, covered.area = TRUE)
 #'
-#' # Warning! this will take some time to run
-#' design <- run.coverage(design, reps = 500)
+#' # Note, the number of reps here has been set to 5 to avoid lengthy run-times,
+#' # however, the reps should be at least 100 for an idea of design statistics
+#' # (i.e. trackline lengths) and 500 + to give a good odea of coverage.
+#' design <- run.coverage(design, reps = 5)
 #' # Plot the coverage
 #' plot(design)
 #' # Display the design statistics
@@ -289,8 +291,10 @@ make.region <- function(region.name = "region",
 #' survey <- generate.transects(design)
 #' plot(region, survey, covered.area = TRUE)
 #'
-#' # Warning! this will quite a long time to run as it is a complex example.
-#' design <- run.coverage(design, reps = 500)
+#' # Note, the number of reps here has been set to 5 to avoid lengthy run-times,
+#' # however, the reps should be at least 100 for an idea of design statistics
+#' # (i.e. trackline lengths) and 500 + to give a good odea of coverage.
+#' design <- run.coverage(design, reps = 5)
 #' # Plot the coverage
 #' plot(design)
 #' # Display the design statistics
@@ -384,19 +388,9 @@ make.design <- function(region = make.region(), transect.type = "line", design =
 #' @export
 #' @author Laura Marshall
 #' @examples
-#' \donttest{
-#' # This example will take a bit of time to generate
-#' # A coverage grid in a rectangular region of 2000 x 500
-#' region <- make.region()
-#' cover <- make.coverage(region, spacing = 50)
-#' plot(region, cover)
-#' # Create coverage grid by approx number of grid points
-#' cover <- make.coverage(region, n.grid.points = 1000)
-#' plot(region, cover)
-#' }
-#'
-#' # Fast running example for CRAN testing purposes
-#' # This spacing is too sparse to assess coverage in a real example
+#' # Fast running example, please note to more accurately assess coverage
+#' # the spacing should be reduced. Spacings of between 20 and 50 will allow
+#' # a better assessment of coverage to be achieved.
 #' region <- make.region()
 #' cover <- make.coverage(region, spacing = 250)
 #' plot(region, cover)

@@ -189,8 +189,10 @@ design <- make.design(region = region,
 survey <- generate.transects(design)
 plot(region, survey, covered.area = TRUE)
 
-# Warning! this will take some time to run
-design <- run.coverage(design, reps = 500)
+# Note, the number of reps here has been set to 5 to avoid lengthy run-times,
+# however, the reps should be at least 100 for an idea of design statistics
+# (i.e. trackline lengths) and 500 + to give a good odea of coverage.
+design <- run.coverage(design, reps = 5)
 # Plot the coverage
 plot(design)
 # Display the design statistics
@@ -225,8 +227,10 @@ design <- make.design(region = region,
 survey <- generate.transects(design)
 plot(region, survey, covered.area = TRUE)
 
-# Warning! this will quite a long time to run as it is a complex example.
-design <- run.coverage(design, reps = 500)
+# Note, the number of reps here has been set to 5 to avoid lengthy run-times,
+# however, the reps should be at least 100 for an idea of design statistics
+# (i.e. trackline lengths) and 500 + to give a good odea of coverage.
+design <- run.coverage(design, reps = 5)
 # Plot the coverage
 plot(design)
 # Display the design statistics
