@@ -9,7 +9,9 @@
 ## R CMD check results
 There were no ERRORs, WARNINGs or NOTEs. 
 
-Error on first submission was due to differences in results from setting the seed, these tests are now only run locally.
+Fixed update which caused error in dsims (dependency) vignette.
+
+Error on first submission was due to differences in results from setting a seed, these tests are now only run locally.
 
 I cannot replicate installation error in Windows for first submission.
 
