@@ -96,8 +96,8 @@ check.line.design <- function(object){
     if(length(object@bounding.shape) != strata.count){
       return("Bounding shape argument has a different number of values than there are strata, please supply a single global value or one value per stratum.")
     }
-    if(any(!na.omit(object@bounding.shape) %in% c("convex hull", "rectangle"))){
-      return("All bounding shape values must either be 'convex hull' or 'rectangle'.")
+  if(any(!na.omit(object@bounding.shape) %in% c("convex.hull", "rectangle"))){
+      return("All bounding shape values must either be 'convex.hull' or 'rectangle'.")
     }
     if(any(is.na(object@bounding.shape[index]))){
       return("NA values have been provided for bounding shape in strata where a zigzag design has been selected. Please supply valid values.")

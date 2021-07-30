@@ -68,7 +68,7 @@ value to 0.}
 
 \item{bounding.shape}{only applicable to zigzag designs. A character value saying
 whether the zigzag transects should be generated using a minimum bounding
-"rectangle" or a "convex hull". The default is a minimum bounding rectangle.}
+"rectangle" or "convex.hull". The default is a minimum bounding rectangle.}
 
 \item{truncation}{A single numeric value describing the longest distance at which
 an object may be observed. Truncation distance is constant across strata.}

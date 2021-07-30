@@ -15,7 +15,7 @@ the type of line transect design.
 multiple values relating to each stratum).}
 
 \item{\code{bounding.shape}}{relevant for zigzag designs, either a minimum bounding "rectangle"
-or a "convex hull".}
+or a "convex.hull".}
 }}
 
 \section{Methods}{

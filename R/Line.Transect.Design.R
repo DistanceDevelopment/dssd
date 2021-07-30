@@ -12,7 +12,7 @@
 #' @slot line.length Numeric value defining the total line length to be generated (may be
 #' multiple values relating to each stratum).
 #' @slot bounding.shape relevant for zigzag designs, either a minimum bounding "rectangle"
-#' or a "convex hull".
+#' or a "convex.hull".
 #' @section Methods:
 #' \describe{
 #'  \item{\code{generate.transects}}{\code{signature=(object = "Line.Transect.Design", quiet = FALSE, ...)}:
