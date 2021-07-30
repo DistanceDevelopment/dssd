@@ -410,7 +410,7 @@ test_that("Only the implemented design parameters are stored", {
                                        spacing = c(NA, 20, NA),
                                        line.length = c(100, NA, 5),
                                        edge.protocol = "minus",
-                                       bounding.shape = c("rectangle", "convex hull"),
+                                       bounding.shape = c("rectangle", "convex.hull"),
                                        design.angle = 45,
                                        truncation = 1),
                  "Bounding shape argument has a different number of values than there are strata, please supply a single global value or one value per stratum.")
@@ -420,17 +420,17 @@ test_that("Only the implemented design parameters are stored", {
                                      spacing = c(NA, 20, NA),
                                      line.length = c(100, NA, 5),
                                      edge.protocol = "minus",
-                                     bounding.shape = c("rectangle", "convex hull", "circle"),
+                                     bounding.shape = c("rectangle", "convex.hull", "circle"),
                                      design.angle = 45,
                                      truncation = 1),
-               "All bounding shape values must either be 'convex hull' or 'rectangle'.")
+               "All bounding shape values must either be 'convex.hull' or 'rectangle'.")
 
   expect_error(design <- make.design(region, transect.type = "line",
                                      design = c("eszigzagcom", "random", "eszigzag"),
                                      spacing = c(NA, 20, NA),
                                      line.length = c(100, NA, 5),
                                      edge.protocol = "minus",
-                                     bounding.shape = c("rectangle", "convex hull", NA),
+                                     bounding.shape = c("rectangle", "convex.hull", NA),
                                      design.angle = 45,
                                      truncation = 1),
                "NA values have been provided for bounding shape in strata where a zigzag design has been selected. Please supply valid values.")
@@ -440,12 +440,12 @@ test_that("Only the implemented design parameters are stored", {
                                      spacing = c(NA, 20, NA),
                                      line.length = c(100, NA, 5),
                                      edge.protocol = "minus",
-                                     bounding.shape = c("rectangle", "convex hull", "convex hull"),
+                                     bounding.shape = c("rectangle", "convex.hull", "convex.hull"),
                                      design.angle = 45,
                                      truncation = 1),
                "Non NA values have been provided for bounding shape in strata where a zigzag design was NOT selected. These vaues will be ignored.")
 
-  expect_equal(design@bounding.shape, c("rectangle", NA, "convex hull"))
+  expect_equal(design@bounding.shape, c("rectangle", NA, "convex.hull"))
 
   # CHECK EFFORT ALLOCATION
 
