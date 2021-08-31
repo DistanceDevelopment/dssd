@@ -83,7 +83,7 @@ test_that("Check designs can generate survey transects", {
                                        edge.protocol = c("minus"),
                                        design.angle = 0,
                                        truncation = 1),
-                 "The default allocation of samplers to strata \\(i.e. the number of samplers per stratum are in proportion to stratum areas\\) will likely lead to an unequal effort design as average sampler lengths will likely vary between strata.")
+                 "The default allocation of samplers to strata \\(i.e. the number of samplers per stratum are in proportion to stratum areas\\) may lead to an unequal effort design as average sampler lengths could vary between strata.")
 
   transects <- generate.transects(design)
   expect_equal(nrow(transects@samplers), 100)
