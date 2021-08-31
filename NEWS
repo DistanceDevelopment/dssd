@@ -1,3 +1,10 @@
+dssd 0.3.1
+----------
+
+Bug Fixes
+
+ * Minor fix as dssd was erroneously displaying a warning about possible unequal coverage when only a total number of samplers was supplied. This was not always applicable.
+
 dssd 0.3.0
 ----------
 
