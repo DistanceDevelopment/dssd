@@ -94,39 +94,36 @@ test_that("Check designs can generate survey transects", {
                                        edge.protocol = c("minus"),
                                        design.angle = 90,
                                        truncation = 1),
-                 "The default allocation of samplers to strata \\(i.e. the number of samplers per stratum are in proportion to stratum areas\\) will likely lead to an unequal effort design as average sampler lengths will likely vary between strata.")
+                 "The default allocation of samplers to strata \\(i.e. the number of samplers per stratum are in proportion to stratum areas\\) may lead to an unequal effort design as average sampler lengths could vary between strata.")
 
   transects <- generate.transects(design)
 
-  expect_warning(design <- make.design(region, transect.type = "line",
-                                       design = c("systematic", "systematic", "systematic"),
-                                       samplers = 15,
-                                       edge.protocol = c("minus"),
-                                       design.angle = 0,
-                                       truncation = 1),
-                 "The default allocation of samplers to strata \\(i.e. the number of samplers per stratum are in proportion to stratum areas\\) will likely lead to an unequal effort design as average sampler lengths will likely vary between strata.")
+  design <- make.design(region, transect.type = "line",
+                        design = c("systematic", "systematic", "systematic"),
+                        samplers = 15,
+                        edge.protocol = c("minus"),
+                        design.angle = 0,
+                        truncation = 1)
 
   transects <- generate.transects(design)
   expect_equal(transects@spacing, rep(3,3))
 
-  expect_warning(design <- make.design(region, transect.type = "line",
-                                       design = c("eszigzag"),
-                                       samplers = 30,
-                                       edge.protocol = c("minus"),
-                                       design.angle = 90,
-                                       truncation = 1),
-                 "The default allocation of samplers to strata \\(i.e. the number of samplers per stratum are in proportion to stratum areas\\) will likely lead to an unequal effort design as average sampler lengths will likely vary between strata.")
+  design <- make.design(region, transect.type = "line",
+                        design = c("eszigzag"),
+                        samplers = 30,
+                        edge.protocol = c("minus"),
+                        design.angle = 90,
+                        truncation = 1)
 
   transects <- generate.transects(design)
   expect_equal(transects@spacing, rep(1.5,3))
 
-  expect_warning(design <- make.design(region, transect.type = "line",
-                                       design = c("eszigzagcom"),
-                                       samplers = 30,
-                                       edge.protocol = c("minus"),
-                                       design.angle = 90,
-                                       truncation = 1),
-                 "The default allocation of samplers to strata \\(i.e. the number of samplers per stratum are in proportion to stratum areas\\) will likely lead to an unequal effort design as average sampler lengths will likely vary between strata.")
+  design <- make.design(region, transect.type = "line",
+                        design = c("eszigzagcom"),
+                        samplers = 30,
+                        edge.protocol = c("minus"),
+                        design.angle = 90,
+                        truncation = 1)
 
   transects <- generate.transects(design)
   expect_equal(transects@spacing, rep(3,3))
