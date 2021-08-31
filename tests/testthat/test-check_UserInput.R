@@ -146,7 +146,7 @@ test_that("Can deal with various forms of user input", {
                                        edge.protocol = c("minus"),
                                        design.angle = 45,
                                        truncation = 1),
-                 "The default allocation of samplers to strata \\(i.e. the number of samplers per stratum are in proportion to stratum areas\\) will likely lead to an unequal effort design as average sampler lengths will likely vary between strata.")
+                 "The default allocation of samplers to strata \\(i.e. the number of samplers per stratum are in proportion to stratum areas\\) may lead to an unequal effort design as average sampler lengths could vary between strata.")
   expect_equal(design@design, rep("random",3))
   expect_equal(design@edge.protocol, rep("minus",3))
   expect_equal(design@design.angle, rep(45,3))
@@ -155,7 +155,7 @@ test_that("Can deal with various forms of user input", {
   expect_warning(design <- make.design(region, transect.type = "line",
                                        design = "random",
                                        truncation = 1),
-                 "The default allocation of samplers to strata \\(i.e. the number of samplers per stratum are in proportion to stratum areas\\) will likely lead to an unequal effort design as average sampler lengths will likely vary between strata.")
+                 "The default allocation of samplers to strata \\(i.e. the number of samplers per stratum are in proportion to stratum areas\\) may lead to an unequal effort design as average sampler lengths could vary between strata.")
   expect_equal(design@samplers, 20)
 
   design <- make.design(region, transect.type = "line",

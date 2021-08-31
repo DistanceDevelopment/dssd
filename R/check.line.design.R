@@ -265,8 +265,8 @@ check.line.design <- function(object){
     object@effort.allocation <- numeric(0)
   }
   if(strata.count > 1 && samplers.len == 1 && length(object@effort.allocation) == 0 && class(object) != "Segment.Transect.Design"){
-    warning("The default allocation of samplers to strata (i.e. the number of samplers per stratum are in proportion to stratum areas) will likely lead to an unequal effort design as average sampler lengths will likely vary between strata.", immediate. = TRUE, call. = FALSE)
     object@effort.allocation <- numeric(0)
+    warning("The default allocation of samplers to strata (i.e. the number of samplers per stratum are in proportion to stratum areas) may lead to an unequal effort design as average sampler lengths could vary between strata.", immediate. = TRUE, call. = FALSE)
   }
   if(spacing.len >= 1 && length(object@effort.allocation) != 0){
     warning("Effort allocation not applicable when effort is determined by spacing, it will be ignored.", immediate. = TRUE, call. = FALSE)
