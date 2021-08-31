@@ -310,15 +310,17 @@ test_that("Only the implemented design parameters are stored", {
   expect_equal(design@design, rep("systematic", 3))
   expect_equal(design@edge.protocol, rep("minus", 3))
 
-  expect_warning(design <- make.design(region, transect.type = "line",
-                                       design = c("eszigzagcom"),
-                                       samplers = 30,
-                                       edge.protocol = "minus",
-                                       design.angle = 45,
-                                       truncation = 1),
-                 "The default allocation of samplers to strata \\(i.e. the number of samplers per stratum are in proportion to stratum areas\\) will likely lead to an unequal effort design as average sampler lengths will likely vary between strata.")
+  design <- make.design(region, transect.type = "line",
+                        design = c("eszigzagcom"),
+                        samplers = 30,
+                        edge.protocol = "minus",
+                        design.angle = 45,
+                        truncation = 1)
   expect_equal(design@design, rep("eszigzagcom", 3))
   expect_equal(design@edge.protocol, rep("minus", 3))
+
+  samps <- generate.transects(design, region)
+  expect_true(length(unique(samps@spacing)) == 1)
 
   # CHECK EFFORT DEFINITIONS
 
