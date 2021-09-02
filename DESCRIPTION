@@ -13,7 +13,7 @@ Suggests: knitr,
 VignetteBuilder: knitr
 Type: Package
 Title: Distance Sampling Survey Design
-Version: 0.3.0.9000
+Version: 0.3.1
 Authors@R: c(
   person("Laura", "Marshall", email = "lhm@st-andrews.ac.uk", role = c("aut", "cre")),
   person("Rexstad", "Eric", email = "eric.rexstad@st-andrews.ac.uk", role = "ctb"))
