@@ -1,7 +1,6 @@
 Package: dssd
 Imports:
     sf,
-    plot3D,
     rgdal,
     ggplot2,
     methods
@@ -13,7 +12,7 @@ Suggests: knitr,
 VignetteBuilder: knitr
 Type: Package
 Title: Distance Sampling Survey Design
-Version: 0.3.1
+Version: 0.3.2
 Authors@R: c(
   person("Laura", "Marshall", email = "lhm@st-andrews.ac.uk", role = c("aut", "cre")),
   person("Rexstad", "Eric", email = "eric.rexstad@st-andrews.ac.uk", role = "ctb"))
@@ -29,7 +28,7 @@ Description: Creates survey designs for distance sampling surveys. These
 BugReports: https://github.com/DistanceDevelopment/dssd/issues
 License: GPL (>=2)
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Collate: 
     'Class.Constructors.R'
     'Coverage.Grid.R'
