@@ -96,7 +96,7 @@ generate.eqspace.zigzags <- function(design, strata.id, samplers, line.length, s
   #keep everything within the polygon strata
   to.keep <- lapply(lines, sf::st_intersection, y = rot.strata)
   #Only keep lines (discard points - fragments of line so small they have become points)
-  test.line <- function(x){ifelse(any(class(x) %in% c("LINESTRING", "MULTILINESTRING")), TRUE, FALSE)}
+  test.line <- function(x){ifelse(inherits(x, "LINESTRING") || inherits(x, "MULTILINESTRING"), TRUE, FALSE)}
   is.line <- which(unlist(lapply(to.keep, FUN = test.line)))
   to.keep <- to.keep[is.line]
   #Calculate covered region - do it here as easier before unrotating!
@@ -105,7 +105,7 @@ generate.eqspace.zigzags <- function(design, strata.id, samplers, line.length, s
     trunctn <- design@truncation
     xend1 <- xend2 <- numeric(0)
     for(tr in seq(along = to.keep)){
-      if(any(class(to.keep[[tr]]) == "LINESTRING")){
+      if(inherits(to.keep[[tr]], "LINESTRING")){
         #Find end points
         lx <- to.keep[[tr]][,1]
         ly <- to.keep[[tr]][,2]
@@ -130,7 +130,7 @@ generate.eqspace.zigzags <- function(design, strata.id, samplers, line.length, s
           y.vals = pm*(x.vals-x0)+y0
         }
         cover.polys[[tr]] <- sf::st_polygon(list(matrix(c(x.vals, y.vals), ncol = 2)))
-      }else if(any(class(to.keep[[tr]]) == "MULTILINESTRING")){
+      }else if(inherits(to.keep[[tr]], "MULTILINESTRING")){
         #Need to iterate along the list
         temp <- list()
         for(part in seq(along = to.keep[[tr]])){

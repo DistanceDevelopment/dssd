@@ -96,7 +96,7 @@ write.transects <- function(object, dsn, layer = character(0), dataset.options =
   if(dsn.ext == "shp"){
     if(inherits(object, "Transect")){
       sf::st_write(object@samplers, dsn)
-    }else if(any(class(object) %in% c("sf","sfc"))){
+    }else if(inherits(object,"sf") || inherits(object,"sfc")){
       sf::st_write(object, dsn)
     }else{
       stop("Object of wrong class to write to shapefile.", call. = FALSE)
@@ -109,7 +109,7 @@ write.transects <- function(object, dsn, layer = character(0), dataset.options =
                dsn=dsn, layer=layer, driver="GPX",
                dataset_options=dataset.options,
                overwrite_layer = overwrite)
-    }else if(any(class(object) %in% c("sf","sfc"))){
+    }else if(inherits(object,"sf") || inherits(object,"sfc")){
       rgdal::writeOGR(as(object, "Spatial"),
                dsn=dsn, layer=layer, driver="GPX",
                dataset_options=dataset.options,
@@ -118,35 +118,35 @@ write.transects <- function(object, dsn, layer = character(0), dataset.options =
       stop("Object of wrong class to write to gpx file.", call. = FALSE)
     }
   }else if(dsn.ext == "csv"){
-    if(class(object)[1] == "Point.Transect"){
+    if(inherits(object, "Point.Transect")){
       samplers <- point.coords.as.dataframe(object@samplers)
       write.csv(samplers, file = dsn, row.names = FALSE)
-    }else if(class(object)[1] == "Line.Transect"){
+    }else if(inherits(object, "Line.Transect")){
       samplers <- line.coords.as.dataframe(object@samplers)
       write.csv(samplers, file = dsn, row.names = FALSE)
-    }else if(any(class(object) %in% c("sf","sfc"))){
+    }else if(inherits(object,"sf") || inherits(object,"sfc")){
       sf.column <- attr(object, "sf_column")
-      if(any(class(object[[sf.column]])) %in% c("sfc_LINESTRING","sfc_MULTILINESTRING","LINESTRING","MULTILINESTRING")){
+      if(inherits(object[[sf.column]],"sfc_LINESTRING") || inherits(object[[sf.column]],"sfc_MULTILINESTRING") || inherits(object[[sf.column]],"LINESTRING") || inherits(object[[sf.column]],"MULTILINESTRING")){
         samplers <- line.coords.as.dataframe(object)
         write.csv(samplers, file = dsn, row.names = FALSE)
-      }else if(any(class(object[[sf.column]])) %in% c("sfc_POINT","POINT")){
+      }else if(inherits(object[[sf.column]], "sfc_POINT") || inherits(object[[sf.column]], "POINT")){
         samplers <- point.coords.as.dataframe(object)
         write.csv(samplers, file = dsn, row.names = FALSE)
       }
     }
   }else if(dsn.ext == "txt"){
-    if(class(object)[1] == "Point.Transect"){
+    if(inherits(object, "Point.Transect")){
       samplers <- point.coords.as.dataframe(object@samplers)
       write.table(samplers, file = dsn, sep = "\t", row.names = FALSE)
-    }else if(class(object)[1] == "Line.Transect"){
+    }else if(inherits(object, "Line.Transect")){
       samplers <- line.coords.as.dataframe(object@samplers)
       write.table(samplers, file = dsn, sep = "\t", row.names = FALSE)
-    }else if(any(class(object) %in% c("sf","sfc"))){
+    }else if(inherits(object,"sf") || inherits(object,"sfc")){
       sf.column <- attr(object, "sf_column")
-      if(any(class(object[[sf.column]])) %in% c("sfc_LINESTRING","sfc_MULTILINESTRING","LINESTRING","MULTILINESTRING")){
+        if(inherits(object[[sf.column]],"sfc_LINESTRING") || inherits(object[[sf.column]],"sfc_MULTILINESTRING") || inherits(object[[sf.column]],"LINESTRING") || inherits(object[[sf.column]],"MULTILINESTRING")){  
         samplers <- line.coords.as.dataframe(object)
         write.table(samplers, file = dsn, sep = "\t", row.names = FALSE)
-      }else if(any(class(object[[sf.column]])) %in% c("sfc_POINT","POINT")){
+      }else if(inherits(object[[sf.column]], "sfc_POINT") || inherits(object[[sf.column]], "POINT")){
         samplers <- point.coords.as.dataframe(object)
         write.table(samplers, file = dsn, sep = "\t", row.names = FALSE)
       }

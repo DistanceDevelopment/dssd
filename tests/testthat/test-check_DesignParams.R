@@ -25,7 +25,7 @@ test_that("Only the implemented design parameters are stored", {
                               seg.threshold = 50,
                               design.angle = 45),
                  "Both spacing and samplers have been supplied for stratum 1, samplers argument will be ignored.")
-  expect_true(class(point.design) == "Point.Transect.Design")
+  expect_true(inherits(point.design, "Point.Transect.Design"))
   expect_true(length(point.design@samplers) == 0)
 
   expect_warning(point.design <- make.design(region,
@@ -70,7 +70,7 @@ test_that("Only the implemented design parameters are stored", {
                               seg.threshold = 50,
                               design.angle = 45)
 
-  expect_true(class(point.design) == "Point.Transect.Design")
+  expect_true(inherits(point.design, "Point.Transect.Design"))
   expect_true(point.design@samplers == 20)
   expect_true(length(point.design@spacing) == 0)
 
@@ -101,7 +101,7 @@ test_that("Only the implemented design parameters are stored", {
                              design.angle = 45),
                  "Spacing, samplers and line.length have been supplied for stratum 1, samplers and line.length arguments will be ignored.")
 
-  expect_true(class(line.design) == "Line.Transect.Design")
+  expect_true(inherits(line.design, "Line.Transect.Design"))
   expect_true(length(line.design@samplers) == 0)
   expect_true(length(line.design@line.length) == 0)
 
@@ -120,7 +120,7 @@ test_that("Only the implemented design parameters are stored", {
                              design.angle = 45),
                  "Both sampers and line.length have been supplied for stratum 1, samplers argument will be ignored.")
 
-  expect_true(class(line.design) == "Line.Transect.Design")
+  expect_true(inherits(line.design, "Line.Transect.Design"))
   expect_true(line.design@line.length == 4500)
   expect_true(length(line.design@samplers) == 0)
   expect_true(length(line.design@spacing) == 0)

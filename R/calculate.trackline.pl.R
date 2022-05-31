@@ -2,7 +2,7 @@ calculate.trackline.pl <- function(transects){
   #Calculates the total trackline length (on and off effort) as
   #well as the total cyclic trackline length
   for(tr in seq(along = transects)){
-    if(any(class(transects[[tr]]) == "MULTILINESTRING")){
+    if(inherits(transects[[tr]], "MULTILINESTRING")){
       #Get total length of line
       last.index <- length(transects[[tr]])
       last.row.index <- nrow(transects[[tr]][[last.index]])

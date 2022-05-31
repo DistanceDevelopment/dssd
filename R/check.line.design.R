@@ -12,13 +12,12 @@ check.line.design <- function(object){
 
   object <- check.design(object)
   # Check if it's now a character (i.e. error), if so return
-  if(class(object) == "character"){
+  if(inherits(object, "character")){
     return(object)
   }
 
   # SEGMENTED GRID DESIGN CHECKS
-  if("Segment.Transect.Design" %in% class(object)){
-
+  if(inherits(object, "Segment.Transect.Design")){
     # Find which strata have the segmented line design
     index <- which(object@design == "segmentedgrid")
     index.neg <- which(object@design != "segmentedgrid")
@@ -267,7 +266,7 @@ check.line.design <- function(object){
   if(strata.count > 1 && # multiple strata
      samplers.len == 1 &&  # single value for samplers
      length(object@effort.allocation) == 0 && # no effort allocation values
-     class(object) != "Segment.Transect.Design" && # not a segmented design
+     !inherits(object, "Segment.Transect.Design") && # not a segmented design
      # there are multiple designs or the design is random
      (length(unique(object@design)) > 1 || "random" %in% object@design)){
     warning("The default allocation of samplers to strata (i.e. the number of samplers per stratum are in proportion to stratum areas) may lead to an unequal effort design as average sampler lengths could vary between strata.", immediate. = TRUE, call. = FALSE)

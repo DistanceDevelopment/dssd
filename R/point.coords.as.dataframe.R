@@ -5,14 +5,14 @@ point.coords.as.dataframe <- function(samplers){
   for(i in seq(along = samplers[[1]])){
     tr <- samplers$transect[i]
     st <- samplers$strata[i]
-    if("POINT" %in% class(samplers$geometry[i][[1]])){
+    if(inherits(samplers$geometry[i][[1]], "POINT")){
       coords <- as.numeric(samplers$geometry[i][[1]])
       temp <- data.frame(transect = tr,
                          strata = st,
                          x = coords[1],
                          y = coords[2])
       all.transects <- rbind(all.transects,temp)
-    }else if("MULTIPOINT" %in% class(samplers$geometry[i][[1]])){
+    }else if(inherits(samplers$geometry[i][[1]], "MULTIPOINT")){
       for(j in seq(along = samplers$geometry[i][[1]])){
         coords <- as.numeric(samplers$geometry[i][[1]][[j]])
         temp <- data.frame(transect = tr,
