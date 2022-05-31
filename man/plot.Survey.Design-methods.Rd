@@ -4,7 +4,7 @@
 \alias{plot,Survey.Design,ANY-method}
 \title{Plot}
 \usage{
-\S4method{plot}{Survey.Design,ANY}(x, y, strata.id = numeric(0), col.breaks = 10, subtitle = "", ...)
+\S4method{plot}{Survey.Design,ANY}(x, y, strata.id = numeric(0), col.breaks = NULL, subtitle = "", ...)
 }
 \arguments{
 \item{x}{object of class Survey.Design}
