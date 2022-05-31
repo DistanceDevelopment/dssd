@@ -166,7 +166,7 @@ setMethod(
         cat("Number of samplers: ", object@samplers[strat], fill = T)
       }
       line.length <- try(object@line.length, silent = TRUE)
-      if(class(line.length) != "try-error"){
+      if(!inherits(line.length, "try-error")){
         if(length(line.length) == 1){
           cat("Line length: ", line.length, " (shared across strata)", fill = T)
         }else if(length(line.length) == length(strata.names)){
@@ -185,7 +185,7 @@ setMethod(
     dp <- ifelse(any(object@region@area < 10), 3, 0)
     cat("\nStrata areas: ", paste(round(object@region@area, dp), collapse = ", "), fill = T)
     if(length(object@region@units) > 0){
-      if(class(line.length) != "try-error"){
+      if(!inherits(line.length, "try-error")){
         cat("Region and effort units: ", object@region@units, fill = T)
       }else{
         cat("Region units: ", object@region@units, fill = T)

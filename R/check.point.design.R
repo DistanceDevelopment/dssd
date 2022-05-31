@@ -12,7 +12,7 @@ check.point.design <- function(object){
 
   object <- check.design(object)
   # Check if it's now a character (i.e. error), if so return
-  if(class(object) == "character"){
+  if(inherits(object, "character")){
     return(object)
   }
 

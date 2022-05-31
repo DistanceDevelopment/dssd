@@ -46,7 +46,7 @@ setMethod(
     .Object@edge.protocol <- edge.protocol
     #Check object is valid
     valid <- try(validObject(.Object), silent = TRUE)
-    if(class(valid) == "try-error"){
+    if(inherits(valid, "try-error")){
       stop(attr(valid, "condition")$message, call. = FALSE)
     }
     # return object

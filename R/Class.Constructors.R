@@ -1,4 +1,4 @@
-#' @importFrom methods new
+#' @importFrom methods new is
 #' @importFrom stats na.omit
 
 #' @title Creates a Region object
@@ -48,10 +48,10 @@ make.region <- function(region.name = "region",
                         units = character(0),
                         shape = NULL){
   #Process shape
-  if("sf" %in% class(shape)){
+  if(inherits(shape, "sf")){
     sf.shape = shape
-  }else if("sfc" %in% class(shape) || "sfg" %in% class(shape)){
-    if("sfg" %in% class(shape)){
+  }else if(inherits(shape,"sfc") || inherits(shape,"sfg")){
+    if(inherits(shape, "sfg")){
       shape <- list(shape)
     }
     if(length(strata.name) < length(shape) && length(shape) > 1){
@@ -63,13 +63,13 @@ make.region <- function(region.name = "region",
       strata.name <- strata.name[1:length(shape)]
     }
     sf.shape = sf::st_sf(strata = strata.name,  geom = shape)
-  }else if(any(class(shape) %in% c("Polygon", "Polygons", "SpatialPolygons", "SpatialPolygonsDataFrame"))){
-    stop("The sp data type is not yet supported... coming soon!")
+  }else if(inherits(shape, "Polygon") || inherits(shape, "Polygons") | inherits(shape, "SpatialPolygons") | inherits(shape, "SpatialPolygonsDataFrame")){
+    stop("The sp data type is not supported")
   }else if(length(class(shape)) == 1 && !is.null(shape)){
-    if(class(shape) == "character"){
+    if(is(shape, "character")){
       sf.shape <- sf::read_sf(shape)
-    }else if(class(shape) == "list"){
-      stop("The list data type is not yet supported... coming soon!")
+    }else if(is(shape, "list")){
+      stop("The list data type is not supported.")
     }
   }else if(is.null(shape)){
     #Make a default shape (same as in DSsim currently)
@@ -325,7 +325,7 @@ make.region <- function(region.name = "region",
 #'
 make.design <- function(region = make.region(), transect.type = "line", design = "systematic", samplers = numeric(0), line.length = numeric(0), seg.length = numeric(0), effort.allocation = numeric(0), design.angle =  0, spacing = numeric(0), edge.protocol = "minus", seg.threshold = numeric(0), bounding.shape = "rectangle", truncation = 50, coverage.grid = NULL){
   #Check if a coverage grid has been passed in - if not create one
-  if(class(coverage.grid) != "Coverage.Grid"){
+  if(!inherits(coverage.grid, "Coverage.Grid")){
     if(!is.null(coverage.grid)){
       warning("The coverage.grid argument must be of class Coverage.Grid.")
     }
@@ -361,12 +361,12 @@ make.design <- function(region = make.region(), transect.type = "line", design =
     design <- new(Class="Point.Transect.Design", region, truncation, design, spacing, samplers, effort.allocation, design.angle, edge.protocol, coverage.grid)
   }
   #Check design object - make sure correct number of elements per slot etc
-  if(class(design) == "Point.Transect.Design"){
+  if(inherits(design, "Point.Transect.Design")){
     test <- check.point.design(design)
   }else{
     test <- check.line.design(design)
   }
-  if(class(test) == "character"){
+  if(inherits(test, "character")){
     stop(test, call. = FALSE)
   }else{
     design <- test

@@ -65,7 +65,7 @@ generate.parallel.lines <- function(design, strata.id, samplers, line.length, sp
   #keep everything within the polygon strata
   to.keep <- lapply(lines, sf::st_intersection, y = rot.strata)
   #Only keep lines - sometimes points are generated for extremely small intersections
-  test.line <- function(x){ifelse(any(class(x) %in% c("LINESTRING", "MULTILINESTRING")), TRUE, FALSE)}
+  test.line <- function(x){ifelse(inherits(x, "LINESTRING") || inherits(x, "MULTILINESTRING"), TRUE, FALSE)}
   is.line <- which(unlist(lapply(to.keep, FUN = test.line)))
   to.keep <- to.keep[is.line]
   #Calculate covered region - do it here as easier before unrotating!
@@ -73,12 +73,12 @@ generate.parallel.lines <- function(design, strata.id, samplers, line.length, sp
   if(calc.cov.area){
     trunc <- design@truncation
     for(tr in seq(along = to.keep)){
-      if(any(class(to.keep[[tr]]) == "LINESTRING")){
+      if(inherits(to.keep[[tr]], "LINESTRING")){
         bbox <- sf::st_bbox(to.keep[[tr]])
         x.vals <- c(rep((bbox$xmin - trunc),2), rep((bbox$xmax + trunc),2), (bbox$xmin - trunc))
         y.vals <- c(bbox$ymin, rep(bbox$ymax,2), rep(bbox$ymin,2))
         cover.polys[[tr]] <- sf::st_polygon(list(matrix(c(x.vals, y.vals), ncol = 2)))
-      }else if(any(class(to.keep[[tr]]) == "MULTILINESTRING")){
+      }else if(inherits(to.keep[[tr]], "MULTILINESTRING")){
         #Need to iterate along the list
         temp <- list()
         for(part in seq(along = to.keep[[tr]])){

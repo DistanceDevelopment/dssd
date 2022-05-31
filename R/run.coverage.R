@@ -85,7 +85,7 @@ run.coverage <- function(design, reps = 10, save.transects = "", quiet = FALSE){
     #Number of transects
     transect.count[rep,] <- transects@samp.count
     #Transect Length
-    if(class(design) == "Line.Transect.Design"){
+    if(inherits(design, "Line.Transect.Design")){
       line.length[rep,] <- transects@line.length
       trackline[rep,] <- transects@trackline
       cyclictrackline[rep,] <- transects@cyclictrackline
@@ -144,7 +144,7 @@ run.coverage <- function(design, reps = 10, save.transects = "", quiet = FALSE){
                         cov.area = cov.area.summary,
                         p.cov.area = cov.area.percent)
 
-  if(class(design) == "Line.Transect.Design"){
+  if(inherits(design, "Line.Transect.Design")){
     line.len.summary <- matrix(rep(NA, 5*(strata.count+1)), ncol = (strata.count+1), dimnames = list(c("Minimum", "Mean", "Median", "Maximum", "sd"), c(strata.names, "Total")))
     line.len.summary[1,1:strata.count] <- apply(line.length, 2, min)
     line.len.summary[2,1:strata.count] <- apply(line.length, 2, mean)

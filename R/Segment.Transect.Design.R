@@ -54,7 +54,7 @@ setMethod(
     .Object@design.statistics <- data.frame()
     #Check object is valid (testing now done in Class constructor)
     valid <- try(validObject(.Object), silent = TRUE)
-    if(class(valid) == "try-error"){
+    if(inherits(valid, "try-error")){
       stop(attr(valid, "condition")$message, call. = FALSE)
     }
     # return object

@@ -17,30 +17,30 @@ calculate.trackline.segl <- function(transects){
     #If line x odd
     if((i %% 2) != 0){
       #Get the first coordinates of the first segment on line x
-      if(any(class(transects[[index[1]]]) == "LINESTRING")){
+      if(inherits(transects[[index[1]]], "LINESTRING")){
         coords <- c(coords, transects[[index[1]]][1,])
-      }else if(any(class(transects[[index[1]]]) == "MULTILINESTRING")){
+      }else if(inherits(transects[[index[1]]], "MULTILINESTRING")){
         coords <- c(coords, transects[[index[1]]][[1]][1,])
       }
       #Get the last coordinate of the last segment on line x
-      if(any(class(transects[[index[2]]]) == "LINESTRING")){
+      if(inherits(transects[[index[2]]], "LINESTRING")){
         coords <- c(coords, transects[[index[2]]][nrow(transects[[index[2]]]),])
-      }else if(any(class(transects[[index[2]]]) == "MULTILINESTRING")){
+      }else if(inherits(transects[[index[2]]], "MULTILINESTRING")){
         last.seg.part <- length(transects[[index[2]]])
         coords <- c(coords, transects[[index[2]]][[last.seg.part]][nrow(transects[[index[2]]][[last.seg.part]]),])
       }
     }else{ #If line x even
       #Get the last coordinate of the last segment
-      if(any(class(transects[[index[2]]]) == "LINESTRING")){
+      if(inherits(transects[[index[2]]], "LINESTRING")){
         coords <- c(coords, transects[[index[2]]][nrow(transects[[index[2]]]),])
-      }else if(any(class(transects[[index[2]]]) == "MULTILINESTRING")){
+      }else if(inherits(transects[[index[2]]], "MULTILINESTRING")){
         last.seg.part <- length(transects[[index[2]]])
         coords <- c(coords, transects[[index[2]]][[last.seg.part]][nrow(transects[[index[2]]][[last.seg.part]]),])
       }
       #Get the first coordinate of the first segment
-      if(any(class(transects[[index[1]]]) == "LINESTRING")){
+      if(inherits(transects[[index[1]]], "LINESTRING")){
         coords <- c(coords, transects[[index[1]]][1,])
-      }else if(any(class(transects[[index[1]]]) == "MULTILINESTRING")){
+      }else if(inherits(transects[[index[1]]], "MULTILINESTRING")){
         coords <- c(coords, transects[[index[1]]][[1]][1,])
       }
     }

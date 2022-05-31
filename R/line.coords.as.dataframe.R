@@ -5,7 +5,7 @@ line.coords.as.dataframe <- function(samplers){
   for(i in seq(along = samplers[[1]])){
     tr <- samplers$transect[i]
     st <- samplers$strata[i]
-    if("LINESTRING" %in% class(samplers$geometry[i][[1]])){
+    if(inherits(samplers$geometry[i][[1]], "LINESTRING")){
       coords <- as.numeric(samplers$geometry[i][[1]])
       temp <- data.frame(transect = tr,
                          strata = st,
@@ -14,7 +14,7 @@ line.coords.as.dataframe <- function(samplers){
                          x.end = coords[2],
                          y.end = coords[4])
       all.transects <- rbind(all.transects,temp)
-    }else if("MULTILINESTRING" %in% class(samplers$geometry[i][[1]])){
+    }else if(inherits(samplers$geometry[i][[1]], "MULTILINESTRING")){
       for(j in seq(along = samplers$geometry[i][[1]])){
         coords <- as.numeric(samplers$geometry[i][[1]][[j]])
         temp <- data.frame(transect = tr,
