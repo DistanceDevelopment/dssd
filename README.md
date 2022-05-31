@@ -5,7 +5,7 @@ Distance Sampling Survey Design
 [![R-CMD-check](https://github.com/DistanceDevelopment/dssd/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/DistanceDevelopment/dssd/actions/workflows/check-standard.yaml)
 [![CRAN (RStudio Mirror) Downloads](http://cranlogs.r-pkg.org/badges/dssd)](https://www.r-pkg.org/pkg/dssd)
 [![CRAN Version](http://www.r-pkg.org/badges/version/dssd)](https://www.r-pkg.org/pkg/dssd)
-[![Codecov test coverage](https://codecov.io/gh/DistanceDevelopment/dssd/branch/master/graph/badge.svg)](https://codecov.io/gh/DistanceDevelopment/dssd?branch=master)
+[![Codecov test coverage](https://codecov.io/gh/DistanceDevelopment/dssd/branch/master/graph/badge.svg)](https://app.codecov.io/gh/DistanceDevelopment/dssd?branch=master)
 
 `dssd` is a package for designing distance sampling surveys. It provides a number of designs including systematic point transect, parallel line transect, zigzag line transect and segment line transect designs.
 
