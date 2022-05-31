@@ -86,16 +86,17 @@ setClass(Class = "Survey.Design",
 #' @param ... not implemented for this class.
 #' @rdname plot.Survey.Design-methods
 #' @exportMethod plot
-#' @importFrom plot3D colkey
 #' @importFrom graphics par mtext
 #' @importFrom grDevices heat.colors
+#' @importFrom ggplot2 ggplot geom_sf scale_color_viridis_c ggtitle
 setMethod(
   f="plot",
   signature="Survey.Design",
-  definition=function(x, y, strata.id = numeric(0), col.breaks = 10, subtitle = "", ...){
+  definition=function(x, y, strata.id = numeric(0), col.breaks = NULL, subtitle = "", ...){
     #Check coverage has been run
     if(all(is.na(x@coverage.scores))){
-      stop("Design has not been run yet, all coverage scores are NA.", call. = FALSE)
+      warning("Design has not been run yet, all coverage scores are NA.", call. = FALSE)
+      return(invisible(NULL))
     }
     # If main is not supplied then take it from the object
     additional.args <- list(...)
@@ -103,30 +104,31 @@ setMethod(
     # Get shape column names
     sf.column.region <- attr(x@region@region, "sf_column")
     sf.column.grid <- attr(x@coverage.grid@grid, "sf_column")
-    # Extract coverage scores and region coords
+    # Extract coverage scores, coverage grid and region coords
     coverage.scores <- x@coverage.scores
-    region.coords <- x@region@region[[sf.column.region]]
     coverage.grid <- x@coverage.grid@grid
-    # If not plotting all extract values for specific strata
+    coverage.grid$coverage.scores <- coverage.scores
+    region.coords <- x@region@region[[sf.column.region]]
+    
+    # If not plotting all strata extract values for specific strata
     if(strata.id != "all"){
-      region.coords <- region.coords[[strata.id]]
-      region.coords <- sf::st_sfc(region.coords, crs = sf::st_crs(x@region@region))
-      coverage.grid <- x@coverage.grid@grid
-      coverage.grid$coverage.scores <- coverage.scores
-      coverage.grid <- suppressWarnings(sf::st_intersection(coverage.grid, region.coords))
-      coverage.scores <- coverage.grid$coverage.scores
+      strata.coords <- region.coords[[strata.id]]
+      strata.coords <- sf::st_sfc(strata.coords, crs = sf::st_crs(x@region@region))
+      coverage.grid <- suppressWarnings(sf::st_intersection(coverage.grid, strata.coords))
+      plot.coords <- strata.coords
+    }else{
+      plot.coords <- region.coords
     }
-    coverage.grid.sfdata <- coverage.grid[[sf.column.grid]]
-    # Plot information
-    pmar <- par(mar = c(1, 1, 4, 5))
-    on.exit(par(mar = pmar))
-    plot(region.coords, main = "Coverage Scores", cex.main = 1.5)
-    cols <- heat.colors(col.breaks)[as.numeric(cut(coverage.scores, breaks = col.breaks))]
-    plot(coverage.grid.sfdata, pch = 20, col = cols, add = T)
-    plot(x@region@region[[sf.column.region]], add = T)
-    plot3D::colkey(side = 4, clim = range(coverage.scores), col = heat.colors(col.breaks), add = TRUE, length = 0.7)
-    mtext(subtitle, side = 3, line = 0, outer = FALSE)
-    invisible(x)
+    
+    # Plot code
+    gplot <- ggplot()+
+      geom_sf(data = coverage.grid, aes(col = coverage.scores), size = 1.2)+
+      scale_color_viridis_c(n.breaks = col.breaks)+
+      geom_sf(data = plot.coords, fill = NA, lwd = 0.5, col = 1)+
+      ggtitle("Coverage Scores")
+    plot(gplot)
+    
+    invisible(gplot)
   }
 )
 
