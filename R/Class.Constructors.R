@@ -323,7 +323,7 @@ make.region <- function(region.name = "region",
 #' plot(design)
 #' design
 #'
-make.design <- function(region = make.region(), transect.type = "line", design = "systematic", samplers = numeric(0), line.length = numeric(0), seg.length = numeric(0), effort.allocation = numeric(0), design.angle =  0, spacing = numeric(0), edge.protocol = "minus", seg.threshold = numeric(0), bounding.shape = "rectangle", truncation = 1, coverage.grid = NULL){
+make.design <- function(region = make.region(), transect.type = "line", design = "systematic", samplers = numeric(0), line.length = numeric(0), seg.length = numeric(0), effort.allocation = numeric(0), design.angle =  0, spacing = numeric(0), edge.protocol = "minus", seg.threshold = numeric(0), bounding.shape = "rectangle", truncation = 50, coverage.grid = NULL){
   #Check if a coverage grid has been passed in - if not create one
   if(class(coverage.grid) != "Coverage.Grid"){
     if(!is.null(coverage.grid)){
