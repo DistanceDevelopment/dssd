@@ -17,7 +17,7 @@ make.design(
   edge.protocol = "minus",
   seg.threshold = numeric(0),
   bounding.shape = "rectangle",
-  truncation = 1,
+  truncation = 50,
   coverage.grid = NULL
 )
 }
