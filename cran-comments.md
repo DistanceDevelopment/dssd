@@ -1,10 +1,13 @@
 ## Test environments
-* local OS X install, R 4.1.1
-* github workflows: windows (4.1), mac (4,1), ubuntu-18.04 (4.1 & devel) 
+* local OS Monterey M1 Pro, R 4.2.0
+* rhub: Fedora Linux, R-devel, clang, gfortran 
+* rhub: Ubuntu Linux 20.04.1 LTS, R-release, GCC
+* winbuilder (release and development)
+* macbuilder (release)
 
 ## R CMD check results
-There were no ERRORs, WARNINGs or NOTEs. 
+There were no ERRORs, WARNINGs or NOTEs on the above.
 
 ## Reverse dependencies
 
-Very minor update which will not affect dsims
+No current dependencies on CRAN
