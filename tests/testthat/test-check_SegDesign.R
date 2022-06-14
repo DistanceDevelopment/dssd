@@ -87,20 +87,10 @@ test_that("Can deal with various forms of user input", {
   survey.tm <- generate.transects(design.tm)
   expect_equal(round(survey.tm@spacing,4), c(502.2591, 165.7570))
 
-  #Test allocating different segment lengths per strata with an overall number of samplers
-  design.tm <- make.design(region.tm,
-                           transect.type = "line",
-                           design = "segmentedgrid",
-                           design.angle = c(45,90),
-                           samplers = 100,
-                           seg.length = c(200,80),
-                           truncation = 25)
-  survey.tm <- generate.transects(design.tm)
-  expect_equal(round(survey.tm@spacing,2), c(298.14, 340.33))
-  expect_equal(survey.tm@seg.threshold, rep(50,2))
-
-  # Test moved from next 3 examples into test-x_seed_tests as they fail on both
+  
+  # Test moved from next 4 examples into test-x_seed_tests as they fail on both
   # windows and debian? due to differing seed handling.
+  # Also at one point one test failed on noLD tests but couldn't be replicated
 
   #Test when no transects
   set.seed(551)
