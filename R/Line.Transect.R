@@ -25,10 +25,10 @@ setClass(Class = "Line.Transect",
 setMethod(
   f="initialize",
   signature="Line.Transect",
-  definition=function(.Object, design, lines, samp.count, line.length, seg.length, effort.allocation,
-                      spacing, design.angle, edge.protocol, cov.area = numeric(0),
-                      cov.area.polys = list(), strata.area, strata.names, trackline,
-                      cyclictrackline){
+  definition=function(.Object, design, lines, samp.count, line.length, seg.length, 
+                      effort.allocation, spacing, design.angle, edge.protocol, 
+                      cov.area = numeric(0), cov.area.polys = list(), strata.area, 
+                      strata.names, trackline, cyclictrackline){
     #Set slots
     .Object@strata.names  <- strata.names
     .Object@design        <- design

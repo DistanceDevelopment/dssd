@@ -204,7 +204,7 @@ setMethod(
       sf::st_crs(all.polys) <- region.crs
     }
     #Make a survey object
-    survey <- new(Class="Point.Transect", design = object@design, points = all.transects, samp.count = sampler.count, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = cov.areas, cov.area.polys = all.polys, strata.area = region@area, strata.names <- strata.names)
+    survey <- new(Class="Point.Transect", design = object@design, points = all.transects, samp.count = sampler.count, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = cov.areas, cov.area.polys = all.polys, strata.area = region@area, strata.names = strata.names)
     return(survey)
   }
 )
