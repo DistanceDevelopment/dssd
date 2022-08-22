@@ -13,7 +13,7 @@ check.shape <- function(sf.shape, dist.for.win){
     # supplied from Dist for Win in Link ID order but dssd uses shapefile ordering.
     # Returns the original shape if LinkID doesn't exist, or if the order is correct
     # Otherwise returns the updated shape with strata order based on LinkID
-    if (is.null(shape$LinkID)){
+    if (is.null(sf.shape$LinkID)){
       #If there is no LinkID don't need to worry can't be in dist.for.windows!
       return(sf.shape)
     }else{
