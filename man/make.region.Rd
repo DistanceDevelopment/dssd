@@ -8,21 +8,26 @@ make.region(
   region.name = "region",
   strata.name = character(0),
   units = character(0),
-  shape = NULL
+  shape = NULL,
+  dist.for.win = FALSE
 )
 }
 \arguments{
 \item{region.name}{the region name}
 
-\item{strata.name}{the stratum names (character vector, same length as the
+\item{strata.name}{the strata names (character vector, same length as the
 number of areas in the shapefile / sf object). If not supplied "A", "B",
-"C", ... will be assigned.}
+"C", ... will be assigned. The strata names should be provided in the 
+order they appear in the shapefile. See details.}
 
 \item{units}{measurement units; either \code{"m"} for metres or \code{"km"} for
 kilometres. If the shapefile has a projection file associated with it the units
 will be taken from there.}
 
 \item{shape}{shapefile path to .shp file or an sf object of class sf, sfc or sfg.}
+
+\item{dist.for.win}{logical indicating if the region is being created via
+Distance for Windows (default = FALSE). See details.}
 }
 \value{
 object of class Region
@@ -30,6 +35,16 @@ object of class Region
 \description{
 This creates an instance of the Region class which defines the study
 area for the survey.
+}
+\details{
+The strata names should be provided in the order the strata are
+presented in the shapefile or sf shape object. This can be simply checked 
+after creating the region by plotting it and checking that the key correctly
+identifies the strata. Note that the order Distance for Windows displays the
+strata in sometimes differs from the order in which they are stored in the
+shapefile. IF running from Distance for Windows then this will be checked 
+and if they don't match a warning will be displayed saying that they are
+being re-ordered.
 }
 \examples{
 # A basic study rectangular study region
