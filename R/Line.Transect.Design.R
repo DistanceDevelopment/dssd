@@ -62,7 +62,14 @@ setMethod(
   f="generate.transects",
   signature="Line.Transect.Design",
   definition=function(object, quiet = FALSE, ...){
-#This function separates the design generation by strata so different strata can have different designs in them. Assumes that the validation method called when the class is initialised checks that all design options either have length 1 or length equal to the number of strata. Also assumes that the region object has been checked and confimred to have the correct number of strata names for the size of the geometry.
+#This function separates the design generation by strata so different strata can have different designs in them. Assumes that the validation method called when the class is initialised checks that all design options either have length 1 or length equal to the number of strata. Also assumes that the region object has been checked and confirmed to have the correct number of strata names for the size of the geometry.
+    
+    # Check not trying to generate transects for segmentedtrack or random lines
+    # Initial check for segmentedtrack or random lines
+    if(any(object@design == "segmentedtrack")){
+      stop("dssd cannot generate transects from segmented trackline designs. Please use Distance for Windows to generate transect shapefiles if you would like to use this design within simulations.", call. = FALSE)
+    }
+    
     # Get strata names
     region <- object@region
     sf.column <- attr(region@region, "sf_column")

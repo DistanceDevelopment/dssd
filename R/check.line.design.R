@@ -7,6 +7,7 @@ check.line.design <- function(object){
   #    modifications) or a string value which will be displayed as an
   #    error
   #
+  
   #Check how many strata there are
   strata.count <- length(object@region@strata.name)
 
@@ -16,16 +17,17 @@ check.line.design <- function(object){
     return(object)
   }
 
-  # SEGMENTED GRID DESIGN CHECKS
+  # SEGMENTED DESIGN CHECKS
   if(inherits(object, "Segment.Transect.Design")){
     # Find which strata have the segmented line design
-    index <- which(object@design == "segmentedgrid")
-    index.neg <- which(object@design != "segmentedgrid")
+    index <- which(object@design %in% c("segmentedgrid","segmentedtrack"))
+    # And which don't
+    index.neg <- which(!object@design %in% c("segmentedgrid","segmentedtrack"))
 
     # SEGMENT LENGTH
     # Either one global value or one value per strata. All values should be
     # numeric and greater than 0. Values should only be provided for strata
-    # where the design is of type 'segmentedgrid'.
+    # where the design is of type 'segmentedgrid' or 'segmentedtrack'.
     if(length(object@seg.length) == 1){
       # Repeat global value for each stratum
       seg.length <- object@seg.length
@@ -52,7 +54,7 @@ check.line.design <- function(object){
     # SEGMENT THRESHOLD
     # Either one global value or one value per strata. All values should be
     # numeric and between 0 and 100. Values should only be provided for strata
-    # where the design is of type 'segmentedgrid'.
+    # where the design is of type 'segmentedgrid' or 'segmentedtrack'.
     if(length(object@seg.threshold) == 1){
       # Repeat global value for each stratum
       seg.threshold <- object@seg.threshold
@@ -82,7 +84,7 @@ check.line.design <- function(object){
   # selected. Values must either be 'convex hull' or 'rectangle'.
   if(any(object@design %in% c("eszigzag", "eszigzagcom"))){
 
-    # Find which strata have the segmented line design
+    # Find which strata have the zigzag line design
     index <- which(object@design %in% c("eszigzag", "eszigzagcom"))
     index.neg <- which(!object@design %in% c("eszigzag", "eszigzagcom"))
 
@@ -109,7 +111,7 @@ check.line.design <- function(object){
 
   # CHECK DESIGNS
   # There should be one design value per stratum or a single global value supplied.
-  # Designs must be either: random, systematic, eszigzag, eszigzagcom, segmentedgrid
+  # Designs must be either: random, systematic, eszigzag, eszigzagcom, segmentedgrid or segmentedtrack
   if(length(object@design) == 1){
     # Repeat global value for each stratum
     object@design <- rep(object@design, strata.count)
@@ -117,8 +119,8 @@ check.line.design <- function(object){
   if(length(object@design) != strata.count){
     return("Design description argument has a different number of values than there are strata, please supply a single global value or one value per stratum.")
   }
-  if(any(!(object@design %in% c("random", "systematic", "eszigzag", "eszigzagcom", "segmentedgrid")))){
-    index <- which(!object@design %in% c("random", "systematic", "eszigzag", "eszigzagcom", "segmentedgrid"))
+  if(any(!(object@design %in% c("random", "systematic", "eszigzag", "eszigzagcom", "segmentedgrid", "segmentedtrack")))){
+    index <- which(!object@design %in% c("random", "systematic", "eszigzag", "eszigzagcom", "segmentedgrid", "segmentedtrack"))
     return(paste("Unrecognised designs: ", paste(object@design[index], collapse = ", "), sep = ""))
   }
 
