@@ -20,6 +20,18 @@ test_that("Seeded examples run", {
                            strata.name = c("Main Area", "Morton Lochs"),
                            shape = projected.shape)
 
+  #Test allocating different segment lengths per strata with an overall number of samplers
+  design.tm <- make.design(region.tm,
+                           transect.type = "line",
+                           design = "segmentedgrid",
+                           design.angle = c(45,90),
+                           samplers = 100,
+                           seg.length = c(200,80),
+                           truncation = 25)
+  survey.tm <- generate.transects(design.tm)
+  expect_equal(round(survey.tm@spacing,2), c(298.14, 340.33))
+  expect_equal(survey.tm@seg.threshold, rep(50,2))
+  
   #Test when no transects
   set.seed(551)
   design.tm <- make.design(region.tm,
