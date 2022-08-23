@@ -1,14 +1,22 @@
+dssd 0.3.4
+----------
+
+Enhancements
+
+ * Can store design parameters associated with segmented trackline design for use with Distance for Windows (cannot generate transects for this design within dssd)
+ * Now checks shapefiles for LinkID ordering if being used by Distance for Windows
+
 dssd 0.3.3
 ----------
 
-Updates
+Enhancements
 
  * Minor change to retain on CRAN and pass noLD testing
 
 dssd 0.3.2
 ----------
 
-Updates
+Enhancements
 
  * Changed the default truncation distance to 50
  * Remove dependency on 3Dplot (and therefore tcltk package)
@@ -73,17 +81,15 @@ Bug Fixes
 dssd 0.1.0
 ----------
 
-Introducing the new Distance Sampling Survey Design package!
+Enhancements
 
-dssd implements the following designs:
+ * Introducing the new Distance Sampling Survey Design package! We provide a number of survey design options which allow you to generate transects for distance sampling surveys.
  * Point transects: Simple random sampling
- * Point trasnects: Systematic grid with random start point
+ * Point transects: Systematic grid with random start point
  * Line transects: Parallel random lines
  * Line transects: Systematic parallel lines with a random start
  * Line transects: Equal spaced zigzags with a random start
  * Line transects: Equal spaced zigzags with complementary set of zigzags
-
-dssd also implements the following feature options:
  * Ability to vary design angle
  * Survey generation by number of samplers, spacing or line length (can generate by different criteria in each strata)
  * Ability to use different designs in each strata (as long as they are of the same type, i.e. all point or all line transects)
