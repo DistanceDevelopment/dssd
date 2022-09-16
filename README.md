@@ -24,4 +24,4 @@ The easiest way to get `dssd` is to install it from CRAN within R-studio or the 
 then install `dssd` from github:
 
       library(devtools)
-      install_github("DistanceDevelopment/dssd")
+      install_github("DistanceDevelopment/dssd", build_vignettes = TRUE)
