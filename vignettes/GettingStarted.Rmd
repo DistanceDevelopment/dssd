@@ -12,6 +12,8 @@ vignette: >
 
 ## Survey Design for Distance Sampling
 
+The most up-to-date copies of these vignettes can now be found on the distance sampling examples page of our website: https://examples.distancesampling.org
+
 Distance Sampling techniques provide design based estimates of density and abundance for populations, the accuracy of these estimates therefore relies on valid survey design. The process of designing a survey involves deciding on the required survey effort in order to achieve a desired precision followed by deciding where exactly the effort (the lines or points) will be located within the survey region. 
 
 Before proceeding to the design stage there are a number of considerations which first need to be addressed. The first steps in conducting a survey are to clearly define the study population and the objectives of the study. In addition, the use of spatial stratification to improve precision should also be considered, the 'Multiple Strata in dssd' vignette details how to work with multi-strata study regions. We recommend consulting @Buckland:2001vm chapter 7 and @Strin2004 before using dssd to design your distance sampling survey.
