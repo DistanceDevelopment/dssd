@@ -1,3 +1,10 @@
+dssd 1.0.0
+----------
+
+Bug Fixes
+
+ * Now accepts XYZ and XYM polygons (the Z and M information is removed when the region is created)
+
 dssd 0.3.4
 ----------
 
