@@ -1,3 +1,4 @@
+#' @importFrom sf st_zm
 check.shape <- function(sf.shape, dist.for.win){
   #This function was added as there were some issues with shapefiles
   #created by Distance. There seemed to be some redundant information added.
