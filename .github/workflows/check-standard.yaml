@@ -19,8 +19,6 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: windows-latest, r: '4.1',   xref: true}
-          - {os: macOS-latest,   r: '4.1',   xref: true}
           - {os: ubuntu-18.04,   r: 'devel', xref: true}
           - {os: ubuntu-18.04,   r: '4.1',   xref: true, rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
           
