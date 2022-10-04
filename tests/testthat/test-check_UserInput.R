@@ -23,7 +23,7 @@ test_that("Can deal with XYZ polygons", {
   # This used to display an error when region was XYZ, now that info is removed
   cover <- make.coverage(region, n.grid.points = 50)
   
-  expect_equal(class(cover), "Coverage.Grid")
+  expect_true(is(cover, "Coverage.Grid"))
   
 })
 
