@@ -1,9 +1,11 @@
 check.shape <- function(sf.shape, dist.for.win){
-  #This fuction was added as there were some issues with shapefiles
+  #This function was added as there were some issues with shapefiles
   #created by Distance. There seemed to be some redundant information added.
   #Checks that object is of class sf
-  #Also checks shapefile type
-  #Weird sometimes geom sometimes geometry! when???
+  
+  # Remove ZM values if they exist
+  sf.shape <- st_zm(sf.shape)
+  # Check shapefile type
   sf.column <- attr(sf.shape, "sf_column")
   if(!any(c("sfc_POLYGON", "sfc_MULTIPOLYGON") %in% attributes(sf.shape[[sf.column]])$class)){
     stop("The shapefile you have provided is of incorrect type. The shapefile must contain polygons or multipolygons.", call. = FALSE)
