@@ -42,7 +42,7 @@ presented in the shapefile or sf shape object. This can be simply checked
 after creating the region by plotting it and checking that the key correctly
 identifies the strata. Note that the order Distance for Windows displays the
 strata in sometimes differs from the order in which they are stored in the
-shapefile. IF running from Distance for Windows then this will be checked 
+shapefile. If running from Distance for Windows then this will be checked 
 and if they don't match a warning will be displayed saying that they are
 being re-ordered.
 }
