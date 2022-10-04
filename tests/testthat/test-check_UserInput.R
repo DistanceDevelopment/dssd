@@ -3,6 +3,30 @@ library(testthat)
 
 context("User Input Checks")
 
+test_that("Can deal with XYZ polygons", {
+  
+  #Setup region
+  outer <- matrix(c(0,0,1,
+                    15,0,1,
+                    15,10,2,
+                    0,10,2,
+                    0,0,1),ncol=3, byrow=TRUE)
+  pol1 <- sf::st_polygon(list(outer))
+  pol2 <- sf::st_polygon(list(outer + 15))
+  sfc <- sf::st_sfc(pol1,pol2)
+  strata.names <- c("SW", "NE")
+  mp1 <- sf::st_sf(strata = strata.names, geom = sfc)
+  region <- make.region(region.name = "study.area",
+                        strata.name = strata.names,
+                        shape = mp1)
+  
+  # This used to display an error when region was XYZ, now that info is removed
+  cover <- make.coverage(region, n.grid.points = 50)
+  
+  expect_equal(class(cover), "Coverage.Grid")
+  
+})
+
 test_that("Can deal with various forms of user input", {
 
   #Setup region
