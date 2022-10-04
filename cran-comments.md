@@ -1,11 +1,10 @@
 ## Submission Comments
 
-New submission to fix noLD issue noted on 01/06/22 and retain dssd on CRAN
+New submission
 
 ## Test environments
-* local OS Monterey M1 Pro, R 4.2.0
-* rhub: Fedora Linux, R-devel, clang, gfortran 
-* rhub: Ubuntu Linux 20.04.1 LTS, R-release, GCC
+* local Windows 11 R-4.2.1
+* git checks: Ubuntu (release and development)
 * winbuilder (release and development)
 * macbuilder (release)
 
@@ -15,4 +14,4 @@ There were no ERRORs, WARNINGs or NOTEs on the above.
 
 ## Reverse dependencies
 
-No current dependencies on CRAN
+
