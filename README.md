@@ -20,7 +20,7 @@ There are two vignettes within the dssd package to help you get started using `d
 We typically aim to keep `dssd` on CRAN, so it can be readily installed from within R-Studio or the R interface.  However, at present there is an [issue](https://github.com/DistanceDevelopment/dssd/issues/94) that prevents this.  Therefore to obtain `dssd` at present, please use the following code.  
 
       # First, ensure you have a copy of the `devtools` package:
-      if (system.file(package = "devtools") == "") install.packages("devtools")
+      if (!nzchar(system.file(package = "devtools"))) install.packages("devtools")
       # then install `dssd` from github:
       devtools::install_github("DistanceDevelopment/dssd", build_vignettes = TRUE)
 
