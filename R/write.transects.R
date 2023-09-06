@@ -6,8 +6,8 @@
 #' between columns. For line transects which have been split across geographical
 #' features (such as islands or lakes) there will be two or more rows in the
 #' csv / txt file with all rows having the same transect ID.
-#' @param object an object inheriting from class Transect or an sf spatial
-#' object extracted from a Transect object.
+#' @param object an object inheriting from class Transect. Alternatively, for 
+#' all file types except gpx an sf spatial object can be supplied.
 #' @param dsn the data source name, currently a filename with a 'shp'
 #' 'csv', 'txt' or 'gpx' extension.
 #' @param layer a character vector specifying the layer name, only
@@ -26,10 +26,10 @@
 #' @importFrom sf as_Spatial
 #' @importFrom methods as
 #' @author Laura Marshall
-#' @details To write the transects to shapefile only the dsn is needed with
+#' @details To write the transects to file usually only the dsn is needed with
 #' a 'shp', 'csv' or 'txt' file extension. To write a gpx file you need to
-#' specify the dsn, layer, dataset.options and usually a projection to
-#' project the coordinates back into latitude and longitude.
+#' specify the dsn and a projection so allow the coordinates to be transformed.
+#' back into latitude and longitude.
 #'
 #' @examples
 #' # Note that for CRAN testing purposes all files written in example code must
@@ -76,10 +76,9 @@
 #' write.transects(survey,
 #'                 dsn = paste0(tempdir(), "/", "transects.gpx"),
 #'                 layer = "lines",
-#'                 dataset.options = "GPX_USE_EXTENSIONS=yes",
 #'                 proj4string = orig.crs)
 #'
-write.transects <- function(object, dsn, layer = character(0), dataset.options = character(0), overwrite = FALSE, proj4string = character(0)){
+write.transects <- function(object, dsn, layer = NULL, dataset.options = character(0), overwrite = FALSE, proj4string = character(0)){
   if(length(proj4string) > 0){
     if(is.na(sf::st_crs(object@samplers))){
       warning("No coordinate system found for survey transects. A coordinate system is only specified for transects if one was specified for the survey region. Cannot project survey transects.", immediate. = TRUE, call. = FALSE)
@@ -102,21 +101,23 @@ write.transects <- function(object, dsn, layer = character(0), dataset.options =
       stop("Object of wrong class to write to shapefile.", call. = FALSE)
     }
   }else if(dsn.ext == "gpx"){
-    if(length(layer) == 0 || length(dataset.options) == 0){
-      stop("You must supply a layer and dataset options to write a gpx file. See documentation ", call. = FALSE)
-    }else if(inherits(object, "Transect")){
-      rgdal::writeOGR(as(object@samplers, "Spatial"),
-               dsn=dsn, layer=layer, driver="GPX",
-               dataset_options=dataset.options,
-               overwrite_layer = overwrite)
-    }else if(inherits(object,"sf") || inherits(object,"sfc")){
-      rgdal::writeOGR(as(object, "Spatial"),
-               dsn=dsn, layer=layer, driver="GPX",
-               dataset_options=dataset.options,
-               overwrite_layer = overwrite)
+    if(inherits(object, "Transect")){
+      sf.column <- attr(object@samplers, "sf_column")
+      #Check that there is a specific geometry defined
+      if(is(object@samplers[[sf.column]], "sfc_GEOMETRY")){
+        if(inherits(object, "Point.Transect")){
+          object@samplers <- sf::st_cast(object@samplers, "POINT")
+        }else if(inherits(object, "Line.Transect")){
+          object@samplers <- sf::st_cast(object@samplers, "MULTILINESTRING")
+        }
+      }
     }else{
-      stop("Object of wrong class to write to gpx file.", call. = FALSE)
+      stop("Please supply an object of either class Point.Transect or Line.Transect to write to gpx file.", call. = FALSE)
     }
+    # Write to gpx file
+    sf::st_write(object@samplers[[sf.column]],
+                 dsn=dsn, 
+                 layer=layer)
   }else if(dsn.ext == "csv"){
     if(inherits(object, "Point.Transect")){
       samplers <- point.coords.as.dataframe(object@samplers)

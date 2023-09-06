@@ -7,15 +7,15 @@
 write.transects(
   object,
   dsn,
-  layer = character(0),
+  layer = NULL,
   dataset.options = character(0),
   overwrite = FALSE,
   proj4string = character(0)
 )
 }
 \arguments{
-\item{object}{an object inheriting from class Transect or an sf spatial
-object extracted from a Transect object.}
+\item{object}{an object inheriting from class Transect. Alternatively, for 
+all file types except gpx an sf spatial object can be supplied.}
 
 \item{dsn}{the data source name, currently a filename with a 'shp'
 'csv', 'txt' or 'gpx' extension.}
@@ -47,10 +47,10 @@ features (such as islands or lakes) there will be two or more rows in the
 csv / txt file with all rows having the same transect ID.
 }
 \details{
-To write the transects to shapefile only the dsn is needed with
+To write the transects to file usually only the dsn is needed with
 a 'shp', 'csv' or 'txt' file extension. To write a gpx file you need to
-specify the dsn, layer, dataset.options and usually a projection to
-project the coordinates back into latitude and longitude.
+specify the dsn and a projection so allow the coordinates to be transformed.
+back into latitude and longitude.
 }
 \examples{
 # Note that for CRAN testing purposes all files written in example code must
@@ -97,7 +97,6 @@ plot(region.tm, survey)
 write.transects(survey,
                 dsn = paste0(tempdir(), "/", "transects.gpx"),
                 layer = "lines",
-                dataset.options = "GPX_USE_EXTENSIONS=yes",
                 proj4string = orig.crs)
 
 }

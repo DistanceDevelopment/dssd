@@ -1,3 +1,10 @@
+dssd 1.0.1
+----------
+
+Bug Fixes
+
+ * Removed dependence on rgdal
+
 dssd 1.0.0
 ----------
 
