@@ -18,7 +18,7 @@ calc.region.width <- function(design, strata.id = NULL){
     }
     theta <- ifelse(rot.angle.rad == 0, 0, 2*pi-rot.angle.rad)
     rot.mat <- matrix(c(cos(theta), sin(theta), -sin(theta), cos(theta)), ncol = 2, byrow = FALSE)
-    rot.strata <- strata*rot.mat
+    rot.strata <- st_set_precision(strata*rot.mat,1e8)
     #Find the width of the region
     bbox <- sf::st_bbox(rot.strata)
     width <- width + (bbox$xmax - bbox$xmin)
