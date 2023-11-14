@@ -99,9 +99,9 @@ make.region <- function(region.name = "region",
   }else if(strata.count != length(strata.name)){
     if(length(sf.shape) <= 26){
       strata.name <- LETTERS[1:length(sf.shape[[sf.column]])]
-      warning("Automatically naming strata as no strata names provided. Assigned strata names: ", paste(strata.name, collapse = ", "), call. = F, immediate. = T)
+      warning("Automatically naming strata as no/insufficient strata names provided. Assigned strata names: ", paste(strata.name, collapse = ", "), call. = F, immediate. = T)
     }else{
-      stop("Too many strata (>26) for strata names to be assigned default names, please provide strata names.", call. = FALSE)
+      stop("Too many strata (>26) for strata names to be assigned default names, please provide the correct number of strata names.", call. = FALSE)
     }
   }
   # Check the format of the shape
