@@ -70,6 +70,10 @@ setMethod(
       stop("dssd cannot generate transects from segmented trackline designs. Please use Distance for Windows to generate transect shapefiles if you would like to use this design within simulations.", call. = FALSE)
     }
     
+    
+    #*** debug
+    cat("Check point 1", fill = TRUE)
+    
     # Get strata names
     region <- object@region
     sf.column <- attr(region@region, "sf_column")
@@ -80,6 +84,10 @@ setMethod(
       strata.names <- region@region.name
       strata.no <- 1
     }
+    
+    #*** debug
+    cat("Check point 2", fill = TRUE)
+    
     #Store original angles
     orig.angles <- object@design.angle
     #Make sure these are restored incase of a crash
@@ -92,6 +100,11 @@ setMethod(
     }else{
       design <- object@design
     }
+    
+    #*** debug
+    cat("Check point 3", fill = TRUE)
+    
+    
     #Calculate effort allocation if only only one design or if using total line length and only if spacing has not been specified.
     if((length(object@design) == 1 || length(object@line.length) == 1 || length(object@samplers) == 1) && length(object@spacing) == 0){
       if(length(object@effort.allocation) == 0){
@@ -101,6 +114,11 @@ setMethod(
         effort.allocation <- object@effort.allocation
       }
     }
+    
+    #*** debug
+    cat("Check point 4", fill = TRUE)
+    
+    
     #Extract design parameters
     spacing <- object@spacing
     samplers <- object@samplers
@@ -118,6 +136,11 @@ setMethod(
     }else if(length(spacing) == 0){
       by.spacing = rep(FALSE, strata.no)
     }
+    
+    #*** debug
+    cat("Check point 5", fill = TRUE)
+    
+    
     #If spacing has not been provided for any
     if(all(!by.spacing)){
       #If only a total number of samplers has been provided (and there is only one design)
@@ -174,6 +197,14 @@ setMethod(
     #     }
     #   }
     }
+    
+    
+    
+    #*** debug
+    cat("Check point 6", fill = TRUE)
+    
+    
+    
     #Store all lines in a list
     transects <- list()
     polys <- list()
@@ -182,7 +213,17 @@ setMethod(
     #Main grid generation
     for (strat in seq(along = region@region[[sf.column]])) {
       if(design[strat] %in% c("systematic","random")){
+        
+        #*** debug
+        cat("Check point 7", fill = TRUE)
+        
+        
         temp <- generate.parallel.lines(object, strat, samplers[strat], line.length[strat], spacing[strat], by.spacing[strat], quiet = quiet)
+        
+        #*** debug
+        cat("Check point 8", fill = TRUE)
+        
+        
         transects[[strat]] <- temp$transects
         polys[[strat]] <- temp$cover.polys
         #If there are transects calculate the trackline
@@ -193,7 +234,18 @@ setMethod(
           cyclictrackline[strat] <- temp$cyclictrackline
         }
       }else if(design[strat] == "eszigzag" || design[strat] == "eszigzagcom"){
+        
+        #*** debug
+        cat("Check point 9", fill = TRUE)
+        
+        
         temp <-  generate.eqspace.zigzags(object, strat, samplers[strat], line.length[strat], spacing[strat], by.spacing[strat], quiet = quiet)
+        
+        
+        #*** debug
+        cat("Check point 10", fill = TRUE)
+        
+        
         transects[[strat]] <- temp$transects
         polys[[strat]] <- temp$cover.polys
         if(!is.null(temp)){
@@ -221,6 +273,11 @@ setMethod(
         transects[[strat]] = NULL
       }
     }
+    
+    
+    #*** debug
+    cat("Check point 11", fill = TRUE)
+    
     #Put transects into a multipart, linestring/multilinestring objects
     #Need to retain transect IDs as well as strata for lines
     if(length(transects) == 0){
@@ -251,12 +308,29 @@ setMethod(
       cov.areas[index[strat]] <- sum(unlist(lapply(polys[[index[strat]]], FUN = sf::st_area)))
       sampler.count[index[strat]] <- length(transects[[index[strat]]])
     }
+    
+    
+    #*** debug
+    cat("Check point 12", fill = TRUE)
+    
+    
     all.transects <- sf::st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp))
     all.polys <- sf::st_sf(data.frame(transect = 1:transect.count, strata = strata.id, geom = temp.poly))
+    
+    
+    #*** debug
+    cat("Check point 13", fill = TRUE)
+    
+    
     #Set crs
     region.crs <- sf::st_crs(region@region)
     sf::st_crs(all.transects) <- region.crs
     sf::st_crs(all.polys) <- region.crs
+    
+    
+    #*** debug
+    cat("Check point 14", fill = TRUE)
+    
     #Make a survey object
     if(inherits(object, "Segment.Transect.Design")){
       transect <- new(Class="Segment.Transect", design = object@design, lines = all.transects, samp.count = sampler.count, line.length = line.length, seg.length = seg.length, effort.allocation = object@effort.allocation, spacing = spacing, design.angle = object@design.angle, edge.protocol = object@edge.protocol, cov.area = cov.areas, cov.area.polys = all.polys, strata.area = region@area, strata.names = strata.names, trackline = trackline, cyclictrackline = cyclictrackline, seg.threshold = seg.threshold)
