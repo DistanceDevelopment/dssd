@@ -1,3 +1,4 @@
+#' @importFrom utils sessionInfo
 generate.systematic.points <- function(design, strata.id, spacing, samplers, coverage.grid = FALSE, calc.cov.area = TRUE, clip.to.strata = TRUE, quiet = FALSE){
   #Generates systematic points
   region <- design@region
@@ -10,6 +11,15 @@ generate.systematic.points <- function(design, strata.id, spacing, samplers, cov
   theta <- ifelse(rot.angle.rad == 0, 0, 2*pi-rot.angle.rad)
   rot.mat <- matrix(c(cos(theta), sin(theta), -sin(theta), cos(theta)), ncol = 2, byrow = FALSE)
   rot.strata <- strata*rot.mat
+  # if we are using atlas and the shape is not valid
+  if(grepl("atlas", sessionInfo()$BLAS) && is.na(sf::st_is_valid(rot.strata))){
+    # turn it into and sfc shape
+    tmp <- sf::st_sfc(rot.strata)
+    # make valid with setting the precision
+    tmp <- sf::st_make_valid(sf::st_set_precision(tmp,1e8))
+    # extract shape again
+    rot.strata <- tmp[[1]]
+  }
   #Buffer strata for plus sampling?
   if(design@edge.protocol[strata.id] == "plus"){
     rot.strata <- sf::st_buffer(rot.strata, design@truncation)
@@ -59,7 +69,19 @@ generate.systematic.points <- function(design, strata.id, spacing, samplers, cov
     #Rotate back again
     reverse.theta <- rot.angle.rad
     rot.mat.rev <- matrix(c(cos(reverse.theta), sin(reverse.theta), -sin(reverse.theta), cos(reverse.theta)), ncol = 2, byrow = FALSE)
-    mat.mult <- function(x,y){return(x*y)}
+    mat.mult <- function(x,y){
+      unrotate <- x*y
+      # if we are using atlas and the shape is not valid
+      if(grepl("atlas", sessionInfo()$BLAS) && is.na(sf::st_is_valid(unrotate))){
+        # turn it into and sfc shape
+        tmp <- sf::st_sfc(unrotate)
+        # make valid with setting the precision
+        tmp <- sf::st_make_valid(sf::st_set_precision(tmp,1e8))
+        # extract shape again
+        unrotate <- tmp[[1]]
+      }
+      return(unrotate)
+    }
     points.unrotated <- lapply(points.inside, mat.mult, y=rot.mat.rev)
     transects <- points.unrotated
   }

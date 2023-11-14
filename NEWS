@@ -1,3 +1,10 @@
+dssd 1.0.2
+----------
+
+Bug Fixes
+
+ * Fixed Atlas bug by setting precision in Atlas environment when invalid shapes are detected.
+
 dssd 1.0.1
 ----------
 

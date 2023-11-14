@@ -18,7 +18,16 @@ calc.region.width <- function(design, strata.id = NULL){
     }
     theta <- ifelse(rot.angle.rad == 0, 0, 2*pi-rot.angle.rad)
     rot.mat <- matrix(c(cos(theta), sin(theta), -sin(theta), cos(theta)), ncol = 2, byrow = FALSE)
-    rot.strata <- st_set_precision(strata*rot.mat,1e8)
+    rot.strata <- strata*rot.mat
+    # if we are using atlas and the shape is not valid
+    if(grepl("atlas", sessionInfo()$BLAS) && is.na(sf::st_is_valid(rot.strata))){
+      # turn it into and sfc shape
+      tmp <- sf::st_sfc(rot.strata)
+      # make valid with setting the precision
+      tmp <- sf::st_make_valid(sf::st_set_precision(tmp,1e8))
+      # extract shape again
+      rot.strata <- tmp[[1]]
+    }
     #Find the width of the region
     bbox <- sf::st_bbox(rot.strata)
     width <- width + (bbox$xmax - bbox$xmin)
