@@ -59,6 +59,7 @@ Collate:
     'generate.systematic.points.R'
     'get.intersection.points.R'
     'line.coords.as.dataframe.R'
+    'mat.mult.R'
     'point.coords.as.dataframe.R'
     'run.coverage.R'
     'write.transects.R'
