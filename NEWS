@@ -4,6 +4,10 @@ dssd 1.0.2
 Bug Fixes
 
  * Fixed Atlas bug by setting precision in Atlas environment when invalid shapes are detected.
+ 
+Enhancements
+
+ * Enhanced message regarding strata names when they are provided but do not match the number of strata. 
 
 dssd 1.0.1
 ----------
