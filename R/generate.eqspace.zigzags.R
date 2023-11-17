@@ -11,7 +11,7 @@ generate.eqspace.zigzags <- function(design, strata.id, samplers, line.length, s
   rot.angle.rad <- rot.angle.rad/180*pi
   theta <- ifelse(rot.angle.rad == 0, 0, 2*pi-rot.angle.rad)
   rot.mat <- matrix(c(cos(theta), sin(theta), -sin(theta), cos(theta)), ncol = 2, byrow = FALSE)
-  rot.strata <- strata*rot.mat
+  rot.strata <- mat.mult(strata, rot.mat)
   #Buffer strata for plus sampling?
   if(design@edge.protocol[strata.id] == "plus"){
     rot.strata <- sf::st_buffer(rot.strata, design@truncation)
@@ -207,7 +207,6 @@ generate.eqspace.zigzags <- function(design, strata.id, samplers, line.length, s
   #Rotate back again
   reverse.theta <- rot.angle.rad
   rot.mat.rev <- matrix(c(cos(reverse.theta), sin(reverse.theta), -sin(reverse.theta), cos(reverse.theta)), ncol = 2, byrow = FALSE)
-  mat.mult <- function(x,y){return(x*y)}
   lines.unrotated <- lapply(to.keep, mat.mult, y=rot.mat.rev)
   transects <- lines.unrotated
   #Also rotate covered region
