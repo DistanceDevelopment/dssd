@@ -1,11 +1,15 @@
 ---
 title: "Getting Started with dssd"
-author: "L Marshall"
-date: "`r Sys.Date()`"
+author:
+  - name: L. Marshall 
+    url: http://distancesampling.org
+    affiliation: CREEM, Univ of St Andrews
+    affiliation_url: https://creem.st-andrews.ac.uk
+date: "`r format(Sys.time(), '%B %Y')`"
 output: rmarkdown::html_vignette
 bibliography: refs.bib
 vignette: >
-  %\VignetteIndexEntry{dssd - getting started}
+  %\VignetteIndexEntry{Getting Started with dssd}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
