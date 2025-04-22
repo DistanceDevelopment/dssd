@@ -16,7 +16,7 @@ vignette: >
 
 ## Survey Design for Distance Sampling
 
-The most up-to-date copies of these vignettes can now be found on the distance sampling examples page of our website: https://examples.distancesampling.org
+The most up-to-date copies of these vignettes can now be found on the distance sampling examples page of our website: https://distancesampling.org/resources/vignettes.html
 
 Distance Sampling techniques provide design based estimates of density and abundance for populations, the accuracy of these estimates therefore relies on valid survey design. The process of designing a survey involves deciding on the required survey effort in order to achieve a desired precision followed by deciding where exactly the effort (the lines or points) will be located within the survey region. 
 

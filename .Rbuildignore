@@ -10,3 +10,5 @@ cran-comments.md
 ^docs$
 ^pkgdown$
 Clarity.txt
+^doc$
+^Meta$

@@ -14,3 +14,5 @@ inst/extdata/.DS_Store
 *.Rproj
 .Rapp.history
 cran-comments.md
+/doc/
+/Meta/
