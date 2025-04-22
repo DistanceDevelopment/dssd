@@ -8,11 +8,11 @@
 <title>Distance Sampling Survey Design • dssd</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
-<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Distance Sampling Survey Design">
-<meta name="description" content="Creates survey designs for distance sampling surveys. These designs can be assessed for various effort and coverage statistics. Once the user is satisfied with the design characteristics they can generate a set of transects to use in their distance sampling survey. Many of the designs implemented in this R package were first made available in our Distance for Windows software and are detailed in Chapter 7 of Advanced Distance Sampling, Buckland et. al. (2008, ISBN-13: 978-0199225873). Find out more about estimating animal/plant abundance with distance sampling at &lt;http://distancesampling.org/&gt;.">
-<meta property="og:description" content="Creates survey designs for distance sampling surveys. These designs can be assessed for various effort and coverage statistics. Once the user is satisfied with the design characteristics they can generate a set of transects to use in their distance sampling survey. Many of the designs implemented in this R package were first made available in our Distance for Windows software and are detailed in Chapter 7 of Advanced Distance Sampling, Buckland et. al. (2008, ISBN-13: 978-0199225873). Find out more about estimating animal/plant abundance with distance sampling at &lt;http://distancesampling.org/&gt;.">
+<meta name="description" content="Creates survey designs for distance sampling surveys. These designs can be assessed for various effort and coverage statistics. Once the user is satisfied with the design characteristics they can generate a set of transects to use in their distance sampling survey. Many of the designs implemented in this R package were first made available in our Distance for Windows software and are detailed in Chapter 7 of Advanced Distance Sampling, Buckland et. al. (2008, ISBN-13: 978-0199225873). Find out more about estimating animal/plant abundance with distance sampling at &lt;https://distancesampling.org/&gt;.">
+<meta property="og:description" content="Creates survey designs for distance sampling surveys. These designs can be assessed for various effort and coverage statistics. Once the user is satisfied with the design characteristics they can generate a set of transects to use in their distance sampling survey. Many of the designs implemented in this R package were first made available in our Distance for Windows software and are detailed in Chapter 7 of Advanced Distance Sampling, Buckland et. al. (2008, ISBN-13: 978-0199225873). Find out more about estimating animal/plant abundance with distance sampling at &lt;https://distancesampling.org/&gt;.">
 <script type="text/javascript"> (function(c,l,a,r,i,t,y){ c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)}; t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;  y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity","script", "m9tfz3zc93");</script>
 </head>
 <body>
@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="index.html">dssd</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,11 +75,12 @@
 <h1 id="getting-dssd">Getting <code>dssd</code>
 <a class="anchor" aria-label="anchor" href="#getting-dssd"></a>
 </h1>
-<p>We typically aim to keep <code>dssd</code> on CRAN, so it can be readily installed from within R-Studio or the R interface. However, at present there is an <a href="https://github.com/DistanceDevelopment/dssd/issues/94" class="external-link">issue</a> that prevents this. Therefore to obtain <code>dssd</code> at present, please use the following code.</p>
+<p>The easiest way to get <code>dssd</code> is to install it from CRAN within R-studio or the R interface. We endeavour to make all new functionality available on CRAN in a timely manor. However, if you wish to download the development version with the latest updates immediately you can do this using Hadley Wickham’s <code>devtools</code> package:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>  <span class="co"># First, ensure you have a copy of the `devtools` package:</span></span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">nzchar</span>(<span class="fu">system.file</span>(<span class="at">package =</span> <span class="st">"devtools"</span>))) <span class="fu">install.packages</span>(<span class="st">"devtools"</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="co"># then install `dssd` from github:</span></span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"DistanceDevelopment/dssd"</span>, <span class="at">build_vignettes =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">nzchar</span>(<span class="fu">system.file</span>(<span class="at">package =</span> <span class="st">"devtools"</span>))) <span class="fu">install.packages</span>(<span class="st">"devtools"</span>)</span></code></pre></div>
+<p>then install <code>dssd</code> from github:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>  <span class="fu">library</span>(devtools)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  <span class="fu">install_github</span>(<span class="st">"DistanceDevelopment/dssd"</span>, <span class="at">build_vignettes =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <div class="section level3">
 <h3 id="troubleshooting-tip">Troubleshooting tip<a class="anchor" aria-label="anchor" href="#troubleshooting-tip"></a>
 </h3>

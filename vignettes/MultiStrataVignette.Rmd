@@ -25,7 +25,7 @@ set.seed(724)
 
 ## Introduction
 
-The most up-to-date copies of these vignettes can now be found on the distance sampling examples page of our website: https://examples.distancesampling.org
+The most up-to-date copies of these vignettes can now be found on the distance sampling examples page of our website: https://distancesampling.org/resources/vignettes.html
 
 This vignette assumes the reader is familiar with the topics covered in the getting started vignette. It expands on that content, demonstrating how to use the distance sampling survey design package, dssd [@dssd-pkg] when your study region is made up of multiple strata. This vignette will detail how you can select different designs (within the same design category, either lines or points) for each stratum and provide stratum specific design parameters. Please note that the examples provided in this vignette are designed to make the reader aware of what is possible inside the dssd package and the designs are not necessarily something that we would recommended for these example survey regions. 
 
