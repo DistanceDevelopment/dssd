@@ -12,9 +12,10 @@ Distance Sampling Survey Design
 
 # Using `dssd`
 
-There are two vignettes within the dssd package to help you get started using `dssd`:
-  - GettingStarted: "Getting Started with dssd"
-  - MultiStrataVignette: "Multiple Strata in dssd"
+There are two vignettes within the dssd package to help you get started using `dssd` (see Articles on navbar):
+
+  - [Getting Started](articles/GettingStarted.html)
+  - [Multiple Strata](articles/MultiStrataVignette.html)
 
 # Getting `dssd`
 

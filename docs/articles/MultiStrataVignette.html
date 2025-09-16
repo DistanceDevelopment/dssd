@@ -8,10 +8,16 @@
 <title>Multiple Strata in dssd • dssd</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Multiple Strata in dssd">
-<script type="text/javascript"> (function(c,l,a,r,i,t,y){ c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)}; t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;  y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity","script", "m9tfz3zc93");</script>
+<script type="text/javascript"> (function(c,l,a,r,i,t,y){ c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)}; t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;  y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity","script", "m9tfz3zc93");</script><!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-JD2Y97JXPX"></script><script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-JD2Y97JXPX');
+</script>
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -41,7 +47,6 @@
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
-<li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/distancesamp" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/DistanceDevelopment/dssd/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
@@ -60,7 +65,7 @@
                         <h4 data-toc-skip class="author">L.
 Marshall</h4>
             <address class="author_afil">
-      CREEM, Univ of St Andrews<br><h4 data-toc-skip class="date">April 2025</h4>
+      CREEM, Univ of St Andrews<br><h4 data-toc-skip class="date">September 2025</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/DistanceDevelopment/dssd/blob/HEAD/vignettes/MultiStrataVignette.Rmd" class="external-link"><code>vignettes/MultiStrataVignette.Rmd</code></a></small>
       <div class="d-none name"><code>MultiStrataVignette.Rmd</code></div>
@@ -103,7 +108,7 @@ the study area into a number of strata. As the purpose of this
 stratification is simply to improve efficiency we would still want to
 try to achieve equal coverage across all strata.</p>
 <div class="float">
-<img src="images%2Fefficiencystrats.png" alt="Figure 1: Example survey design for a Minke whale survey. The shaded polygons represent the study area and the dotted lines represent convex hulls stretched around the study region polygons. While the full length of the zigzag transects is shown only the parts inside the shaded area will be surveyed. Left panel shows an equal spaced zigzag design generated inside a convex hull applied to the study region as a whole. The right panel shows an equal spaced zigzag design generated inside a number of strata selected so that the study region was divided into a number of almost convex shapes."><div class="figcaption">Figure 1: Example survey design for a Minke
+<img src="images/efficiencystrats.png" alt="Figure 1: Example survey design for a Minke whale survey. The shaded polygons represent the study area and the dotted lines represent convex hulls stretched around the study region polygons. While the full length of the zigzag transects is shown only the parts inside the shaded area will be surveyed. Left panel shows an equal spaced zigzag design generated inside a convex hull applied to the study region as a whole. The right panel shows an equal spaced zigzag design generated inside a number of strata selected so that the study region was divided into a number of almost convex shapes."><div class="figcaption">Figure 1: Example survey design for a Minke
 whale survey. The shaded polygons represent the study area and the
 dotted lines represent convex hulls stretched around the study region
 polygons. While the full length of the zigzag transects is shown only
@@ -595,7 +600,7 @@ first need to project the study area onto a flat plane.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#Load the unprojected shapefile</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE</span></span></code></pre>
+<pre><code><span><span class="co">## Linking to GEOS 3.13.1, GDAL 3.10.2, PROJ 9.5.1; sf_use_s2() is TRUE</span></span></code></pre>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">shapefile.name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"TentsmuirUnproj.shp"</span>, package <span class="op">=</span> <span class="st">"dssd"</span><span class="op">)</span></span>
 <span><span class="va">sf.shape</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">read_sf</a></span><span class="op">(</span><span class="va">shapefile.name</span><span class="op">)</span></span>
@@ -761,7 +766,7 @@ Marshall, L. 2019. <em>Dssd: Distance Sampling Survey Design</em>. <a href="http
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>We improve our site and software support by using Microsoft Clarity to see <br> how you use our website. By using our site, you agree that we and Microsoft <br> can collect and use this data. Clarity is GDPR compliant.</p>
+  <p>We improve our site and software support by using cookies to see <br> how you use our website.</p>
 </div>
 
 <div class="pkgdown-footer-right">
